@@ -118,15 +118,15 @@ body span {
   display: none;
 }
 *::selection {
-  background: #ff3b00;
+  background: #ddd;
   color: #fff;
 }
 *::-moz-selection {
-  background: #ff3b00;
+  background: #ddd;
   color: #fff;
 }
 *::-webkit-selection {
-  background: #ff3b00;
+  background: #ddd;
   color: #fff;
 }
 .container {
@@ -1090,7 +1090,7 @@ body span {
   z-index: 40;
   height: 90vh;
   width: 100%;
-  background-image: url("/images/theme/welcome-image.jpg");
+  background-image: url("https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -1391,14 +1391,14 @@ body span {
   position: relative;
   width: 100%;
   height: 0;
-  padding-bottom: 66%;
+  padding-bottom: 300px;
 }
 .article .wrap .head img {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 300px;
   object-fit: cover;
   overflow: hidden;
 }
