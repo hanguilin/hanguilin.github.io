@@ -954,7 +954,7 @@ body span {
   margin: 5px 10px;
 }
 .menu .menu-wrap .menu-content .menu-item a.active {
-  text-decoration: line-through;
+  border-bottom: 3px solid;
 }
 .menu .menu-wrap .menu-close {
   position: absolute;
@@ -1040,7 +1040,6 @@ body span {
 }
 .navbar #qrcode-navbar img {
   width: 150px;
-  height: 150px;
 }
 @media (max-width: 768px) {
   .navbar .center {
