@@ -1772,12 +1772,12 @@ body span {
   padding-left: 1rem;
 }
 .archive {
-  max-width: 576px;
+  max-width: 600px;
   min-height: calc(100vh - 300px);
   margin: 0 auto;
   margin-top: 60px;
 }
-@media (max-width: 576px) {
+@media (max-width: 600px) {
   .archive {
     margin: 20px;
   }
