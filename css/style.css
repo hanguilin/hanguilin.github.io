@@ -118,15 +118,15 @@ body span {
   display: none;
 }
 *::selection {
-  background: #ddd;
+  background: #ff3b00;
   color: #fff;
 }
 *::-moz-selection {
-  background: #ddd;
+  background: #ff3b00;
   color: #fff;
 }
 *::-webkit-selection {
-  background: #ddd;
+  background: #ff3b00;
   color: #fff;
 }
 .container {

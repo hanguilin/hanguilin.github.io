@@ -6,12 +6,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Tomcat+Nginx+Redis实现session共享 - 与李的个人博客</title>
+  <title>一篇文章教你快速上手接口管理工具swagger - 与李的个人博客</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   
-  <meta name="description" content="一、准备工作中间件：Tomcat、Redis、Ngin...">
+  <meta name="description" content="一、关于swagger1、什么是swagger?
+sw...">
   <meta name="author" content="韩桂林">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
@@ -135,7 +136,7 @@
         <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
       
     </div>
-    <div class="center">Tomcat+Nginx+Redis实现session共享</div>
+    <div class="center">一篇文章教你快速上手接口管理工具swagger</div>
     <div class="right">
       <i class="iconfont iconmenu j-navbar-menu"></i>
     </div>
@@ -176,57 +177,87 @@
       <div class="col-xl-8"><article class="article">
   <div class="wrap">
     <section class="head">
-  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/221642-159058900274ce.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/001552-15909417528022.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">Tomcat+Nginx+Redis实现session共享</h1>
+    <h1 class="head-title">一篇文章教你快速上手接口管理工具swagger</h1>
     <div class="head-info">
-      <span class="post-info-item"><i class="iconfont iconcalendar"></i>November 29, 2020</span>
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 04, 2020</span>
       
         <span class="post-info-item">
-          <i class="iconfont iconeye"></i><span id="/2020/11/29/Tomcat-Nginx-Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB/" class="leancloud" data-flag-title="Tomcat+Nginx+Redis实现session共享"></span>
+          <i class="iconfont iconeye"></i><span id="/2020/12/04/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%95%99%E4%BD%A0%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7swagger/" class="leancloud" data-flag-title="一篇文章教你快速上手接口管理工具swagger"></span>
         </span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>741</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2707</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <h1 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h1><p>中间件：Tomcat、Redis、Nginx</p>
-<p>jar包：commons-pool2-2.4.2.jar、jedis-2.8.0.jar、tomcat-redis-session-manager-2.0.0.jar</p>
-<h1 id="二、配置"><a href="#二、配置" class="headerlink" title="二、配置"></a>二、配置</h1><h2 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h2><p>多台Tomacat需要配置不同的端口号</p>
-<p><font color=red>/lib </font></p>
-<p>将jar包存放到此位置</p>
-<p><font color=red>/conf/server.xml</font></p>
-<img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128144308378.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  alt="" style="zoom:67%;" />
+        <h1 id="一、关于swagger"><a href="#一、关于swagger" class="headerlink" title="一、关于swagger"></a>一、关于swagger</h1><p>1、什么是swagger?</p>
+<p>swagger是spring fox的一套产品，可以作为后端开发者测试接口的工具，也可以作为前端取数据的接口文档。</p>
+<p>2、为什么使用？</p>
+<p>相比于传统的接口文档书写，开发者可以以更高的效率来进行接口测试与开发。而且使得更具可读性。</p>
+<p>3、怎样配置？</p>
+<p>引入依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;dependency&gt;<br>            &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;springfox-swagger2&lt;&#x2F;artifactId&gt;<br>            &lt;version&gt;2.5.0&lt;&#x2F;version&gt;<br>&lt;&#x2F;dependency&gt;<br>&lt;dependency&gt;<br>            &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;springfox-swagger-ui&lt;&#x2F;artifactId&gt;<br>            &lt;version&gt;2.5.0&lt;&#x2F;version&gt;<br>&lt;&#x2F;dependency&gt;<br></code></pre></td></tr></table></figure>
 
-<img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128144359433.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  alt="" style="zoom:67%;" />
+<p>配置代码 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs plain">import io.swagger.annotations.ApiOperation;<br>import org.springframework.context.annotation.Bean;<br>import org.springframework.context.annotation.Configuration;<br>import springfox.documentation.builders.ApiInfoBuilder;<br>import springfox.documentation.builders.RequestHandlerSelectors;<br>import springfox.documentation.service.ApiInfo;<br>import springfox.documentation.service.Contact;<br>import springfox.documentation.spi.DocumentationType;<br>import springfox.documentation.spring.web.plugins.Docket;<br>import springfox.documentation.swagger2.annotations.EnableSwagger2;<br><br>@Configuration  &#x2F;&#x2F; 注册成ioc组件<br>@EnableSwagger2  &#x2F;&#x2F;开启swagger2<br>public class SwaggerConfig &#123;<br><br>   &#x2F;&#x2F; 扫描所有带@ApiOperation注解的类<br>    @Bean<br>    public Docket api() &#123;<br>        return new Docket(DocumentationType.SWAGGER_2)<br>                .apiInfo(apiInfo())<br>                .select()<br>                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))<br>                .build();<br>    &#125;<br>    <br>    &#x2F;&#x2F;api接口作者相关信息<br>    private ApiInfo apiInfo() &#123;<br>        Contact contact &#x3D; new Contact(&quot;与李&quot;, &quot;&quot;, &quot;1451633962@qq.com&quot;);<br>        ApiInfo apiInfo &#x3D; new ApiInfoBuilder().license(&quot;&quot;).title(&quot;CSDN&quot;).description(&quot;接口文档&quot;).contact(contact).version(&quot;3.0&quot;).build();<br>        return apiInfo;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><font color=red>/conf/context.xml</font></p>
-<img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128144802479.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" />
-
-<p>host为Redis的ip地址，port为端口，database为数据库。</p>
-<h2 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h2><p>/conf/nginx.conf</p>
-<img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128145135781.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" />
-
-<p>upstream意为配置服务器列表，本例中开启了两台tomcat，端口分别为8080与9999。</p>
-<p>proxy_pass意为配置代理服务器。</p>
-<p>此配置意为监听本地（192.168.0.113）的80端口，并将请求以轮询方式转发给8080和9999的tomcat服务器。</p>
-<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p>Redis不需要特殊配置，启动即可。</p>
-<h1 id="三、测试"><a href="#三、测试" class="headerlink" title="三、测试"></a>三、测试</h1><p>先后启动Redis服务、两台tomcat服务器、Nginx服务器。</p>
-<p>在Tomcat启动页面加上标识，判断两台服务器中sessionId是否一致。</p>
-<p>/webapps/ROOT/index.jsp:</p>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128145904190.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" /><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128162322240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<h1 id="四、结果"><a href="#四、结果" class="headerlink" title="四、结果"></a>四、结果</h1><p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128145904190.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" /><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128162322240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128162353184.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" /><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128162739595.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<p>如果F5刷新页面不能切换端口对应的页面，可能是由于浏览器缓存造成。</p>
-<p>解决方法：清除缓存刷新，alt+F5</p>
-<p>此时可看到多个tomcat服务在不断轮询，且sessionId一致。</p>
-<p>再用Redis桌面管理工具查看信息：</p>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128162353184.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" /><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191128162739595.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<p>可以看到session信息已经交给Redis管理。</p>
-<h1 id="五、弊端"><a href="#五、弊端" class="headerlink" title="五、弊端"></a>五、弊端</h1><p>此种方式依赖于tomcat容器，如果中间件换成jetty或者其他，就不受用。</p>
-<p>还有一种较好实现方式：Spring Session + Redis</p>
+<h1 id="二、使用教程"><a href="#二、使用教程" class="headerlink" title="二、使用教程"></a>二、使用教程</h1><p>@Api ：对rest接口类的注解</p>
+<ul>
+<li><p>value 对资源的标签名</p>
+</li>
+<li><p>description 描述</p>
+</li>
+</ul>
+<p>@ApiOperation ：对方法的注解</p>
+<ul>
+<li><p>value 对资源的标签名</p>
+</li>
+<li><p>notes 对方法操作的描述</p>
+</li>
+</ul>
+<p>@ApiImplicitParams ：对多个参数的描述的集合</p>
+<p>@ApiImplicitParam：在@ApiImplicitParams里面</p>
+<ul>
+<li><p>name 属性字段名</p>
+</li>
+<li><p>value 属性字段含义</p>
+</li>
+<li><p>required 是否必填（true/false）</p>
+</li>
+<li><p>paramType 参数位置（”query”为参数放置url,”body”为post方法放在body里…）</p>
+</li>
+<li><p>dataType 参数类型（”String”、”int”…）</p>
+</li>
+</ul>
+<p>@ApiModel ：对实体类的描述</p>
+<p>@ApiModelProperty ：对实体字段的描述</p>
+<ul>
+<li><p>name 属性名称</p>
+</li>
+<li><p>value 属性描述</p>
+</li>
+<li><p>hidden 是否不再swagger页面展示（true/false）</p>
+</li>
+</ul>
+<h1 id="三、踩过的坑"><a href="#三、踩过的坑" class="headerlink" title="三、踩过的坑"></a>三、踩过的坑</h1><p>1、swagger-ui页面卡死</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191225153214624.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>原因：返回的实体或者入参实体中字段重复嵌套，导致swagger页面在展示model时需要大量循环计算，导致cpu占满，浏览器资源耗尽导致页面卡死。</p>
+<p>解决方案：</p>
+<ul>
+<li><p>注意实体中字段的数据的嵌套，隐藏改字段或者修改实体，避免嵌套。</p>
+</li>
+<li><p>不用swagger,用其他接口测试工具(0_0)</p>
+</li>
+</ul>
+<p>2、POST请求时，Data Type未显示字段注释</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191225154608545.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 解决方案：</p>
+<p> 给请求实体加上@RequestBody注解</p>
+<p><img    class="lazyload" data-original="https://img-blog.csdnimg.cn/20191225154823236.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">img</span><img    class="lazyload" data-original="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">点击并拖拽以移动</span></p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20191225154734567.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
 
       </section>
       <section class="extra">
@@ -234,7 +265,7 @@
           <ul class="copyright">
   
     <li><strong>本文作者：</strong>韩桂林</li>
-    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/11/29/Tomcat-Nginx-Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;11&#x2F;29&#x2F;Tomcat-Nginx-Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;11&#x2F;29&#x2F;Tomcat-Nginx-Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB&#x2F;index.html</a></li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/04/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%95%99%E4%BD%A0%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7swagger/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;04&#x2F;%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%95%99%E4%BD%A0%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7swagger&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;04&#x2F;%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%95%99%E4%BD%A0%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7swagger&#x2F;index.html</a></li>
     <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
   
 </ul>
@@ -251,12 +282,12 @@
 </section>
         
         
-  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Session/" rel="tag">Session</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tomcat/" rel="tag">Tomcat</a></li></ul> 
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swagger/" rel="tag">Swagger</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95/" rel="tag">接口测试</a></li></ul> 
 
         
   <nav class="nav">
-    <a href="/2020/11/29/windows%E4%B8%8B%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8jenkins%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9E%84%E5%BB%BA%E4%B8%8E%E9%83%A8%E7%BD%B2war%E5%8C%85/"><i class="iconfont iconleft"></i>windows下安装使用jenkins实现自动化构建与部署war包</a>
-    <a href="/2020/11/29/MarkDown%E6%9C%AC%E5%9C%B0%E7%BC%96%E8%BE%91%E7%A5%9E%E7%BB%84%E5%90%88/">MarkDown本地编辑神组合<i class="iconfont iconright"></i></a>
+    <a></a>
+    <a href="/2020/12/04/%E5%85%A5%E9%97%A8alibaba%E7%9A%84EasyExcel/">入门alibaba的EasyExcel<i class="iconfont iconright"></i></a>
   </nav>
 
       </section>
@@ -302,7 +333,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-text">一、准备工作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%85%8D%E7%BD%AE"><span class="toc-text">二、配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Tomcat"><span class="toc-text">Tomcat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx"><span class="toc-text">Nginx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis"><span class="toc-text">Redis</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%B5%8B%E8%AF%95"><span class="toc-text">三、测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%BB%93%E6%9E%9C"><span class="toc-text">四、结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%BC%8A%E7%AB%AF"><span class="toc-text">五、弊端</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%85%B3%E4%BA%8Eswagger"><span class="toc-text">一、关于swagger</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B"><span class="toc-text">二、使用教程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91"><span class="toc-text">三、踩过的坑</span></a></li></ol>
   </aside>
 
         
