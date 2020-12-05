@@ -788,7 +788,7 @@ body span {
   width: 100%;
   height: 100%;
   top: 0;
-  background: url("/images/theme/loading.gif") no-repeat center;
+  background: url("https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/loading.gif") no-repeat center;
   background-color: var(--color-background);
   z-index: 2019;
   overflow: hidden;
