@@ -1,0 +1,517 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Solr专题（一）手把手教你搭建Solr服务 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="一、Solr是什么，能解决什么问题？Solr是一个高性...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+    </div>
+    <div class="center">Solr专题（一）手把手教你搭建Solr服务</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/192524-153260432471a0.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Solr专题（一）手把手教你搭建Solr服务</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 05, 2020</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/05/Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%80%EF%BC%89%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E6%90%AD%E5%BB%BASolr%E6%9C%8D%E5%8A%A1/" class="leancloud" data-flag-title="Solr专题（一）手把手教你搭建Solr服务"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3583</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="一、Solr是什么，能解决什么问题？"><a href="#一、Solr是什么，能解决什么问题？" class="headerlink" title="一、Solr是什么，能解决什么问题？"></a>一、Solr是什么，能解决什么问题？</h1><p>Solr是一个高性能，采用Java开发，基于Lucene的全文搜索服务器。同时对其进行了扩展，提供了比Lucene更为丰富的查询语言，同时实现了可配置、可扩展并对查询性能进行了优化，并且提供了一个完善的功能管理界面，是一款非常优秀的全文搜索引擎。</p>
+<p>简而言之就是在项目中可以作为搜索引擎，提供资源的高效查询。</p>
+<p>Q:数据库不是能提供查询的接口吗？为什么要用额外的框架来做?</p>
+<p>A:因为模糊查询不能使用数据库的索引，所以数据库提供的模糊查询效率很低。而Solr本身也可以看做是数据库（no sql）类似于MongoDB存文档数据的菲关系型数据库。许多大型网站的搜索引擎绝不是通过查询数据库来做的，而是由Solr、Elasticsearch 这样的全文检索框架来负责。</p>
+<h1 id="二、同类型产品比较"><a href="#二、同类型产品比较" class="headerlink" title="二、同类型产品比较"></a>二、同类型产品比较</h1><p>全文检索框架还有ElasticSearch，它们两者之间的区别如下：</p>
+<ul>
+<li>Solr 利用 Zookeeper 进行分布式管理，而 Elasticsearch 自身带有分布式协调管理功能;</li>
+<li>Solr 支持更多格式的数据，而 Elasticsearch 仅支持json文件格式；</li>
+<li>Solr 官方提供的功能更多，而 Elasticsearch 本身更注重于核心功能，高级功能多有第三方插件提供；</li>
+<li>Solr 在传统的搜索应用中表现好于 Elasticsearch，但在处理实时搜索应用时效率明显低于 Elasticsearch。</li>
+<li>Solr 是传统搜索应用的有力解决方案，但 Elasticsearch 更适用于新兴的实时搜索应用。</li>
+</ul>
+<h1 id="三、搭建服务"><a href="#三、搭建服务" class="headerlink" title="三、搭建服务"></a>三、搭建服务</h1><p>本例中Solr版本为7.7.2</p>
+<h2 id="1-下载Solr"><a href="#1-下载Solr" class="headerlink" title="1.下载Solr"></a>1.下载Solr</h2><p>官方下载网站： <a target="_blank" rel="noopener" href="https://lucene.apache.org/solr/downloads.html">https://lucene.apache.org/solr/downloads.html</a></p>
+<h2 id="2-版本变更记录"><a href="#2-版本变更记录" class="headerlink" title="2.版本变更记录"></a>2.版本变更记录</h2><p>参考博文:  <a target="_blank" rel="noopener" href="https://blog.csdn.net/jiangchao858/article/details/52443745">https://blog.csdn.net/jiangchao858/article/details/52443745</a></p>
+<p>说明：Solr从5.0.0开始内嵌jetty服务器，可直接启动，之前版本需依赖外部容器（tomcat、jetty…）中启动。</p>
+<h2 id="3-安装与启动"><a href="#3-安装与启动" class="headerlink" title="3.安装与启动"></a>3.安装与启动</h2><p>免安装，下载解压即用。</p>
+<p>常用命令：</p>
+<ul>
+<li>启动：solr start</li>
+<li>停止：solr stop -p 8983</li>
+<li>重启：solr restart</li>
+</ul>
+<p>启动方式：找到bin目录，在地址栏输入cmd,打开命令界面</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407132640857.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 输入solr start，使用默认端口启用jetty服务。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407133122983.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 在浏览器输入localhost:8983/solr查看效果</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407133247153.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="4、建立core"><a href="#4、建立core" class="headerlink" title="4、建立core"></a>4、建立core</h2><p>core就相当于数据库中的表，用来存放数据。</p>
+<p>在/server/solr下新建一个文件夹，文件夹的名称就是core的名称，再将/server/solr/configsets/sample_techproducts_configs中的conf文件夹复制到新建的文件夹下。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407134444474.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 完成后重启solr服务，再进入solr的admin界面进行添加Core</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407134844910.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407134928430.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 添加成功后，文件夹里会多出两个文件（data、core.properties）</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407135105610.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 进入自己建立的core进行管理：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407135254304.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> <img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407135501478.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 至此，Solr服务的搭建已经成功了，接下来是运用教程。</p>
+<h2 id="5、导入数据"><a href="#5、导入数据" class="headerlink" title="5、导入数据"></a>5、导入数据</h2><p>是指将数据库里面的数据导入到Solr中。</p>
+<p>首先导入需要的jar包，将dist下的两个jar包复制到/server/solr-webapp/webapp/WEB-INF/lib文件夹下</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407142048297.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+ <img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407142351329.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" />
+
+<p>如果没有mysql驱动包的需要复制一份过来：</p>
+<img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20201020113133110.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  alt="" style="zoom:67%;" />
+
+<p>在你自己的core里的conf下新建一个data-config.xml的配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot; ?&gt;<br>&lt;dataConfig&gt;<br>&lt;dataSource driver&#x3D;&quot;com.mysql.jdbc.Driver&quot; url&#x3D;&quot;jdbc:mysql:&#x2F;&#x2F;127.0.0.1:3306&#x2F;mydb?useUnicode&#x3D;true&amp;characterEncoding&#x3D;utf-8&quot; user&#x3D;&quot;root&quot; password&#x3D;&quot;root&quot;&#x2F;&gt;<br>&lt;document name&#x3D;&quot;SysUser&quot;&gt;<br>	&lt;entity name&#x3D;&quot;SysUser&quot; pk&#x3D;&quot;id&quot;<br>	    query&#x3D;&#39;SELECT id,name,age FROM sys_suer&#39;<br>	    deltaImportQuery&#x3D;&#39;SELECT id,name,age FROM sys_user WHERE id &#x3D; &quot;$&#123;dataimporter.delta.id&#125;&quot;&#39;<br>	    deltaQuery&#x3D;&quot;SELECT id FROM sys_user where create_date &gt; &#39;$&#123;dataimporter.last_index_time&#125;&#39;&quot; &gt;<br>		&lt;field column&#x3D;&quot;id&quot; name&#x3D;&quot;id&quot;&#x2F;&gt;<br>		&lt;field column&#x3D;&quot;name&quot; name&#x3D;&quot;name&quot;&#x2F;&gt;<br>		&lt;field column&#x3D;&quot;age&quot; name&#x3D;&quot;age&quot;&#x2F;&gt;<br>	&lt;&#x2F;entity&gt;<br>&lt;&#x2F;document&gt;<br>&lt;&#x2F;dataConfig&gt;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>dataSource表示连接数据库的配置</li>
+<li>document表示文档信息</li>
+<li>entity表示实体信息</li>
+<li> –query表示全量导入时调用的sql语句</li>
+<li> –deltaImportQuery表示增量导入时调用的sql语句</li>
+<li> –deltaQuery表示增量导入时查出来的数据</li>
+<li> –field表示字段</li>
+<li>  –column表示数据库中字段名称</li>
+<li>  –name表示存在solr的core中的名称</li>
+<li>${dataimporter.last_index_time}表示最后一次导入数据的时间</li>
+</ul>
+<p>具体流程：选择全量导入（全部数据导入）时调用query查询数据并导入到Solr中。选择增量导入时，先执行deltaQuery语句获得需要导入数据的id，再根据deltaImportQuery查出数据并导入到Solr中。</p>
+<p>编辑你Core下的conf/managed-schema文件：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407141613971.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<ul>
+<li>indexed表示是否被索引，即是否被查询使用。</li>
+<li>stored表示是否存到Solr库。</li>
+<li>type表示搜索类型，当前为string类型的搜索，还可以自己配置，如IK中文分词器。</li>
+</ul>
+<p>编辑core下conf/solrconfig.xml</p>
+<p>新增以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;!-- dataimport --&gt;<br>&lt;requestHandler name&#x3D;&quot;&#x2F;dataimport&quot; class&#x3D;&quot;org.apache.solr.handler.dataimport.DataImportHandler&quot;&gt;<br>  &lt;lst name&#x3D;&quot;defaults&quot;&gt;<br>    &lt;str name&#x3D;&quot;config&quot;&gt;data-config.xml&lt;&#x2F;str&gt;<br>  &lt;&#x2F;lst&gt;<br>&lt;&#x2F;requestHandler&gt;<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407142704430.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 配好之后重启solr服务，并进入admin界面</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407143325275.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 只有点击刷新状态按钮，才回刷新显示状态，出现Indexing completed则为导入完成。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407143834355.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="6、查询数据"><a href="#6、查询数据" class="headerlink" title="6、查询数据"></a>6、查询数据</h2> <img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200407144059716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" />
+
+<p> 输入查询条件，点击执行查询，即可感受到全文检索的魅力。</p>
+<p>下一节将会对Solr Query进行一个详细的讲解。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/05/Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%80%EF%BC%89%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E6%90%AD%E5%BB%BASolr%E6%9C%8D%E5%8A%A1/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;05&#x2F;Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%80%EF%BC%89%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E6%90%AD%E5%BB%BASolr%E6%9C%8D%E5%8A%A1&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;05&#x2F;Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%80%EF%BC%89%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E6%90%AD%E5%BB%BASolr%E6%9C%8D%E5%8A%A1&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Solr/" rel="tag">Solr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2/" rel="tag">全文检索</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2020/12/05/Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%A6%E8%A7%A3Solr%E6%9F%A5%E8%AF%A2%E5%8F%82%E6%95%B0/"><i class="iconfont iconleft"></i>Solr专题（二）详解Solr查询参数</a>
+    <a href="/2020/12/05/Windows%E4%B8%AD%E4%BD%BF%E7%94%A8MyCat%E5%AE%9E%E7%8E%B0%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/">Windows中使用MyCat实现读写分离<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "雁过留痕",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-2">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Solr%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E8%83%BD%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-text">一、Solr是什么，能解决什么问题？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%90%8C%E7%B1%BB%E5%9E%8B%E4%BA%A7%E5%93%81%E6%AF%94%E8%BE%83"><span class="toc-text">二、同类型产品比较</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%90%AD%E5%BB%BA%E6%9C%8D%E5%8A%A1"><span class="toc-text">三、搭建服务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%B8%8B%E8%BD%BDSolr"><span class="toc-text">1.下载Solr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%89%88%E6%9C%AC%E5%8F%98%E6%9B%B4%E8%AE%B0%E5%BD%95"><span class="toc-text">2.版本变更记录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8"><span class="toc-text">3.安装与启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E5%BB%BA%E7%AB%8Bcore"><span class="toc-text">4、建立core</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="toc-text">5、导入数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E3%80%81%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE"><span class="toc-text">6、查询数据</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>

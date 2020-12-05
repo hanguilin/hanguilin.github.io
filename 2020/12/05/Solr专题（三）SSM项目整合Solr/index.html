@@ -1,0 +1,442 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Solr专题（三）SSM项目整合Solr - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="一、环境配置所需要的jar包： org.apache....">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+    </div>
+    <div class="center">Solr专题（三）SSM项目整合Solr</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/201425-1549541665ba5e.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Solr专题（三）SSM项目整合Solr</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 05, 2020</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/05/Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%89%EF%BC%89SSM%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Solr/" class="leancloud" data-flag-title="Solr专题（三）SSM项目整合Solr"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2295</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="一、环境配置"><a href="#一、环境配置" class="headerlink" title="一、环境配置"></a>一、环境配置</h1><p>所需要的jar包： org.apache.solr.solr-solrj</p>
+<p>maven依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;org.apache.solr&#x2F;solr-solrj --&gt;<br>&lt;dependency&gt;<br>    &lt;groupId&gt;org.apache.solr&lt;&#x2F;groupId&gt;<br>    &lt;artifactId&gt;solr-solrj&lt;&#x2F;artifactId&gt;<br>    &lt;version&gt;7.7.2&lt;&#x2F;version&gt;<br>&lt;&#x2F;dependency&gt;<br></code></pre></td></tr></table></figure>
+
+<h1 id="二、教程"><a href="#二、教程" class="headerlink" title="二、教程"></a>二、教程</h1><p>solr查询方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs plain">&#x2F;**<br> * 执行solr查询<br> * @param query SolrQuery<br> * @param pageNo 页码<br> * @param pageSize 页面数据大小<br> * @param orderBy 排序<br> * @return Map&lt;String, Object&gt;<br> *&#x2F;<br>public Map&lt;String, Object&gt; getSolrQuery(String query, String pageNo, String pageSize, String orderBy)&#123;<br>	SolrQuery solrQuery &#x3D; new SolrQuery();<br>	solrQuery.set(CommonParams.Q, query);<br>	Map&lt;String, Object&gt; map &#x3D; Maps.newHashMap();<br>	map.put(&quot;total&quot;, 0);<br>	map.put(&quot;rows&quot;, Collections.emptyList());<br>	try &#123;<br>		Integer no &#x3D; PageUtils.parseNo(pageNo);<br>		Integer size &#x3D; PageUtils.parseSize(pageSize);<br>		Integer offset &#x3D; PageUtils.getOffset(no, size);<br>		solrQuery.setStart(offset);<br>		solrQuery.setRows(size);<br>		setOrder(solrQuery, orderBy);<br>		&#x2F;&#x2F;执行查询并返回结果<br>		QueryResponse resp &#x3D; solrClient.query(solrQuery);<br>		SolrDocumentList results &#x3D; resp.getResults();<br>		&#x2F;&#x2F;获取查询到的数据总量<br>		long numFound &#x3D; results.getNumFound();<br>		if(numFound &lt;&#x3D; 0) &#123;<br>			return map;<br>		&#125;else &#123;<br>			map.put(&quot;total&quot;, numFound);<br>			map.put(&quot;rows&quot;, convert(results));<br>			return map;<br>		&#125;<br>	&#125; catch (Exception e) &#123;<br>		LOGGER.error(e.getMessage(), e);<br>		return map;<br>	&#125;<br>&#125;<br><br>&#x2F;**<br> * 设置排序方式<br> * <br> * @param solrQuery SolrQuery<br> * @param orderBy 排序字段 example:name desc<br> *&#x2F;<br>private void setOrder(SolrQuery solrQuery, String orderBy) &#123;<br>	if(VerifyUtils.isEmpty(orderBy)) &#123;<br>		return;<br>	&#125;<br>	String[] split &#x3D; orderBy.split(SPACE);<br>	if(&quot;asc&quot;.equals(split[1].toLowerCase())) &#123;<br>		solrQuery.setSort(split[0], ORDER.asc);<br>	&#125;else &#123;<br>		solrQuery.setSort(split[0], ORDER.desc);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中SolrQuery实体为Solr的查询实体，其调用方法</p>
+<p>set( String name, String … val )：设置查询参数，name可以使用org.apache.solr.common.params.CommonParams类调用，具体参数与上一节 <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37171817/article/details/105385260">Solr专题（二）详解Solr查询参数</a> 一致。</p>
+<p>下节主要讲解solr在项目中的安全设置。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/05/Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%89%EF%BC%89SSM%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Solr/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;05&#x2F;Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%89%EF%BC%89SSM%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Solr&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;05&#x2F;Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%89%EF%BC%89SSM%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Solr&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Solr/" rel="tag">Solr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2/" rel="tag">全文检索</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2020/12/05/Solr%E4%B8%93%E9%A2%98%EF%BC%88%E5%9B%9B%EF%BC%89Solr%E5%AE%89%E5%85%A8%E8%AE%BE%E7%BD%AE/"><i class="iconfont iconleft"></i>Solr专题（四）Solr安全设置</a>
+    <a href="/2020/12/05/Solr%E4%B8%93%E9%A2%98%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%A6%E8%A7%A3Solr%E6%9F%A5%E8%AF%A2%E5%8F%82%E6%95%B0/">Solr专题（二）详解Solr查询参数<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "雁过留痕",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-2">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-text">一、环境配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%95%99%E7%A8%8B"><span class="toc-text">二、教程</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
