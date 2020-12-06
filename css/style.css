@@ -1172,6 +1172,33 @@ body span {
 .preview .preview-scroll i {
   font-size: 32px;
 }
+.typed-cursor {
+  opacity: 1;
+  animation: typedjsBlink 0.7s infinite;
+  -webkit-animation: typedjsBlink 0.7s infinite;
+  animation: typedjsBlink 0.7s infinite;
+  font-size: 2.5em;
+  color: #fff;
+}
+@-webkit-keyframes typedjsBlink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.typed-fade-out {
+  opacity: 0;
+  -webkit-animation: 0;
+  animation: 0;
+}
+.typed-fade-out transition {
+  opacity: 0.25s;
+}
 @-moz-keyframes move-forever {
   0% {
     transform: translate3d(-90px, 0, 0);
@@ -1246,6 +1273,26 @@ body span {
   }
   100% {
     opacity: 1;
+  }
+}
+@-moz-keyframes typedjsBlink {
+  50% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes typedjsBlink {
+  50% {
+    opacity: 0;
+  }
+}
+@-o-keyframes typedjsBlink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes typedjsBlink {
+  50% {
+    opacity: 0;
   }
 }
 .scrollbar {

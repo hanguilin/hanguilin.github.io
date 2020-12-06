@@ -103,7 +103,18 @@ console.log("%c 简书 %c", "background:#333333; color:#ffffff", "", "https://ww
         $.get(CONFIG.preview.motto.api, function (data) {
           data && $("#motto").text(data);
         });
-      }
+      } else {
+		  var boxObj = document.getElementById('motto');
+		  if (boxObj) {
+			  new Typed(boxObj, {
+			  // 注意：输出的可以是标签，将标签当节点运行。比如下面的h2
+				strings: [CONFIG.preview.motto.default],
+				typeSpeed: 100, // 速度
+				startDelay: 500,
+				cursorChar: "_"
+			  });
+		  }
+	  }
 
     },
     background: function () {
@@ -112,7 +123,7 @@ console.log("%c 简书 %c", "background:#333333; color:#ffffff", "", "https://ww
       }
     },
 	beat: function () {
-		
+	   
 	}
   }
 

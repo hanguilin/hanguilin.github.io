@@ -117,6 +117,8 @@ Stream？其实就是处理集合的一种形式，称...">
   </script>
 
   
+    <script type="text/javascript" src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+  
 
   
 
@@ -187,7 +189,7 @@ Stream？其实就是处理集合的一种形式，称...">
           <i class="iconfont iconeye"></i><span id="/2020/12/06/Java%208%20Stream%20API%E5%AE%9E%E4%BE%8B/" class="leancloud" data-flag-title="Java 8 Stream API实例"></span>
         </span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3180</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3125</span>
     </div>
   </div>
 </section>
@@ -209,40 +211,40 @@ Stream？其实就是处理集合的一种形式，称...">
 <li>filter 过滤</li>
 </ul>
 <p>例：需要过滤出在集合中，大于5的数字的集合。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;Integer&gt; result &#x3D; list.stream().filter(o -&gt; o&gt;5).collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;Integer&gt; result = list.stream().filter(o -&gt; o&gt;<span class="hljs-number">5</span>).collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
 
 <p> filter内部使用的是lamda表达式，也是Java8的功能，o代表集合中每一个元素，o&gt;5表示这个元素的值若大于5就返回true,就获取结果。collect表示聚合，Collectors.toList()表示将结果聚合到一个List集合。</p>
 <ul>
 <li>map 形成一个新对象</li>
 </ul>
 <p>例：需要将集合内的元素全部转换成String类型。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;String&gt; result &#x3D; list.stream().map(o-&gt;String.valueOf(o)).collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt; result = list.stream().map(o-&gt;String.valueOf(o)).collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
 
 <ul>
 <li>sort 排序</li>
 </ul>
 <p>例： 需要从小到大排序。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;Integer&gt; result &#x3D; list.stream().sorted().collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;Integer&gt; result = list.stream().sorted().collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
 
 <p>例： 需要从大到小排序。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;Integer&gt; result &#x3D; list.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;Integer&gt; result = list.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
 
 <ul>
 <li>forEach 遍历</li>
 </ul>
 <p>例： 打印集合内每个元素。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">list.stream().forEach(o-&gt;System.out.println(o));<br>list.forEach(o-&gt;System.out.println(o));<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">list.stream().forEach(o-&gt;System.out.println(o));<br>list.forEach(o-&gt;System.out.println(o));<br></code></pre></td></tr></table></figure>
 
 <ul>
 <li>distinct 去除重复元素</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;Integer&gt; result &#x3D; list.stream().distinct().collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;Integer&gt; result = list.stream().distinct().collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
 
 <ul>
 <li>reduce 集合内运算</li>
 </ul>
 <p>例： 计算集合中元素的和。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Integer sum &#x3D; list.stream().reduce(0, (i, j) -&gt; i + j);<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Integer sum = list.stream().reduce(<span class="hljs-number">0</span>, (i, j) -&gt; i + j);<br></code></pre></td></tr></table></figure>
 
 <p>reduce中第一个参数为基数，即为初始值，i,j的定义为第一个和第二个操作数，i+j即为操作，此处为加法操作。</p>
 <p>如果计算乘法，就不能设置初始值为0，因为0乘任何数都为0。</p>
@@ -256,7 +258,7 @@ Stream？其实就是处理集合的一种形式，称...">
 <li>…</li>
 </ol>
 <p>例： 将list聚合成一个key为元素，value为“item”+元素的Map。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Map&lt;Integer, String&gt; map &#x3D; list.stream().collect(Collectors.toMap(Function.identity(), o -&gt; String.format(&quot;item%s&quot;, o)));<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Map&lt;Integer, String&gt; map = list.stream().collect(Collectors.toMap(Function.identity(), o -&gt; String.format(<span class="hljs-string">&quot;item%s&quot;</span>, o)));<br></code></pre></td></tr></table></figure>
 
 <p>结果：{1=item1, 2=item2, 3=item3, 4=item4, 6=item6, 7=item7}</p>
 <p>keyMapper表示设置为key的规则，valueMapper表示设置为value的规则。</p>
@@ -266,10 +268,10 @@ Stream？其实就是处理集合的一种形式，称...">
 </ul>
 <p>Collectors.groupingBy(Function&lt;? super T, ? extends K&gt; classifier)</p>
 <p>新建一个User实体，有姓名和年龄两个字段，并初始化一个集合便于测试。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;User&gt; list &#x3D; new ArrayList&lt;User&gt;();<br>list.add(new User(&quot;与李&quot;, 18));<br>list.add(new User(&quot;CSDN&quot;, 19));<br>list.add(new User(&quot;han&quot;, 20));<br>list.add(new User(&quot;han&quot;, 21));<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;User&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;User&gt;();<br>list.add(<span class="hljs-keyword">new</span> User(<span class="hljs-string">&quot;与李&quot;</span>, <span class="hljs-number">18</span>));<br>list.add(<span class="hljs-keyword">new</span> User(<span class="hljs-string">&quot;CSDN&quot;</span>, <span class="hljs-number">19</span>));<br>list.add(<span class="hljs-keyword">new</span> User(<span class="hljs-string">&quot;han&quot;</span>, <span class="hljs-number">20</span>));<br>list.add(<span class="hljs-keyword">new</span> User(<span class="hljs-string">&quot;han&quot;</span>, <span class="hljs-number">21</span>));<br></code></pre></td></tr></table></figure>
 
 <p>例： 需要把名字相同的实体提出来放在一起，形成一个List集合。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Map&lt;String, List&lt;User&gt;&gt; group &#x3D; list.stream().collect(Collectors.groupingBy(User::getName));<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Map&lt;String, List&lt;User&gt;&gt; group = list.stream().collect(Collectors.groupingBy(User::getName));<br></code></pre></td></tr></table></figure>
 
 <p>结果：{han=[User [name=han, age=20], User [name=han, age=21]], CSDN=[User [name=CSDN, age=19]], 与李=[User [name=与李, age=18]]}</p>
 <p>此处使用User实体的name属性进行分组。</p>
@@ -279,7 +281,7 @@ Stream？其实就是处理集合的一种形式，称...">
 </ul>
 <p>Collectors.partitioningBy(Predicate&lt;? super T&gt; predicate)</p>
 <p>例： 分别统计年龄大于等于20和小于20的学生信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Map&lt;Boolean, List&lt;User&gt;&gt; partitioning &#x3D; list.stream().collect(Collectors.partitioningBy(o -&gt; o.getAge() &gt;&#x3D; 20));<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Map&lt;Boolean, List&lt;User&gt;&gt; partitioning = list.stream().collect(Collectors.partitioningBy(o -&gt; o.getAge() &gt;= <span class="hljs-number">20</span>));<br></code></pre></td></tr></table></figure>
 
 <p>结果：{false=[User [name=与李, age=18], User [name=CSDN, age=19]], true=[User [name=han, age=20], User [name=han, age=21]]}</p>
 <p>可以看到返回结果是一个Map&lt;Boolean, List<User>&gt;,利用partitioningBy后生成的map,有且仅有两个元素，key固定为true和false,分别表示满足条件的信息和不不满足条件的信息。</p>
