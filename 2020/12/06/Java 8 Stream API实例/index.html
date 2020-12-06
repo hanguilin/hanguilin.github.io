@@ -6,12 +6,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>解决Spring整合Quartz Job时Bean不能依赖注入的问题 - 与李的个人博客</title>
+  <title>Java 8 Stream API实例 - 与李的个人博客</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   
-  <meta name="description" content="一、问题描述项目环境：Spring项目整合org.qu...">
+  <meta name="description" content="一、开篇
+Stream？其实就是处理集合的一种形式，称...">
   <meta name="author" content="韩桂林 (与李)">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
@@ -135,7 +136,7 @@
         <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
       
     </div>
-    <div class="center">解决Spring整合Quartz Job时Bean不能依赖注入的问题</div>
+    <div class="center">Java 8 Stream API实例</div>
     <div class="right">
       <i class="iconfont iconmenu j-navbar-menu"></i>
     </div>
@@ -176,40 +177,113 @@
       <div class="col-xl-8"><article class="article">
   <div class="wrap">
     <section class="head">
-  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/231304-1571152384273d.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/213648-152777380869aa.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">解决Spring整合Quartz Job时Bean不能依赖注入的问题</h1>
+    <h1 class="head-title">Java 8 Stream API实例</h1>
     <div class="head-info">
-      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 05, 2020</span>
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 06, 2020</span>
       
         <span class="post-info-item">
-          <i class="iconfont iconeye"></i><span id="/2020/12/05/%E8%A7%A3%E5%86%B3Spring%E6%95%B4%E5%90%88Quartz%20Job%E6%97%B6Bean%E4%B8%8D%E8%83%BD%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98/" class="leancloud" data-flag-title="解决Spring整合Quartz Job时Bean不能依赖注入的问题"></span>
+          <i class="iconfont iconeye"></i><span id="/2020/12/06/Java%208%20Stream%20API%E5%AE%9E%E4%BE%8B/" class="leancloud" data-flag-title="Java 8 Stream API实例"></span>
         </span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1870</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3180</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <h1 id="一、问题描述"><a href="#一、问题描述" class="headerlink" title="一、问题描述"></a>一、问题描述</h1><p>项目环境：Spring项目整合org.quartz-scheduler</p>
-<p>问题描述：实现Job类的类中，不能使用@Autowired自动注入Bean</p>
-<h1 id="二、解决教程"><a href="#二、解决教程" class="headerlink" title="二、解决教程"></a>二、解决教程</h1><ul>
-<li>新建CustomJobFactory类</li>
+        <h1 id="一、开篇"><a href="#一、开篇" class="headerlink" title="一、开篇"></a>一、开篇</h1><ol>
+<li>Stream？其实就是处理集合的一种形式，称之为流，在Java8中被引入,可被Collection中的子类调用。</li>
+<li>作用？简化代码，提升你的开发效率。</li>
+<li>不会？看完这篇你就能自己上手了！</li>
+</ol>
+<h1 id="二、实例"><a href="#二、实例" class="headerlink" title="二、实例"></a>二、实例</h1><p>首先将你的集合处理成流，才可以使用此API。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Stream&lt;String&gt; stream &#x3D; list.stream();<br></code></pre></td></tr></table></figure>
+
+<p> 接下来创建一个String类型的List，便于测试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;Integer&gt; list &#x3D; new ArrayList&lt;Integer&gt;();<br>list.add(1);<br>list.add(2);<br>list.add(3);<br>list.add(7);<br>list.add(4);<br>list.add(6);<br></code></pre></td></tr></table></figure>
+
+<p> 接下来展示具体参数使用方式。</p>
+<ul>
+<li>filter 过滤</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs plain">import org.quartz.spi.TriggerFiredBundle;<br>import org.springframework.beans.factory.annotation.Autowired;<br>import org.springframework.beans.factory.config.AutowireCapableBeanFactory;<br>import org.springframework.scheduling.quartz.SpringBeanJobFactory;<br><br>public class CustomJobFactory extends SpringBeanJobFactory&#123;<br>	<br>	@Autowired    <br>    private AutowireCapableBeanFactory capableBeanFactory;    <br>    <br>    @Override    <br>    protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception &#123;    <br>        &#x2F;&#x2F;调用父类的方法    <br>        Object jobInstance &#x3D; super.createJobInstance(bundle);    <br>        &#x2F;&#x2F;进行注入    <br>        capableBeanFactory.autowireBean(jobInstance);    <br>        return jobInstance;    <br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>例：需要过滤出在集合中，大于5的数字的集合。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;Integer&gt; result &#x3D; list.stream().filter(o -&gt; o&gt;5).collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
+
+<p> filter内部使用的是lamda表达式，也是Java8的功能，o代表集合中每一个元素，o&gt;5表示这个元素的值若大于5就返回true,就获取结果。collect表示聚合，Collectors.toList()表示将结果聚合到一个List集合。</p>
+<ul>
+<li>map 形成一个新对象</li>
+</ul>
+<p>例：需要将集合内的元素全部转换成String类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;String&gt; result &#x3D; list.stream().map(o-&gt;String.valueOf(o)).collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
 
 <ul>
-<li>配置spring-context.xml</li>
+<li>sort 排序</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;bean id&#x3D;&quot;customJobFactory&quot; class&#x3D;&quot;com.***.CustomJobFactory&quot;&gt;&lt;&#x2F;bean&gt;<br>	<br>&lt;!-- 声明任务工厂 --&gt;  <br>&lt;bean  id&#x3D;&quot;schedulerFactoryBean&quot;  class&#x3D;&quot;org.springframework.scheduling.quartz.SchedulerFactoryBean&quot;&gt;<br>    &lt;property name&#x3D;&quot;dataSource&quot; ref&#x3D;&quot;dataSource&quot; &#x2F;&gt;<br>    &lt;property name&#x3D;&quot;jobFactory&quot; ref&#x3D;&quot;customJobFactory&quot;&gt;&lt;&#x2F;property&gt;<br>    &lt;property name&#x3D;&quot;configLocation&quot; value&#x3D;&quot;classpath:&#x2F;properties&#x2F;quartz.properties&quot; &#x2F;&gt;  <br>&lt;&#x2F;bean&gt;<br></code></pre></td></tr></table></figure>
+<p>例： 需要从小到大排序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;Integer&gt; result &#x3D; list.stream().sorted().collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
+
+<p>例： 需要从大到小排序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;Integer&gt; result &#x3D; list.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
 
 <ul>
-<li>使用方式</li>
+<li>forEach 遍历</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plain">@DisallowConcurrentExecution  <br>public class testJob implements Job&#123;  <br>  <br>    @Autowired  <br>    private XxxService xxxService;  <br><br>    public void execute(JobExecutionContext context) throws JobExecutionException &#123;<br>        &#x2F;&#x2F; ***<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>例： 打印集合内每个元素。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">list.stream().forEach(o-&gt;System.out.println(o));<br>list.forEach(o-&gt;System.out.println(o));<br></code></pre></td></tr></table></figure>
 
-<p>以上配置即可解决spring bean在quartz-scheduler中不能自动注入的问题。</p>
+<ul>
+<li>distinct 去除重复元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;Integer&gt; result &#x3D; list.stream().distinct().collect(Collectors.toList());<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>reduce 集合内运算</li>
+</ul>
+<p>例： 计算集合中元素的和。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Integer sum &#x3D; list.stream().reduce(0, (i, j) -&gt; i + j);<br></code></pre></td></tr></table></figure>
+
+<p>reduce中第一个参数为基数，即为初始值，i,j的定义为第一个和第二个操作数，i+j即为操作，此处为加法操作。</p>
+<p>如果计算乘法，就不能设置初始值为0，因为0乘任何数都为0。</p>
+<ul>
+<li>collect 聚合成Collection</li>
+</ul>
+<ol>
+<li>Collectors.toMap(Function&lt;? super T, ? extends K&gt; keyMapper, Function&lt;? super T, ? extends U&gt; valueMapper)</li>
+<li>Collectors.toList()</li>
+<li>Collectors.toSet()</li>
+<li>…</li>
+</ol>
+<p>例： 将list聚合成一个key为元素，value为“item”+元素的Map。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Map&lt;Integer, String&gt; map &#x3D; list.stream().collect(Collectors.toMap(Function.identity(), o -&gt; String.format(&quot;item%s&quot;, o)));<br></code></pre></td></tr></table></figure>
+
+<p>结果：{1=item1, 2=item2, 3=item3, 4=item4, 6=item6, 7=item7}</p>
+<p>keyMapper表示设置为key的规则，valueMapper表示设置为value的规则。</p>
+<p>Function.identity()表示当前本身元素。</p>
+<ul>
+<li>groupBy 分组</li>
+</ul>
+<p>Collectors.groupingBy(Function&lt;? super T, ? extends K&gt; classifier)</p>
+<p>新建一个User实体，有姓名和年龄两个字段，并初始化一个集合便于测试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;User&gt; list &#x3D; new ArrayList&lt;User&gt;();<br>list.add(new User(&quot;与李&quot;, 18));<br>list.add(new User(&quot;CSDN&quot;, 19));<br>list.add(new User(&quot;han&quot;, 20));<br>list.add(new User(&quot;han&quot;, 21));<br></code></pre></td></tr></table></figure>
+
+<p>例： 需要把名字相同的实体提出来放在一起，形成一个List集合。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Map&lt;String, List&lt;User&gt;&gt; group &#x3D; list.stream().collect(Collectors.groupingBy(User::getName));<br></code></pre></td></tr></table></figure>
+
+<p>结果：{han=[User [name=han, age=20], User [name=han, age=21]], CSDN=[User [name=CSDN, age=19]], 与李=[User [name=与李, age=18]]}</p>
+<p>此处使用User实体的name属性进行分组。</p>
+<p>User::getName 与 o -&gt; o.getName() 含义相同，两者皆可传入。</p>
+<ul>
+<li>partitioningBy 分区</li>
+</ul>
+<p>Collectors.partitioningBy(Predicate&lt;? super T&gt; predicate)</p>
+<p>例： 分别统计年龄大于等于20和小于20的学生信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Map&lt;Boolean, List&lt;User&gt;&gt; partitioning &#x3D; list.stream().collect(Collectors.partitioningBy(o -&gt; o.getAge() &gt;&#x3D; 20));<br></code></pre></td></tr></table></figure>
+
+<p>结果：{false=[User [name=与李, age=18], User [name=CSDN, age=19]], true=[User [name=han, age=20], User [name=han, age=21]]}</p>
+<p>可以看到返回结果是一个Map&lt;Boolean, List<User>&gt;,利用partitioningBy后生成的map,有且仅有两个元素，key固定为true和false,分别表示满足条件的信息和不不满足条件的信息。</p>
+<h1 id="三、结尾"><a href="#三、结尾" class="headerlink" title="三、结尾"></a>三、结尾</h1><p>此文列举了Stream部分方法的使用,具体更多的方法需要自己去深入了解。通过熟悉使用Stream的api之后，你会对它的处理方式爱不释手。</p>
 
       </section>
       <section class="extra">
@@ -217,7 +291,7 @@
           <ul class="copyright">
   
     <li><strong>本文作者：</strong>韩桂林 (与李)</li>
-    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/05/%E8%A7%A3%E5%86%B3Spring%E6%95%B4%E5%90%88Quartz%20Job%E6%97%B6Bean%E4%B8%8D%E8%83%BD%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;05&#x2F;%E8%A7%A3%E5%86%B3Spring%E6%95%B4%E5%90%88Quartz%20Job%E6%97%B6Bean%E4%B8%8D%E8%83%BD%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;05&#x2F;%E8%A7%A3%E5%86%B3Spring%E6%95%B4%E5%90%88Quartz%20Job%E6%97%B6Bean%E4%B8%8D%E8%83%BD%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98&#x2F;index.html</a></li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/06/Java%208%20Stream%20API%E5%AE%9E%E4%BE%8B/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;06&#x2F;Java%208%20Stream%20API%E5%AE%9E%E4%BE%8B&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;06&#x2F;Java%208%20Stream%20API%E5%AE%9E%E4%BE%8B&#x2F;index.html</a></li>
     <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
   
 </ul>
@@ -234,12 +308,12 @@
 </section>
         
         
-  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Quartz/" rel="tag">Quartz</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li></ul> 
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Stream/" rel="tag">Stream</a></li></ul> 
 
         
   <nav class="nav">
-    <a href="/2020/12/06/Java%208%20Stream%20API%E5%AE%9E%E4%BE%8B/"><i class="iconfont iconleft"></i>Java 8 Stream API实例</a>
-    <a href="/2020/12/05/Solr%E4%B8%93%E9%A2%98%EF%BC%88%E5%9B%9B%EF%BC%89Solr%E5%AE%89%E5%85%A8%E8%AE%BE%E7%BD%AE/">Solr专题（四）Solr安全设置<i class="iconfont iconright"></i></a>
+    <a></a>
+    <a href="/2020/12/05/%E8%A7%A3%E5%86%B3Spring%E6%95%B4%E5%90%88Quartz%20Job%E6%97%B6Bean%E4%B8%8D%E8%83%BD%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98/">解决Spring整合Quartz Job时Bean不能依赖注入的问题<i class="iconfont iconright"></i></a>
   </nav>
 
       </section>
@@ -285,7 +359,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-text">一、问题描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%A7%A3%E5%86%B3%E6%95%99%E7%A8%8B"><span class="toc-text">二、解决教程</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%BC%80%E7%AF%87"><span class="toc-text">一、开篇</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%9E%E4%BE%8B"><span class="toc-text">二、实例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%93%E5%B0%BE"><span class="toc-text">三、结尾</span></a></li></ol>
   </aside>
 
         

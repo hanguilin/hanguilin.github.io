@@ -110,7 +110,10 @@ console.log("%c 简书 %c", "background:#333333; color:#ffffff", "", "https://ww
       if (CONFIG.preview.background.api) {
         $(".preview-image").css("background-image", "url(" + CONFIG.preview.background.api + ")");
       }
-    }
+    },
+	beat: function () {
+		
+	}
   }
 
   var action = {
@@ -236,6 +239,7 @@ console.log("%c 简书 %c", "background:#333333; color:#ffffff", "", "https://ww
     preview: function () {
       fn.background();
       fn.motto();
+	  fn.beat();
     },
     qrcode: function () {
       if (CONFIG.qrcode.type === 'url') {
