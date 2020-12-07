@@ -781,7 +781,7 @@ body span {
   opacity: 1;
 }
 .lazyload {
-  background: url("https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/loading.gif") no-repeat center;
+  background: url("/images/theme/animation_200_kie4qv7b.gif") no-repeat center;
 }
 .loading {
   position: fixed;
