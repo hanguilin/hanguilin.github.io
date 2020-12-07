@@ -904,6 +904,9 @@ body span {
 .footer .footer-copyright {
   text-align: center;
 }
+.footer .footer-count {
+  text-align: center;
+}
 .header {
   text-align: center;
   margin: 100px auto;
