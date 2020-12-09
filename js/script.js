@@ -174,6 +174,10 @@ console.log("%c 简书 %c", "background:#333333; color:#ffffff", "", "https://ww
         fn.hideMenu();
         $(".navbar").removeClass("hide");
       });
+	  $(".menu-wrap").on("click", function () {
+		  fn.hideMenu();
+		  $(".navbar").removeClass("hide");
+	  })
     },
     scroolToTop: function () {
       $(".fab-up").on("click", function () {
