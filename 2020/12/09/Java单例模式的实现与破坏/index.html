@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Java单例模式的实现与破坏 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="单例模式是一种设计模式，是在整个运行过程中只需要产生一...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/h-loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+    </div>
+    <div class="center">Java单例模式的实现与破坏</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/212112-1551792072f791.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Java单例模式的实现与破坏</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 09, 2020</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/09/Java%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E7%A0%B4%E5%9D%8F/" class="leancloud" data-flag-title="Java单例模式的实现与破坏"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>4178</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <p>单例模式是一种设计模式，是在整个运行过程中只需要产生一个实例。那么怎样去创建呢，以下提供了几种方案。</p>
+<h1 id="一、创建单例对象"><a href="#一、创建单例对象" class="headerlink" title="一、创建单例对象"></a>一、创建单例对象</h1><h3 id="懒汉式"><a href="#懒汉式" class="headerlink" title="懒汉式"></a>懒汉式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestSingleton</span> </span>&#123;<br>	<br>	<span class="hljs-comment">// 构造方法私有化</span><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">TestSingleton</span><span class="hljs-params">()</span></span>&#123;&#125;<br>	<br>	<span class="hljs-comment">// 声明实例</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> TestSingleton singleton;<br>	<br>	<span class="hljs-comment">// 提供外部调用方法，生成并获取实例</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> TestSingleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">if</span>(singleton == <span class="hljs-keyword">null</span>) &#123;<br>			singleton = <span class="hljs-keyword">new</span> TestSingleton();<br>		&#125;<br>		<span class="hljs-keyword">return</span> singleton;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>此方案是以时间换空间，启动时并不会执行任何操作，只有被调用时，采取实例化对象。不过这种方法在多线程下不安全，因为两个线程如果同时调用时，会同时通过非空验证的验证，造成创建两个对象的后果，有悖设计初衷。</p>
+<p>针对多线程问题，应该加入双重非空判断：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestSingleton</span> </span>&#123;<br>	<br>	<span class="hljs-comment">// 构造方法私有化</span><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">TestSingleton</span><span class="hljs-params">()</span></span>&#123;&#125;<br>	<br>	<span class="hljs-comment">// 声明实例</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">volatile</span> TestSingleton singleton;<br>	<br>	<span class="hljs-comment">// 提供外部调用方法，生成并获取实例</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> TestSingleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">if</span>(singleton == <span class="hljs-keyword">null</span>) &#123;<br>			<span class="hljs-keyword">synchronized</span> (TestSingleton.class) &#123;<br>				<span class="hljs-keyword">if</span>(singleton == <span class="hljs-keyword">null</span>) &#123;<br>					singleton = <span class="hljs-keyword">new</span> TestSingleton();<br>				&#125;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">return</span> singleton;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestSingleton</span> </span>&#123;<br>	<br>	<span class="hljs-comment">// 构造方法私有化</span><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">TestSingleton</span><span class="hljs-params">()</span></span>&#123;&#125;<br>	<br>	<span class="hljs-comment">// 声明并生成实例</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> TestSingleton singleton = <span class="hljs-keyword">new</span> TestSingleton();<br>	<br>	<span class="hljs-comment">// 提供外部调用方法，获取实例</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> TestSingleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> singleton;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>以空间换时间，类一加载时，就对其进行实例化，后面调用时直接提供对象实例。</p>
+<h3 id="静态内部类实现懒加载"><a href="#静态内部类实现懒加载" class="headerlink" title="静态内部类实现懒加载"></a>静态内部类实现懒加载</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestSingleton</span> </span>&#123;<br>	<br>	<span class="hljs-comment">// 构造方法私有化</span><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">TestSingleton</span><span class="hljs-params">()</span></span>&#123;&#125;<br>	<br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestSingletonFactory</span></span>&#123;<br>		<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> TestSingleton singleton = <span class="hljs-keyword">new</span> TestSingleton();<br>	&#125;<br>	<br>	<span class="hljs-comment">// 提供外部调用方法，获取实例</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> TestSingleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> TestSingletonFactory.singleton;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>当getInstance方法被调用时，才会初始化静态内部类TestSingletonFactory的静态变量singleton。此处由JVM来保障线程安全。</p>
+<h1 id="二、破坏单例"><a href="#二、破坏单例" class="headerlink" title="二、破坏单例"></a>二、破坏单例</h1><p>实现单例后，按照预期结果应该所有对象都是同一个对象。但是以下有几种情况可以破坏单例的性质。</p>
+<p>首先让单例类实现Serializable, Cloneable接口，以便实验。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestSingleton</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span>, <span class="hljs-title">Cloneable</span></span>&#123;<br><br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1L</span>;<br><br>	<span class="hljs-comment">// 构造方法私有化</span><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">TestSingleton</span><span class="hljs-params">()</span></span>&#123;&#125;<br><br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestSingletonFactory</span></span>&#123;<br>		<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> TestSingleton singleton = <span class="hljs-keyword">new</span> TestSingleton();<br>	&#125;<br><br>	<span class="hljs-comment">// 提供外部调用方法，获取实例</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> TestSingleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> TestSingletonFactory.singleton;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>序列化</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 获取实例</span><br>TestSingleton originSingleton = TestSingleton.getInstance();<br><span class="hljs-comment">// 写出对象</span><br>ByteArrayOutputStream bos = <span class="hljs-keyword">new</span> ByteArrayOutputStream();<br>ObjectOutputStream oos = <span class="hljs-keyword">new</span> ObjectOutputStream(bos);<br>oos.writeObject(originSingleton);<br><span class="hljs-comment">// 写入对象</span><br>ByteArrayInputStream bis = <span class="hljs-keyword">new</span> ByteArrayInputStream(bos.toByteArray());<br>ObjectInputStream ois = <span class="hljs-keyword">new</span> ObjectInputStream(bis);<br>TestSingleton serializeSingleton = (TestSingleton) ois.readObject();<br><span class="hljs-comment">// 判断两个对象是否相等</span><br>System.out.println(originSingleton == serializeSingleton); <span class="hljs-comment">// false</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>反射</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 反射</span><br>Class&lt;TestSingleton&gt; clazz = TestSingleton.class;<br><span class="hljs-comment">// 获取无参构造函数</span><br>Constructor&lt;TestSingleton&gt; constructor = clazz.getDeclaredConstructor();<br><span class="hljs-comment">// 将私有设置为可见</span><br>constructor.setAccessible(<span class="hljs-keyword">true</span>);<br><span class="hljs-comment">// 用构造器生成实例</span><br>TestSingleton instance = constructor.newInstance();<br><span class="hljs-comment">// 判断两个对象是否相等</span><br>System.out.println(originSingleton == instance); <span class="hljs-comment">// false</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>克隆</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 克隆</span><br>TestSingleton clone = (TestSingleton) originSingleton.clone();<br>System.out.println(originSingleton == clone); <span class="hljs-comment">// false</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="三、修复破坏"><a href="#三、修复破坏" class="headerlink" title="三、修复破坏"></a>三、修复破坏</h1><p>对于这种预料之外的结果，我们应该怎样去控制呢？</p>
+<ul>
+<li>序列化</li>
+</ul>
+<p>添加readResolve方法，返回Object。</p>
+<ul>
+<li>反射</li>
+</ul>
+<p>添加全局可见变量，如果再次调用构造方法生成实例时，抛出运行时错误。</p>
+<ul>
+<li>克隆</li>
+</ul>
+<p>重写clone方法，直接返回单例对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestSingleton</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span>, <span class="hljs-title">Cloneable</span></span>&#123;<br><br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1L</span>;<br>	<br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">boolean</span> isCreated = <span class="hljs-keyword">false</span>;<span class="hljs-comment">//默认是第一次创建</span><br><br>	<span class="hljs-comment">// 构造方法私有化</span><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">TestSingleton</span><span class="hljs-params">()</span></span>&#123;<br>		<span class="hljs-keyword">if</span>(isCreated) &#123;<br>			<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;实例已经被创建&quot;</span>);<br>		&#125;<br>		isCreated = <span class="hljs-keyword">true</span>;<br>	&#125;<br><br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestSingletonFactory</span></span>&#123;<br>		<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> TestSingleton singleton = <span class="hljs-keyword">new</span> TestSingleton();<br>	&#125;<br><br>	<span class="hljs-comment">// 提供外部调用方法，获取实例</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> TestSingleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> TestSingletonFactory.singleton;<br>	&#125;<br>	<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">protected</span> Object <span class="hljs-title">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException </span>&#123;<br>		<span class="hljs-keyword">return</span> getInstance();<br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 防止序列化破环</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> Object <span class="hljs-title">readResolve</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> getInstance();<br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/09/Java%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E7%A0%B4%E5%9D%8F/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;09&#x2F;Java%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E7%A0%B4%E5%9D%8F&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;09&#x2F;Java%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E7%A0%B4%E5%9D%8F&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" rel="tag">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2020/12/09/%E5%85%B3%E4%BA%8EJava%E4%BB%A3%E7%90%86%E9%82%A3%E4%BA%9B%E4%BA%8B%E5%84%BF/"><i class="iconfont iconleft"></i>关于Java代理那些事儿</a>
+    <a href="/2020/12/09/Java%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B9%8BCache%E6%A8%A1%E5%BC%8F/">Java数据类型之Cache模式<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "雁过留痕",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-2">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%88%9B%E5%BB%BA%E5%8D%95%E4%BE%8B%E5%AF%B9%E8%B1%A1"><span class="toc-text">一、创建单例对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%87%92%E6%B1%89%E5%BC%8F"><span class="toc-text">懒汉式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A5%BF%E6%B1%89%E5%BC%8F"><span class="toc-text">饿汉式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB%E5%AE%9E%E7%8E%B0%E6%87%92%E5%8A%A0%E8%BD%BD"><span class="toc-text">静态内部类实现懒加载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%A0%B4%E5%9D%8F%E5%8D%95%E4%BE%8B"><span class="toc-text">二、破坏单例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BF%AE%E5%A4%8D%E7%A0%B4%E5%9D%8F"><span class="toc-text">三、修复破坏</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</html>
