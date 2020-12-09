@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Java数据类型之Cache模式 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="1、关于Java数据类型基本数据类型基本数据类型有8种...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/h-loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+    </div>
+    <div class="center">Java数据类型之Cache模式</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/123945-1496983185ad61.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Java数据类型之Cache模式</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 09, 2020</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/09/Java%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B9%8BCache%E6%A8%A1%E5%BC%8F/" class="leancloud" data-flag-title="Java数据类型之Cache模式"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3171</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="1、关于Java数据类型"><a href="#1、关于Java数据类型" class="headerlink" title="1、关于Java数据类型"></a>1、关于Java数据类型</h1><h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><p>基本数据类型有8种，每种基本数据类型都有对应的引用类型。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+<th>长度</th>
+<th>可表示数据</th>
+<th>包装类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean</td>
+<td>布尔型</td>
+<td>1</td>
+<td>true、false</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>字节型</td>
+<td>1</td>
+<td>2<sup>-7</sup>~2<sup>7</sup>-1</td>
+<td>Byte</td>
+</tr>
+<tr>
+<td>char</td>
+<td>字符型</td>
+<td>2</td>
+<td>2<sup>-15</sup>~2<sup>15</sup>-1</td>
+<td>Character</td>
+</tr>
+<tr>
+<td>short</td>
+<td>短整型</td>
+<td>2</td>
+<td>2<sup>-15</sup>~2<sup>15</sup>-1</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>int</td>
+<td>整型</td>
+<td>4</td>
+<td>2<sup>-31</sup>~2<sup>31</sup>-1</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>float</td>
+<td>浮点型</td>
+<td>4</td>
+<td>2<sup>-31</sup>~2<sup>31</sup>-1</td>
+<td>Float</td>
+</tr>
+<tr>
+<td>long</td>
+<td>长整型</td>
+<td>8</td>
+<td>2<sup>-63</sup>~2<sup>63</sup>-1</td>
+<td>Long</td>
+</tr>
+<tr>
+<td>double</td>
+<td>双精度浮点型</td>
+<td>8</td>
+<td>2<sup>-63</sup>~2<sup>63</sup>-1</td>
+<td>Double</td>
+</tr>
+</tbody></table>
+<h2 id="为什么要有包装类型？"><a href="#为什么要有包装类型？" class="headerlink" title="为什么要有包装类型？"></a>为什么要有包装类型？</h2><p>因为Java是面向对象语言，很多地方用到的是对象，而不是基本数据类型。比如集合类中，我们是无法定义集合的泛型是基本数据类型的。而包装类，顾名思义，就是将基本数据类型包装起来，使其具备了对象的性质，也为其添加了很多操作方法。</p>
+<h2 id="自动装箱与拆箱"><a href="#自动装箱与拆箱" class="headerlink" title="自动装箱与拆箱"></a>自动装箱与拆箱</h2><p>自动装箱: 就是将基本数据类型自动转换成对应的包装类。</p>
+<p>自动拆箱：就是将包装类自动转换成对应的基本数据类型。</p>
+<p>为什么要有自动装拆箱呢？因为很多地方都是需要其进行转换的，而重复操作又会显得很多余，所以为其提供了自动适配功能。</p>
+<p>那么哪些地方能用到呢？举两个最常用的例子。</p>
+<ol>
+<li>类型转换</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">Integer i = <span class="hljs-number">10</span>; <span class="hljs-comment">// 自动装箱</span><br><span class="hljs-keyword">int</span> a = i; <span class="hljs-comment">// 自动拆箱</span><br></code></pre></td></tr></table></figure>
+
+<p>2）存入集合</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;Integer&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;Integer&gt;();<br><span class="hljs-keyword">int</span> a = <span class="hljs-number">1</span>;<br>list.add(a); <span class="hljs-comment">// 自动装箱</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="2、Cache"><a href="#2、Cache" class="headerlink" title="2、Cache"></a>2、Cache</h1><p>顾名思义，Cache就是缓存的意思。那数据类型里面哪些地方用到Cache呢？它具备什么作用？</p>
+<p>首先抛出一道题，请大家参考。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">Integer a = Integer.valueOf(<span class="hljs-number">20</span>);<br>Integer b = Integer.valueOf(<span class="hljs-number">20</span>);<br>System.out.println(a == b);<br></code></pre></td></tr></table></figure>
+
+<p>结果相等吗？是相等的。输出true。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">Integer a = Integer.valueOf(<span class="hljs-number">128</span>);<br>Integer b = Integer.valueOf(<span class="hljs-number">128</span>);<br>System.out.println(a == b);<br></code></pre></td></tr></table></figure>
+
+<p>这里结果不相等的，为啥？128！=128？</p>
+<p>首先来看valueOf这个方法：</p>
+<ul>
+<li>Integer valueOf(String s, int radix)</li>
+</ul>
+<p>将字符串以规定进制转换成Integer,radix表示进制数。</p>
+<ul>
+<li>Integer valueOf(String s)</li>
+</ul>
+<p>将字符串转换为10进制的Integer。</p>
+<ul>
+<li>Integer valueOf(int i)</li>
+</ul>
+<p>将基本数据类型转换为包装类。</p>
+<p>为什么会造成两个相同数字比较出来不相同呢？来，我们上源码。</p>
+<p>前两个方法最终调用的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Integer <span class="hljs-title">valueOf</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>&#123;<br>    <span class="hljs-comment">// 如果值在IntegerCache的低位和高位之间就从IntegerCache里取</span><br>    <span class="hljs-keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)<br>        <span class="hljs-keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];<br>    <span class="hljs-comment">// 否则new一个对象</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Integer(i);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>IntegerCache是Integer中的一个静态内部类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IntegerCache</span> </span>&#123;<br>        <span class="hljs-comment">// 低位固定为-128</span><br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> low = -<span class="hljs-number">128</span>;<br>        <span class="hljs-comment">// 高位</span><br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> high;<br>        <span class="hljs-comment">// 存放缓存区数据</span><br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Integer cache[];<br><br>        <span class="hljs-keyword">static</span> &#123;<br>            <span class="hljs-comment">// 高位默认为127</span><br>            <span class="hljs-keyword">int</span> h = <span class="hljs-number">127</span>;<br>            <span class="hljs-comment">// 可以通过配置</span><br>            String integerCacheHighPropValue =<br>                sun.misc.VM.getSavedProperty(<span class="hljs-string">&quot;java.lang.Integer.IntegerCache.high&quot;</span>);<br>            <span class="hljs-keyword">if</span> (integerCacheHighPropValue != <span class="hljs-keyword">null</span>) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 将配置值转换为基本数据类型</span><br>                    <span class="hljs-keyword">int</span> i = parseInt(integerCacheHighPropValue);<br>                    <span class="hljs-comment">// 将配置值与127比较取最大值</span><br>                    i = Math.max(i, <span class="hljs-number">127</span>);<br>                    <span class="hljs-comment">// 确定高位值，防止数组长度超过整型最大值</span><br>                    h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="hljs-number">1</span>);<br>                &#125; <span class="hljs-keyword">catch</span>( NumberFormatException nfe) &#123;<br>                    <span class="hljs-comment">// If the property cannot be parsed into an int, ignore it.</span><br>                &#125;<br>            &#125;<br>            high = h;<br>            <br>            <span class="hljs-comment">// 初始化数组大小</span><br>            cache = <span class="hljs-keyword">new</span> Integer[(high - low) + <span class="hljs-number">1</span>];<br>            <span class="hljs-keyword">int</span> j = low;<br>            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; cache.length; k++)<br>                <span class="hljs-comment">// 初始化数组数据</span><br>                cache[k] = <span class="hljs-keyword">new</span> Integer(j++);<br><br>            <span class="hljs-comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span><br>            <span class="hljs-comment">// 如果高位值大于等于127，则抛出异常</span><br>            <span class="hljs-keyword">assert</span> IntegerCache.high &gt;= <span class="hljs-number">127</span>;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">IntegerCache</span><span class="hljs-params">()</span> </span>&#123;&#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>因为128超过了整型缓存区域，所以每次都会new一个对象，所以导致比较出来不相等。</p>
+<p>Short、Long、Character等内部都有Cache区域，建议大家多去挖掘挖掘。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/09/Java%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B9%8BCache%E6%A8%A1%E5%BC%8F/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;09&#x2F;Java%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B9%8BCache%E6%A8%A1%E5%BC%8F&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;09&#x2F;Java%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B9%8BCache%E6%A8%A1%E5%BC%8F&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" rel="tag">数据类型</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2020/12/09/%E7%90%86%E8%A7%A3%E5%B9%B6%E6%89%8B%E5%86%99%E7%AE%80%E6%98%93%E7%9A%84SpringMVC%E6%A1%86%E6%9E%B6/">理解并手写简易的SpringMVC框架<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "雁过留痕",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-2">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81%E5%85%B3%E4%BA%8EJava%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">1、关于Java数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">基本数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B%EF%BC%9F"><span class="toc-text">为什么要有包装类型？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1"><span class="toc-text">自动装箱与拆箱</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81Cache"><span class="toc-text">2、Cache</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</html>
