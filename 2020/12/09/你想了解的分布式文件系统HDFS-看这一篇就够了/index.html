@@ -1,0 +1,652 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>你想了解的分布式文件系统HDFS,看这一篇就够了 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="1、分布式文件系统计算机集群结构分布式文件系统把文件分...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/h-loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+    </div>
+    <div class="center">你想了解的分布式文件系统HDFS,看这一篇就够了</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/222204-1515594124525e.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">你想了解的分布式文件系统HDFS,看这一篇就够了</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 09, 2020</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/09/%E4%BD%A0%E6%83%B3%E4%BA%86%E8%A7%A3%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS-%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86/" class="leancloud" data-flag-title="你想了解的分布式文件系统HDFS,看这一篇就够了"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>13451</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="1、分布式文件系统"><a href="#1、分布式文件系统" class="headerlink" title="1、分布式文件系统"></a>1、分布式文件系统</h1><h2 id="计算机集群结构"><a href="#计算机集群结构" class="headerlink" title="计算机集群结构"></a>计算机集群结构</h2><p>分布式文件系统把文件分布存储到多个节点（计算机）上，成千上万的计算机节点构成计算机集群。</p>
+<p>分布式文件系统使用的计算机集群，其配置都是由普通硬件构成的，与用多个处理器和专用高级硬件的并行化处理装置相比，前者大大降低了硬件上的开销。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614135454473.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="分布式文件系统的结构"><a href="#分布式文件系统的结构" class="headerlink" title="分布式文件系统的结构"></a>分布式文件系统的结构</h2><p>分布式文件系统在物理结构上是由众多阶段及节点构成的，而这些节点中分为两类。一类是主节点（Master Node），又被称为名称节点（NameNode），另一类是从节点（Slave Node），又被称为数据节点（DataNode）。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614141133269.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h1 id="2、HDFS简介"><a href="#2、HDFS简介" class="headerlink" title="2、HDFS简介"></a>2、HDFS简介</h1><p>官方用户指南：<a target="_blank" rel="noopener" href="http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html">http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html</a></p>
+<p>Hadoop是由HDFS和MapReduce两大组件组成的，HDFS全称为Hadoop Distributed File System（Hadoop 分布式文件系统）。</p>
+<p>它和现有的分布式文件系统有很多共同点。但同时，它和其他的分布式文件系统的区别也是很明显的。HDFS是一个高度容错性的系统，适合部署在廉价的机器上。HDFS能提供高吞吐量的数据访问，非常适合大规模数据集上的应用。</p>
+<p>HDFS要实现的目标：</p>
+<ul>
+<li><strong>兼容廉价的硬件设备</strong></li>
+<li><strong>流数据读写</strong></li>
+<li><strong>大数据集</strong></li>
+<li><strong>简单的文件类型</strong></li>
+<li><strong>强大的跨平台兼容性</strong></li>
+</ul>
+<p>HDFS局限性：</p>
+<ul>
+<li>不适合低延迟数据访问</li>
+<li>无法高效存储大量小文件（与自身实现有关）</li>
+<li>不支持多用户写入及任意修改文件</li>
+</ul>
+<h1 id="3、HDFS相关概念"><a href="#3、HDFS相关概念" class="headerlink" title="3、HDFS相关概念"></a>3、HDFS相关概念</h1><h2 id="块"><a href="#块" class="headerlink" title="块"></a>块</h2><p>“块”在HDFS中作为最小存储单位，默认一个块为64MB。在HDFS中，一个文件将会被分割成多个块，保存到各个数据节点。块的大小远远高于普通文件系统，可以最小化寻址开销。</p>
+<p>HDFS中抽象的块模型可以带来如下好处：</p>
+<ul>
+<li><strong>支持大规模文件存储</strong></li>
+</ul>
+<p>单个文件被分成若干个块，分别存储到若干个数据节点中，其文件大小不会受到单个节点容量的限制。</p>
+<ul>
+<li><strong>简化系统设计</strong></li>
+</ul>
+<p>文件块大小是固定的，可以很容易计算出一个节点中可以存储多少个文件块。方便了元数据的管理，元数据不需要和文件块一起保存，可以由其它系统负责管理元数据。</p>
+<ul>
+<li><strong>适合数据备份</strong></li>
+</ul>
+<p>每个文件块都可以冗余的存储到多个数据节点上，当一个节点数据出错时，就可以根据其他副本节点恢复数据。大大提高了系统的容错性与高可用性。</p>
+<h2 id="名称节点（NameNode）和数据节点-DataNode"><a href="#名称节点（NameNode）和数据节点-DataNode" class="headerlink" title="名称节点（NameNode）和数据节点(DataNode)"></a>名称节点（NameNode）和数据节点(DataNode)</h2><p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614144546843.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> NameNode与SecondaryNameNode同为“名称节点”。SecondaryNameNode作为二级名称节点，它与NameNode的关系是：SecondaryNameNode是NameNode的冷备份。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>功能</th>
+<th>位置</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NameNode</td>
+<td>存储元数据</td>
+<td>元数据保存在内存中</td>
+<td>保存文件、block、DataNode之间的映射关系</td>
+</tr>
+<tr>
+<td>DataNode</td>
+<td>存储文件内容</td>
+<td>文件内容保存到磁盘</td>
+<td>维护了block id到DataNode本地文件的映射关系</td>
+</tr>
+</tbody></table>
+<h2 id="名称节点的数据结构"><a href="#名称节点的数据结构" class="headerlink" title="名称节点的数据结构"></a>名称节点的数据结构</h2><p>在HDFS中，名称节点（NameNode）负责管理分布式文件系统的命名空间 （Namespace），保存了两个核心的数据结构，即FsImage和EditLog 。名称节点记录了每个文件中各个块所在的数据节点的位置信息。</p>
+<ul>
+<li>FsImage</li>
+</ul>
+<p>用于维护文件系统树以及文件树中所有的文件和文件夹的元数据 。</p>
+<ul>
+<li>EditLog</li>
+</ul>
+<p>操作日志文件，其中记录了所有针对文件的创建、删除、重命名等操作 。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614151116386.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="FsImage"><a href="#FsImage" class="headerlink" title="FsImage"></a>FsImage</h2><p>FsImage文件包含文件系统中所有目录和文件inode的序列化形式。每个inode是一 个文件或目录的元数据的内部表示，并包含此类信息：文件的复制等级、修改和访问 时间、访问权限、块大小以及组成文件的块。对于目录，则存储修改时间、权限和配 额元数据 。</p>
+<p>FsImage文件没有记录块存储在哪个数据节点。而是由名称节点把这些映射保留在 内存中，当数据节点加入HDFS集群时，数据节点会把自己所包含的块列表告知给名 称节点，此后会定期执行这种告知操作，以确保名称节点的块映射是最新的。</p>
+<h2 id="名称节点的启动"><a href="#名称节点的启动" class="headerlink" title="名称节点的启动"></a>名称节点的启动</h2><p>在名称节点启动的时候，它会将FsImage文件中的内容加载到内存中，之后再执行 EditLog文件中的各项操作，使得内存中的元数据和实际的同步，存在内存中的元数 据支持客户端的读操作。</p>
+<p>一旦在内存中成功建立文件系统元数据的映射，则创建一个新的FsImage文件和一个空的EditLog文件。</p>
+<p>名称节点起来之后，HDFS中的更新操作会重新写到EditLog文件中，因为FsImage 文件一般都很大（GB级别的很常见），如果所有的更新操作都往FsImage文件中添 加，这样会导致系统运行的十分缓慢，但是，如果往EditLog文件里面写就不会这样 ，因为EditLog 要小很多。每次执行写操作之后，且在向客户端发送成功代码之前， edits文件都需要同步更新。</p>
+<h2 id="名称节点运行期间EditLog不断变大的问题"><a href="#名称节点运行期间EditLog不断变大的问题" class="headerlink" title="名称节点运行期间EditLog不断变大的问题"></a>名称节点运行期间EditLog不断变大的问题</h2><p>在名称节点运行期间，HDFS的所有更新操作都是直接写到EditLog中，久而久之， EditLog文 件将会变得很大 。</p>
+<p>虽然这对名称节点运行时候是没有什么明显影响的，但是，当名称节点重启的时候，名称节点 需要先将FsImage里面的所有内容映像到内存中，然后再一条一条地执行EditLog中的记录，当EditLog文件非常大的时候，会导致名称节点启动操作非常慢，而在这段时间内HDFS系统处于安全模式，一直无法对外提供写操作，影响了用户的使用。</p>
+<p>名称节点运行期间EditLog不断变大的问题，如何解决？答案是：SecondaryNameNode<strong>第二名称节点</strong>。</p>
+<p>第二名称节点是HDFS架构中的一个组成部分，它是用来保存名称节点中对HDFS元数据信息的备份，并减少名称节点重启的时间。SecondaryNameNode一般是单独运行在一台机器上。</p>
+<p>SecondaryNameNode的工作情况：</p>
+<p>（1）SecondaryNameNode会定期和NameNode 通信，请求其停止使用EditLog文件，暂时将新的写操作写到一个新的文件edit.new上来，这个操作是瞬间完成，上层写日志的函数完全感觉不到差别。</p>
+<p>（2）SecondaryNameNode通过HTTP GET方式从NameNode上获取到FsImage和EditLog文件，并下载到本地的相应目录下。</p>
+<p>（3）SecondaryNameNode将下载下来的FsImage载入到内存，然后一条一条地执行EditLog文件中的各项更新操作，使得内存中的 FsImage保持最新；这个过程就是EditLog和 FsImage文件合并。</p>
+<p>（4）SecondaryNameNode执行完（3）操作之后，会通过post方式将新的FsImage文件发送到NameNode节点上 。</p>
+<p>（5）NameNode将从SecondaryNameNode接收到的新的FsImage替换旧的FsImage文件， 同时将edit.new替换EditLog文件，通过这个过程EditLog就变小了。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614153302381.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="数据节点（DataNode）"><a href="#数据节点（DataNode）" class="headerlink" title="数据节点（DataNode）"></a>数据节点（DataNode）</h2><p>数据节点是分布式文件系统HDFS的工作节点，负责数据的存储和读取，会根据客 户端或者是名称节点的调度来进行数据的存储和检索，并且向名称节点定期发送自己 所存储的块的列表 。</p>
+<p>每个数据节点中的数据会被保存在各自节点的本地Linux文件系统中。</p>
+<h1 id="4、HDFS体系结构"><a href="#4、HDFS体系结构" class="headerlink" title="4、HDFS体系结构"></a>4、HDFS体系结构</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>HDFS采用了主从（Master/Slave）结构模型，一个HDFS集群包括一个名称节点（ NameNode）和若干个数据节点（DataNode）。名称节点作为中心服务器， 负责管理文件系统的命名空间及客户端对文件的访问。集群中的数据节点一般是一个节点运行 一个数据节点进程，负责处理文件系统客户端的读/写请求，在名称节点的统一调度下进行数据 块的创建、删除和复制等操作。每个数据节点的数据实际上是保存在本地Linux文件系统中的。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614155053316.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="HDFS命名空间管理"><a href="#HDFS命名空间管理" class="headerlink" title="HDFS命名空间管理"></a>HDFS命名空间管理</h2><p>HDFS的命名空间包含目录、文件和块。</p>
+<p>在HDFS1.0体系结构中，在整个HDFS集群中只有一个命名空间，并且只有唯一一个名称节点，该节点负责对这个命名空间进行管理 。</p>
+<p>HDFS使用的是传统的分级文件体系，因此，用户可以像使用普通文件系统一样，创建、删除目录和文件，在目录间转移文件，重命名文件等。</p>
+<h2 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h2><p>HDFS是一个部署在集群上的分布式文件系统，因此，很多数据需要通过网络进行传输。</p>
+<p>所有的HDFS通信协议都是构建在TCP/IP协议基础之上的。</p>
+<p>客户端通过一个可配置的端口向名称节点主动发起TCP连接，并使用客户端协议与 名称节点进行交互。 </p>
+<p>名称节点和数据节点之间则使用数据节点协议进行交互。</p>
+<p>客户端与数据节点的交互是通过RPC（Remote Procedure Call）来实现的。在设 计上，名称节点不会主动发起RPC，而是响应来自客户端和数据节点的RPC请求。</p>
+<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>客户端是用户操作HDFS最常用的方式，HDFS在部署时都提供了客户端。</p>
+<p>HDFS客户端是一个库，暴露了HDFS文件系统接口，这些接口隐藏了HDFS实现中的大部分复杂性。 </p>
+<p>严格来说，客户端并不算是HDFS的一部分。</p>
+<p>客户端可以支持打开、读取、写入等常见的操作，并且提供了类似Shell的命令行方式来访问HDFS中的数据</p>
+<p>此外，HDFS也提供了Java API，作为应用程序访问文件系统的客户端编程接口。</p>
+<h2 id="HDFS体系结构的局限性"><a href="#HDFS体系结构的局限性" class="headerlink" title="HDFS体系结构的局限性"></a>HDFS体系结构的局限性</h2><p>HDFS只设置唯一一个名称节点，这样做虽然大大简化了系统设计，但也带来了一些 明显的局限性，具体如下：</p>
+<p>（1）命名空间的限制：名称节点是保存在内存中的，因此，名称节点能够容纳的 对象（文件、块）的个数会受到内存空间大小的限制。</p>
+<p>（2）性能的瓶颈：整个分布式文件系统的吞吐量，受限于单个名称节点的吞吐量。</p>
+<p>（3）隔离问题：由于集群中只有一个名称节点，只有一个命名空间，因此，无法 对不同应用程序进行隔离。</p>
+<p>（4）集群的可用性：一旦这个唯一的名称节点发生故障，会导致整个集群变得不 可用。</p>
+<h1 id="5、HDFS存储原理"><a href="#5、HDFS存储原理" class="headerlink" title="5、HDFS存储原理"></a>5、HDFS存储原理</h1><h2 id="冗余数据保存"><a href="#冗余数据保存" class="headerlink" title="冗余数据保存"></a>冗余数据保存</h2><p>作为一个分布式文件系统，为了保证系统的容错性和可用性，HDFS采用了多副 本方式对数据进行冗余存储，通常一个数据块的多个副本会被分布到不同的数据节点 上，如图所示，数据块1被分别存放到数据节点A和C上，数据块2被存放在数据节 点A和B上。</p>
+<p>这种多副本方式具有以下几个优点：</p>
+<p>（1）加快数据传输速度。</p>
+<p>（2）容易检查数据错误。</p>
+<p>（3）保证数据可靠性。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614160824515.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="数据存取策略"><a href="#数据存取策略" class="headerlink" title="数据存取策略"></a>数据存取策略</h2><h3 id="数据存放"><a href="#数据存放" class="headerlink" title="数据存放"></a>数据存放</h3><p>Block的副本放置策略：</p>
+<p>第一个副本：放置在上传文件的数据节点；如果是集群外提交，则随机挑选一台磁盘 不太满、CPU不太忙的节点。</p>
+<p>第二个副本：放置在与第一个副本不同的机架的节点上。</p>
+<p>第三个副本：与第一个副本相同机架的其他节点上。</p>
+<p>更多副本：随机节点。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614161001800.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h3 id="数据读取"><a href="#数据读取" class="headerlink" title="数据读取"></a>数据读取</h3><p>HDFS提供了一个API可以确定一个数据节点所属的机架ID，客户端也可以调用API 获取自己所属的机架ID。</p>
+<p>当客户端读取数据时，从名称节点获得数据块不同副本的存放位置列表，列表中包 含了副本所在的数据节点，可以调用API来确定客户端和这些数据节点所属的机架ID， 当发现某个数据块副本对应的机架ID和客户端对应的机架ID相同时，就优先选择该副本读取数据，如果没有发现，就随机选择一个副本读取数据。</p>
+<h2 id="数据错误与恢复"><a href="#数据错误与恢复" class="headerlink" title="数据错误与恢复"></a>数据错误与恢复</h2><p>HDFS具有较高的容错性，可以兼容廉价的硬件，它把硬件出错看作一种常态， 而不是异常，并设计了相应的机制检测数据错误和进行自动恢复，主要包括以下几种 情形：名称节点出错、数据节点出错和数据出错。</p>
+<h3 id="名称节点出错"><a href="#名称节点出错" class="headerlink" title="名称节点出错"></a>名称节点出错</h3><p>名称节点保存了所有的元数据信息，其中，最核心的两大数据结构是FsImage和Editlog，如果这两个文件发生损坏，那么整个HDFS实例将失效。因此，HDFS设置了备份机制，把这些核心文件同步复制到备份服务器SecondaryNameNode上。当名称节点出错时，就可以根据备份服务器SecondaryNameNode中的FsImage和Editlog数据进行恢复。</p>
+<h3 id="数据节点出错"><a href="#数据节点出错" class="headerlink" title="数据节点出错"></a>数据节点出错</h3><p>每个数据节点会定期向名称节点发送“心跳”信息，向名称节点报告自己的状态。</p>
+<p>当数据节点发生故障，或者网络发生断网时，名称节点就无法收到来自一些数据节点的心跳信息，这时，这些数据节点就会被标记为“宕机”，节点上面的所有数据都会被标记为“不可读”，名称节点不会再给它们发送任何I/O请求。</p>
+<p>这时，有可能出现一种情形，即由于一些数据节点的不可用，会导致一些数据块的副本数量小于冗余因子。 </p>
+<p>名称节点会定期检查这种情况，一旦发现某个数据块的副本数量小于冗余因子，就会启动数据冗余复制，为它生成新的副本。 </p>
+<p>HDFS和其它分布式文件系统的最大区别就是可以调整冗余数据的位置。</p>
+<h3 id="数据出错"><a href="#数据出错" class="headerlink" title="数据出错"></a>数据出错</h3><p>网络传输和磁盘错误等因素，都会造成数据错误。 </p>
+<p>客户端在读取到数据后，会采用md5和sha1对数据块进行校验，以确定读取到正确的数据。 </p>
+<p>在文件被创建时，客户端就会对每一个文件块进行信息摘录，并把这些信息写入到同一个路径的隐藏文件里面。 </p>
+<p>当客户端读取文件的时候，会先读取该信息文件，然后，利用该信息文件对每个读 取的数据块进行校验，如果校验出错，客户端就会请求到另外一个数据节点读取该文件块，并且向名称节点报告这个文件块有错误，名称节点会定期检查并且重新复制这个块。</p>
+<h1 id="6、HDFS读写过程"><a href="#6、HDFS读写过程" class="headerlink" title="6、HDFS读写过程"></a>6、HDFS读写过程</h1><p>FileSystem是一个通用文件系统的抽象基类，可以被分布式文件系统继承，所有可能使用 Hadoop文件系统的代码，都要使用这个类。</p>
+<p>Hadoop为FileSystem这个抽象类提供了多种具体实现。</p>
+<p>DistributedFileSystem就是FileSystem在HDFS文件系统中的具体实现。</p>
+<p>FileSystem的open()方法返回的是一个输入流FSDataInputStream对象，在HDFS文件系统中 ，具体的输入流就是DFSInputStream；FileSystem中的create()方法返回的是一个输出流 FSDataOutputStream对象，在HDFS文件系统中，具体的输出流就是DFSOutputStream。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">Configuration conf = <span class="hljs-keyword">new</span> Configuration();<br>FileSystem fs = FileSystem.get(conf);<br>FSDataInputStream in = fs.open(<span class="hljs-keyword">new</span> Path(uri));<br>FSDataOutputStream out = fs.create(<span class="hljs-keyword">new</span> Path(uri));<br></code></pre></td></tr></table></figure>
+
+<p>备注：创建一个Configuration对象时，其构造方法会默认加载工程项目下两个配置文件，分别是 hdfs-site.xml以及core-site.xml，这两个文件中会有访问HDFS所需的参数值，主要是 fs.defaultFS，指定了HDFS的地址（比如hdfs://localhost:9000），有了这个地址客户端就可以 通过这个地址访问HDFS了。</p>
+<h2 id="读取文件"><a href="#读取文件" class="headerlink" title="读取文件"></a>读取文件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.io.BufferedReader;<br><span class="hljs-keyword">import</span> java.io.InputStreamReader ;<br><span class="hljs-keyword">import</span> org.apache.hadoop.conf.Configuration ;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FileSystem ;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.Path ;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FSDataInputStream ;<br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Chapter3</span> </span>&#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>		<span class="hljs-keyword">try</span> &#123;<br>			Configuration conf = <span class="hljs-keyword">new</span> Configuration();<br>			FileSystem fs = FileSystem.get(conf);<br>			Path filename = <span class="hljs-keyword">new</span> Path(“hdfs:<span class="hljs-comment">//localhost:9000/user/hadoop/test.txt&quot;);</span><br>			FSDataInputStream is = fs.open(filename);<br>			BufferedReader d = <span class="hljs-keyword">new</span> BufferedReader(<span class="hljs-keyword">new</span> InputStreamReader(is));<br>			String content = d.readLine(); <span class="hljs-comment">//读取文件一行</span><br>			System.out.println(content);<br>			d.close(); <span class="hljs-comment">//关闭文件</span><br>			fs.close(); <span class="hljs-comment">//关闭hdfs</span><br>		&#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>			e.printStackTrace();<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p> <img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614162412445.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.apache.hadoop.conf.Configuration;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FileSystem;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FSDataOutputStream;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.Path;<br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Chapter3</span> </span>&#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>		<span class="hljs-keyword">try</span> &#123;<br>			Configuration conf = <span class="hljs-keyword">new</span> Configuration();<br>			FileSystem fs = FileSystem.get(conf);<br>			<span class="hljs-keyword">byte</span>[] buff = <span class="hljs-string">&quot;Hello world&quot;</span>.getBytes(); <span class="hljs-comment">// 要写入的内容</span><br>			String filename = <span class="hljs-string">&quot; hdfs://localhost:9000/user/hadoop/test.txt &quot;</span>; <span class="hljs-comment">//要写入的文件名</span><br>			FSDataOutputStream os = fs.create(<span class="hljs-keyword">new</span> Path(filename));<br>			os.write(buff,<span class="hljs-number">0</span>,buff.length);<br>			System.out.println(<span class="hljs-string">&quot;Create:&quot;</span>+ filename);<br>		&#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>			e.printStackTrace();<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p> <img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614162551879.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h1 id="7、HDFS编程实践"><a href="#7、HDFS编程实践" class="headerlink" title="7、HDFS编程实践"></a>7、HDFS编程实践</h1><h2 id="首先启动hadoop"><a href="#首先启动hadoop" class="headerlink" title="首先启动hadoop"></a>首先启动hadoop</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">$ cd /usr/local/hadoop<br>$ ./bin/hdfs namenode -format  # 格式化hdfs文件系统，初始化时使用，之前执行后就不需再执行<br>$ ./bin/start-dfs.sh<br></code></pre></td></tr></table></figure>
+
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><p>HDFS有很多shell命令，其中，fs命令可以说是HDFS最常用的命令。利用该命令可以 查看HDFS文件系统的目录结构、上传和下载数据、创建文件等。</p>
+<p>该命令的用法为： hadoop fs [genericOptions] [commandOptions]</p>
+<p>备注：Hadoop中有三种Shell命令方式：</p>
+<ol>
+<li>hadoop fs适用于任何不同的文件系统，比如本地文件系统和HDFS文件系统。</li>
+<li>hadoop dfs只能适用于HDFS文件系统。</li>
+<li>hdfs dfs跟hadoop dfs的命令作用一样，也只能适用于HDFS文件系统。</li>
+</ol>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>hadoop fs -ls <path>:显示<path>指定的文件的详细信息</p>
+<p>hadoop fs -mkdir <path>:创建<path>指定的文件夹</p>
+<p><strong>例中“./”表示“/usr/local/hadoop/bin”路径。</strong></p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020061417253919.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>hadoop fs -cat <path>:将<path>指定的文件的内容输出到标准输出（stdout）</p>
+<p>hadoop fs -copyFromLocal <localsrc> <dst>:将本地源文件<localsrc>复制到路径<dst>指定的文件或文件夹中</p>
+<p> <img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614173511725.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="WEB管理界面"><a href="#WEB管理界面" class="headerlink" title="WEB管理界面"></a>WEB管理界面</h2><p><a href="http://ip:50070,默认端口50070">http://ip:50070,默认端口50070</a></p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614174032631.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="利用Java-API与HDFS进行交互"><a href="#利用Java-API与HDFS进行交互" class="headerlink" title="利用Java API与HDFS进行交互"></a>利用Java API与HDFS进行交互</h2><p>maven项目中引入</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;dependencies&gt;<br>	&lt;!-- https:<span class="hljs-comment">//mvnrepository.com/artifact/org.apache.hadoop/hadoop-common --&gt;</span><br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;<br>		&lt;artifactId&gt;hadoop-common&lt;/artifactId&gt;<br>		&lt;version&gt;2.6.0&lt;/version&gt;<br>	&lt;/dependency&gt;<br>	&lt;!-- https:<span class="hljs-comment">//mvnrepository.com/artifact/org.apache.hadoop/hadoop-hdfs --&gt;</span><br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;<br>		&lt;artifactId&gt;hadoop-hdfs&lt;/artifactId&gt;<br>		&lt;version&gt;2.6.0&lt;/version&gt;<br>	&lt;/dependency&gt;<br>	&lt;!-- https:<span class="hljs-comment">//mvnrepository.com/artifact/org.apache.hadoop/hadoop-client --&gt;</span><br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;<br>		&lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;<br>		&lt;version&gt;2.6.0&lt;/version&gt;<br>	&lt;/dependency&gt;<br>&lt;/dependencies&gt;<br></code></pre></td></tr></table></figure>
+
+<p> 写一个FileSystem获取工具类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.hdfs;<br><br><span class="hljs-keyword">import</span> java.io.IOException;<br><br><span class="hljs-keyword">import</span> org.apache.hadoop.conf.Configuration;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FileSystem;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 单例模式生成FileSystem</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FileSystemFactory</span> </span>&#123;<br>	<br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FileSystemFactoryHolder</span></span>&#123;<br>		<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> FileSystem instance;<br>        <br>        <span class="hljs-keyword">static</span> &#123;<br>        	Configuration conf = <span class="hljs-keyword">new</span> Configuration();<br>                conf.set(<span class="hljs-string">&quot;fs.defaultFS&quot;</span>,<span class="hljs-string">&quot;hdfs://172.20.10.6:9000&quot;</span>);<br>                conf.set(<span class="hljs-string">&quot;fs.hdfs.impl&quot;</span>, <span class="hljs-string">&quot;org.apache.hadoop.hdfs.DistributedFileSystem&quot;</span>);<br>                <span class="hljs-keyword">try</span> &#123;<br>			instance = FileSystem.get(conf);<br>	        &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>		        e.printStackTrace();<br>	        &#125;<br>            &#125;<br>	&#125;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> FileSystem <span class="hljs-title">getInsatnce</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> FileSystemFactoryHolder.instance;<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>实例：利用hadoop 的java api检测伪分布式文件系统HDFS上是否存在某个文件？</strong></p>
+<p>其中172.20.10.6是我hadoop机器上的ip地址。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.hdfs;<br><br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FileSystem;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.Path;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HdfsExists</span> </span>&#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>		<span class="hljs-keyword">try</span> &#123;<br>			String filename = <span class="hljs-string">&quot;/user/hadoop/input&quot;</span>;<br>			FileSystem fs = FileSystemFactory.getInsatnce();<br>			<span class="hljs-keyword">if</span>(fs.exists(<span class="hljs-keyword">new</span> Path(filename)))&#123;<br>				System.out.println(<span class="hljs-string">&quot;文件存在&quot;</span>);<br>			&#125;<span class="hljs-keyword">else</span>&#123;<br>				System.out.println(<span class="hljs-string">&quot;文件不存在&quot;</span>);<br>			&#125;<br>			fs.close();<br>		&#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>			e.printStackTrace();<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p> <img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614190816697.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 验证一下是否存在：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614190952296.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><strong>实例：写HDFS上的文件？</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.hdfs;<br><br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FSDataOutputStream;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FileSystem;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.Path;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HdfsWrite</span> </span>&#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>		<span class="hljs-keyword">try</span> &#123;<br>			FileSystem fs = FileSystemFactory.getInsatnce();<br>			<span class="hljs-keyword">byte</span>[] buff = <span class="hljs-string">&quot;Hello world!&quot;</span>.getBytes(); <span class="hljs-comment">// 要写入的内容</span><br>			String filename = <span class="hljs-string">&quot;/user/22113/test&quot;</span>; <span class="hljs-comment">//要写入的文件名</span><br>			FSDataOutputStream os = fs.create(<span class="hljs-keyword">new</span> Path(filename));<br>			os.write(buff,<span class="hljs-number">0</span>,buff.length);<br>			System.out.println(<span class="hljs-string">&quot;Create:&quot;</span>+ filename);<br>			os.close();<br>			fs.close();<br>		&#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>			e.printStackTrace();<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614201419346.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><strong>实例：读HDFS上的文件？</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.hdfs;<br><br><span class="hljs-keyword">import</span> java.io.BufferedReader;<br><span class="hljs-keyword">import</span> java.io.InputStreamReader;<br><br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FSDataInputStream;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.FileSystem;<br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.Path;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HdfsRead</span> </span>&#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>		<span class="hljs-keyword">try</span> &#123;<br>			FileSystem fs = FileSystemFactory.getInsatnce();<br>                        String filename = <span class="hljs-string">&quot;/user/22113/test.txt&quot;</span>; <span class="hljs-comment">//要读的文件名</span><br>                        FSDataInputStream in = fs.open(<span class="hljs-keyword">new</span> Path(filename));<br>                        BufferedReader bis = <span class="hljs-keyword">new</span> BufferedReader(<span class="hljs-keyword">new</span> InputStreamReader(in));<br>                        System.out.println(bis.readLine());<br>                        bis.close();<br>                        fs.close();<br>		&#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>			e.printStackTrace();<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614203059291.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>常见错误：</p>
+<ul>
+<li>java.net.ConnectException</li>
+</ul>
+<p>Connection refused: no further information</p>
+<p>此例环境：windows中安装虚拟机运行Hadoop。由于hadoop中core-site.xml中设置的fs.defaultFS是hdfs://localhost:9000，所以报错，应该将lcoalhost替换成自己虚拟机分配的ip地址，之后重启hadoop。</p>
+<ul>
+<li>记得开启对应的虚拟机端口，端口未开启会报错。《<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37171817/article/details/106731470">CentOS7 中开放端口</a>》</li>
+<li>org.apache.hadoop.security.AccessControlException</li>
+</ul>
+<p>Permission denied: user=22113, access=WRITE, inode=”/user/hadoop”:hadoop:supergroup:drwxr-xr-x</p>
+<p>没有写入权限，应该设置该文件夹权限。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200614193902416.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>文件权限由读、可执行变成读、写、可执行。现在/user/22113文件夹皆可以写入内容了。</p>
+<ul>
+<li>org.apache.hadoop.ipc.RemoteException(java.io.IOException)</li>
+</ul>
+<p>File /user/22113/test.txt could only be replicated to 0 nodes instead of minReplication (=1).  There are 1 datanode(s) running and 1 node(s) are excluded in this operation.</p>
+<p>这个错误从网上找了很久，都没解决。有人说是DataNode没启动，但是我用jps命令查看，发现DataNode是在运行。还有人说是format多次NameNode与DataNode导致的，可是这都不是原因。后来突然想起关闭虚拟机防火墙，发现就可以了，功能正常运作，具体原因待分析。</p>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>本文是根据中国大学MOOC网站上，课程《<a target="_blank" rel="noopener" href="https://www.icourse163.org/course/XMU-1002335004">大数据技术原理与应用</a>》的课件ppt撰写的一篇博文。由于自己也是正在跟着这门课进行学习，所以很多专业性知识点都是截取课件ppt上的内容。顺便推荐一下这门课程，老师讲解的知识点非常细致，还有对操作步骤详细记录的博客资源。</p>
+<p>感谢厦门大学数据库实验室，感谢林子雨老师提供的这么优秀的资源。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/09/%E4%BD%A0%E6%83%B3%E4%BA%86%E8%A7%A3%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS-%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;09&#x2F;%E4%BD%A0%E6%83%B3%E4%BA%86%E8%A7%A3%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS-%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;09&#x2F;%E4%BD%A0%E6%83%B3%E4%BA%86%E8%A7%A3%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS-%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDFS/" rel="tag">HDFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" rel="tag">分布式文件系统</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2020/12/09/%E5%88%86%E5%B8%83%E5%BC%8F%E5%A4%84%E7%90%86%E6%A1%86%E6%9E%B6Hadoop%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/">分布式处理框架Hadoop的安装与使用<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "雁过留痕",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-2">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-text">1、分布式文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E9%9B%86%E7%BE%A4%E7%BB%93%E6%9E%84"><span class="toc-text">计算机集群结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-text">分布式文件系统的结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81HDFS%E7%AE%80%E4%BB%8B"><span class="toc-text">2、HDFS简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81HDFS%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-text">3、HDFS相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%97"><span class="toc-text">块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%EF%BC%88NameNode%EF%BC%89%E5%92%8C%E6%95%B0%E6%8D%AE%E8%8A%82%E7%82%B9-DataNode"><span class="toc-text">名称节点（NameNode）和数据节点(DataNode)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">名称节点的数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FsImage"><span class="toc-text">FsImage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%E7%9A%84%E5%90%AF%E5%8A%A8"><span class="toc-text">名称节点的启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%E8%BF%90%E8%A1%8C%E6%9C%9F%E9%97%B4EditLog%E4%B8%8D%E6%96%AD%E5%8F%98%E5%A4%A7%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">名称节点运行期间EditLog不断变大的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%8A%82%E7%82%B9%EF%BC%88DataNode%EF%BC%89"><span class="toc-text">数据节点（DataNode）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81HDFS%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="toc-text">4、HDFS体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="toc-text">HDFS命名空间管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="toc-text">通信协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-text">HDFS体系结构的局限性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81HDFS%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86"><span class="toc-text">5、HDFS存储原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%97%E4%BD%99%E6%95%B0%E6%8D%AE%E4%BF%9D%E5%AD%98"><span class="toc-text">冗余数据保存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%8F%96%E7%AD%96%E7%95%A5"><span class="toc-text">数据存取策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E6%94%BE"><span class="toc-text">数据存放</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96"><span class="toc-text">数据读取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%94%99%E8%AF%AF%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="toc-text">数据错误与恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%E5%87%BA%E9%94%99"><span class="toc-text">名称节点出错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%8A%82%E7%82%B9%E5%87%BA%E9%94%99"><span class="toc-text">数据节点出错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%87%BA%E9%94%99"><span class="toc-text">数据出错</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6%E3%80%81HDFS%E8%AF%BB%E5%86%99%E8%BF%87%E7%A8%8B"><span class="toc-text">6、HDFS读写过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6"><span class="toc-text">读取文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6"><span class="toc-text">写入文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7%E3%80%81HDFS%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5"><span class="toc-text">7、HDFS编程实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A6%96%E5%85%88%E5%90%AF%E5%8A%A8hadoop"><span class="toc-text">首先启动hadoop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-text">实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB%E7%AE%A1%E7%90%86%E7%95%8C%E9%9D%A2"><span class="toc-text">WEB管理界面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8Java-API%E4%B8%8EHDFS%E8%BF%9B%E8%A1%8C%E4%BA%A4%E4%BA%92"><span class="toc-text">利用Java API与HDFS进行交互</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E5%B0%BE"><span class="toc-text">结尾</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</html>
