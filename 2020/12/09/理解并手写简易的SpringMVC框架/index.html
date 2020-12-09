@@ -1,0 +1,552 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>理解并手写简易的SpringMVC框架 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="一、前言Spring框架是大多Java程序员的必修课程...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/h-loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+    </div>
+    <div class="center">理解并手写简易的SpringMVC框架</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/225248-160735276818ce.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">理解并手写简易的SpringMVC框架</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 09, 2020</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/09/%E7%90%86%E8%A7%A3%E5%B9%B6%E6%89%8B%E5%86%99%E7%AE%80%E6%98%93%E7%9A%84SpringMVC%E6%A1%86%E6%9E%B6/" class="leancloud" data-flag-title="理解并手写简易的SpringMVC框架"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>24878</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>Spring框架是大多Java程序员的必修课程，而SpringMVC是里面的重头戏，它大大的简化了Servlet的繁琐操作，让开发人员得以用更多的时间去处理业务。</p>
+<p>SpringMVC是一款经典的三层架构模式，M为Model（模型）,V为View（视图）,C为Controlle（控制器）。MVC是一种软件设计典范，用一种业务逻辑、数据、界面显示分离的方法组织代码，将业务逻辑聚集到一个部件里面，在改进和个性化定制界面及用户交互的同时，不需要重新编写业务逻辑。MVC被独特的发展起来用于映射传统的输入、处理和输出功能在一个逻辑的图形化用户界面的结构中。</p>
+<h1 id="二、SpringMVC流程"><a href="#二、SpringMVC流程" class="headerlink" title="二、SpringMVC流程"></a>二、SpringMVC流程</h1><p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200518171620174.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="流程简述："><a href="#流程简述：" class="headerlink" title="流程简述："></a>流程简述：</h2><p>（1）用户通过浏览器或其他途径发起请求。</p>
+<p>（2）请求经过前端控制器DispatcherServlet,并根据请求的URI匹配到对应的处理映射器。</p>
+<p>（3）处理映射器返回HandlerExecutionChain实体给DispatcherServlet，内部封装了拦截器HandlerInterceptor、Object类型的具体处理器handler。</p>
+<p>（4）系统启动时，初始化了HandlerAdapter的List的集合，此步骤循环List集合，调用HandlerAdapter的support方法，找到handler支持的HandlerAdapter处理适配器。</p>
+<p>（5）由HandlerAdapter处理参数并调用处理器的方法。</p>
+<p>（6）返回结果是ModelAndView,即视图。其内部封装了view、model、status。</p>
+<p>（7）将处理得到的ModelAndView返回给DispatcherServlet。</p>
+<p>（8）将ModelAndView交由专业的视图解析器进行解析，得到页面位置。</p>
+<p>（9）返回结果给DispatcherServlet。</p>
+<p>（10）将数据渲染到页面。</p>
+<p>（11）响应请求。</p>
+<h2 id="源码核心部分概览"><a href="#源码核心部分概览" class="headerlink" title="源码核心部分概览"></a>源码核心部分概览</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initStrategies</span><span class="hljs-params">(ApplicationContext context)</span> </span>&#123;<br>    initMultipartResolver(context);<br>    initLocaleResolver(context);<br>    initThemeResolver(context);<br>    initHandlerMappings(context);<br>    initHandlerAdapters(context);<br>    initHandlerExceptionResolvers(context);<br>    initRequestToViewNameTranslator(context);<br>    initViewResolvers(context);<br>    initFlashMapManager(context);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>  initMultipartResolver(context)</li>
+</ul>
+<p>初始化文件上传解析功能，将普通HttpServletRequest包装成MutipartHttpServletRequest，此类可通过getFile获取到文件集合。</p>
+<ul>
+<li>  initLocaleResolver(context)</li>
+</ul>
+<p>初始化与当地区域有关的设置，如视图解析器与国际化资源的配置。</p>
+<ul>
+<li>  initThemeResolver(context)</li>
+</ul>
+<p>初始化主题解析，如消息国际话得配置，每个主题对应 一个properties文件。</p>
+<ul>
+<li>  initHandlerMappings(context)</li>
+</ul>
+<p>初始化HandlerMappings，用来获取对应的handler与interceptor。</p>
+<ul>
+<li>  initHandlerAdapters(context)</li>
+</ul>
+<p>初始化处理适配器，用来执行具体方法。</p>
+<ul>
+<li>  initHandlerExceptionResolvers(context)</li>
+</ul>
+<p>对异常情况进行处理。</p>
+<ul>
+<li>  initRequestToViewNameTranslator(context)</li>
+</ul>
+<p>从请求中获取视图名称。</p>
+<ul>
+<li>  initViewResolvers(context)</li>
+</ul>
+<p>初始化视图解析器，将ModelAndView渲染成页面。</p>
+<ul>
+<li>  initFlashMapManager(context)</li>
+</ul>
+<p>主要用处在于传递重定向参数。</p>
+<h1 id="三、手写Spring-MVC"><a href="#三、手写Spring-MVC" class="headerlink" title="三、手写Spring MVC"></a>三、手写Spring MVC</h1><h2 id="项目目录"><a href="#项目目录" class="headerlink" title="项目目录"></a>项目目录</h2><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200518175129241.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" />
+
+<h2 id="源码地址："><a href="#源码地址：" class="headerlink" title="源码地址："></a>源码地址：</h2><p><a target="_blank" rel="noopener" href="https://github.com/hanguilin/custom-springmvc">https://github.com/hanguilin/custom-springmvc</a></p>
+<h2 id="环境配置："><a href="#环境配置：" class="headerlink" title="环境配置："></a>环境配置：</h2><p>maven项目中引入Servlet需要的jar包</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;dependency&gt;<br>    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;<br>    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;<br>    &lt;version&gt;3.0.1&lt;/version&gt;<br>    &lt;scope&gt;provided&lt;/scope&gt;<br>&lt;/dependency&gt;<br></code></pre></td></tr></table></figure>
+
+<p>其他jar包（本人写代码用到的一些包）</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java">      &lt;dependency&gt;<br>	&lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br>	&lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;<br>	&lt;version&gt;1.7.25&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>	&lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;<br>	&lt;artifactId&gt;logback-classic&lt;/artifactId&gt;<br>	&lt;version&gt;1.2.3&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>	&lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br>	&lt;artifactId&gt;slf4j-simple&lt;/artifactId&gt;<br>	&lt;version&gt;1.7.25&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>	&lt;groupId&gt;log4j&lt;/groupId&gt;<br>	&lt;artifactId&gt;log4j&lt;/artifactId&gt;<br>	&lt;version&gt;1.2.17&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>	&lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br>	&lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;<br>	&lt;version&gt;1.7.21&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;!-- https:<span class="hljs-comment">//mvnrepository.com/artifact/org.apache.commons/commons-lang3 --&gt;</span><br>&lt;dependency&gt;<br>	&lt;groupId&gt;org.apache.commons&lt;/groupId&gt;<br>	&lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;<br>	&lt;version&gt;3.4&lt;/version&gt;<br>&lt;/dependency&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="注解类："><a href="#注解类：" class="headerlink" title="注解类："></a>注解类：</h2><p>建立SpringMVC中常用注解@Controller、@RequstMapping、@Autowired、@Qualifier、@Service、@RequestParam的替代注解。区别为在自己的注解中给名字添加了Custom前缀。各个注解的区别在于注解地方，如类、方法、字段上不同。</p>
+<p><strong>CustomController.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.annotation;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.Documented;<br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 控制层注解</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Target(ElementType.TYPE)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> CustomController &#123;<br>	<br>	<span class="hljs-function">String <span class="hljs-title">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> &quot;&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>CustomRequestMapping.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.annotation;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.Documented;<br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 请求路径注解</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Target(&#123;ElementType.TYPE, ElementType.METHOD&#125;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> CustomRequestMapping &#123;<br><br>	<span class="hljs-function">String <span class="hljs-title">value</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>CustomAutowired.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.annotation;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.Documented;<br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 自动注入</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Target(&#123;ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> CustomAutowired &#123;<br><br>	<span class="hljs-function">String <span class="hljs-title">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> &quot;&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>CustomQualifer.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.annotation;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.Documented;<br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 按名称自动注入</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Target(&#123;ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD, ElementType.ANNOTATION_TYPE&#125;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> CustomQualifer &#123;<br><br>	<span class="hljs-function">String <span class="hljs-title">value</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>CustomService.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.annotation;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.Documented;<br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 业务层注解</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Target(ElementType.TYPE)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> CustomService &#123;<br>	<br>	<span class="hljs-function">String <span class="hljs-title">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> &quot;&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>CustomRequestParam.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.annotation;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.Documented;<br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 参数注解</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Target(ElementType.PARAMETER)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> CustomRequestParam &#123;<br><br>	<span class="hljs-function">String <span class="hljs-title">value</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> &quot;&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>在classpath下建立spring-mvc.properties,指定扫描包路径</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">spring.scanner.base.<span class="hljs-keyword">package</span>=com.hgl<br></code></pre></td></tr></table></figure>
+
+<h2 id="核心配置类"><a href="#核心配置类" class="headerlink" title="核心配置类"></a>核心配置类</h2><p>SpringMVC核心配置类DispatcherServlet.java，替代类为CustomDispatcherServlet.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.servlet;<br><br><span class="hljs-keyword">import</span> java.io.File;<br><span class="hljs-keyword">import</span> java.io.IOException;<br><span class="hljs-keyword">import</span> java.io.InputStream;<br><span class="hljs-keyword">import</span> java.lang.reflect.Field;<br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><span class="hljs-keyword">import</span> java.net.URL;<br><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.Map;<br><span class="hljs-keyword">import</span> java.util.Properties;<br><span class="hljs-keyword">import</span> java.util.regex.Matcher;<br><span class="hljs-keyword">import</span> java.util.regex.Pattern;<br><br><span class="hljs-keyword">import</span> javax.servlet.ServletConfig;<br><span class="hljs-keyword">import</span> javax.servlet.ServletException;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServlet;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletRequest;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletResponse;<br><br><span class="hljs-keyword">import</span> org.apache.commons.lang3.StringUtils;<br><span class="hljs-keyword">import</span> org.slf4j.Logger;<br><span class="hljs-keyword">import</span> org.slf4j.LoggerFactory;<br><br><span class="hljs-keyword">import</span> com.hgl.mvc.annotation.CustomController;<br><span class="hljs-keyword">import</span> com.hgl.mvc.annotation.CustomQualifer;<br><span class="hljs-keyword">import</span> com.hgl.mvc.annotation.CustomRequestMapping;<br><span class="hljs-keyword">import</span> com.hgl.mvc.annotation.CustomService;<br><span class="hljs-keyword">import</span> com.hgl.mvc.resolver.ArgumentResolver;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomDispatcherServlet</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">HttpServlet</span></span>&#123;<br><br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(CustomDispatcherServlet.class);<br>	<br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1L</span>;<br>	<br>	<span class="hljs-keyword">private</span> Properties contextConfig = <span class="hljs-keyword">new</span> Properties();<br><br>	<span class="hljs-comment">// 所有扫描类</span><br>	<span class="hljs-keyword">private</span> List&lt;String&gt; classes = <span class="hljs-keyword">new</span> ArrayList&lt;String&gt;();<br><br>	<span class="hljs-comment">// 存放bean的容器ioc</span><br>	<span class="hljs-keyword">private</span> Map&lt;String, Object&gt; context = <span class="hljs-keyword">new</span> HashMap&lt;String, Object&gt;();<br>	<br>	<span class="hljs-comment">// 存放参数解析器</span><br>	<span class="hljs-keyword">private</span> Map&lt;String, ArgumentResolver&gt; argumentResolverMap = <span class="hljs-keyword">new</span> HashMap&lt;String, ArgumentResolver&gt;();<br>	<br>	<span class="hljs-comment">// 根据请求url找到具体的处理器</span><br>	<span class="hljs-keyword">private</span> List&lt;CustomHandlerMapping&gt; handlerMapping = <span class="hljs-keyword">new</span> ArrayList&lt;CustomHandlerMapping&gt;();<br>	<br>	<span class="hljs-keyword">private</span> List&lt;CustomHandlerAdapter&gt; handlerAdapter = <span class="hljs-keyword">new</span> ArrayList&lt;CustomHandlerAdapter&gt;();<br><br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CustomDispatcherServlet</span><span class="hljs-params">()</span> </span>&#123;<br>		LOGGER.info(<span class="hljs-string">&quot;CustomDispatcherServlet()...&quot;</span>);<br>	&#125;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">(ServletConfig config)</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;<br>		<span class="hljs-comment">// 加载配置文件</span><br>		initConfig(config.getInitParameter(<span class="hljs-string">&quot;spring-mvc&quot;</span>));<br>		<span class="hljs-comment">// 扫描类</span><br>		initBaseScanPackage(contextConfig.getProperty(<span class="hljs-string">&quot;spring.scanner.base.package&quot;</span>));<br>		<span class="hljs-comment">// 生成bean实例，注入ioc</span><br>		initContext();<br>		<span class="hljs-comment">// 初始化参数解析器</span><br>		initArgumentResolver();<br>		<span class="hljs-comment">// 为controller层中service对象注入实例</span><br>		initInstance();<br>		<span class="hljs-comment">// 建立URI与处理器的映射</span><br>		initHandlerMapping();<br>		<span class="hljs-comment">// 处理器适配器</span><br>		initHandlerAdapter();<br>	&#125;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initConfig</span><span class="hljs-params">(String initParameter)</span> </span>&#123;<br>		InputStream in = <span class="hljs-keyword">this</span>.getClass().getClassLoader().getResourceAsStream(initParameter);<br>		<span class="hljs-keyword">try</span> &#123;<br>			contextConfig.load(in);<br>		&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>			LOGGER.error(e.getMessage(), e);<br>		&#125; <span class="hljs-keyword">finally</span> &#123;<br>			<span class="hljs-keyword">if</span>(in != <span class="hljs-keyword">null</span>) &#123;<br>				<span class="hljs-keyword">try</span> &#123;<br>					in.close();<br>				&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>					LOGGER.error(e.getMessage(), e);<br>				&#125;<br>			&#125;<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initBaseScanPackage</span><span class="hljs-params">(String basePackage)</span> </span>&#123;<br>		URL resource = <span class="hljs-keyword">this</span>.getClass().getClassLoader().getResource(<span class="hljs-string">&quot;/&quot;</span> + basePackage.replaceAll(<span class="hljs-string">&quot;\\.&quot;</span>, <span class="hljs-string">&quot;/&quot;</span>));<br>		String packagePath = resource.getFile();<br>		File packageFile = <span class="hljs-keyword">new</span> File(packagePath);<br>		String[] listFiles = packageFile.list();<br>		<span class="hljs-keyword">for</span> (String filepPath : listFiles) &#123;<br>			File file = <span class="hljs-keyword">new</span> File(packagePath + filepPath);<br>			<span class="hljs-keyword">if</span>(file.isDirectory()) &#123;<br>				initBaseScanPackage(basePackage + <span class="hljs-string">&quot;.&quot;</span> + filepPath);<br>			&#125;<span class="hljs-keyword">else</span> &#123;<br>				classes.add(basePackage + <span class="hljs-string">&quot;.&quot;</span> + file.getName());<br>			&#125;<br>		&#125;<br>	&#125;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initContext</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">if</span>(classes.isEmpty()) &#123;<br>			LOGGER.error(<span class="hljs-string">&quot;do scan failed.&quot;</span>);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>		<span class="hljs-keyword">for</span> (String className : classes) &#123;<br>			String classPath = className.substring(<span class="hljs-number">0</span>, className.lastIndexOf(<span class="hljs-string">&quot;.class&quot;</span>));<br>			<span class="hljs-keyword">try</span> &#123;<br>				Class&lt;?&gt; clazz = Class.forName(classPath);<br>				String simpleName = clazz.getSimpleName();<br>				<span class="hljs-keyword">if</span>(clazz.isAnnotationPresent(CustomController.class)) &#123;<br>					CustomController controller = clazz.getAnnotation(CustomController.class);<br>					String key = controller.value();<br>					<span class="hljs-keyword">if</span>(StringUtils.isBlank(key)) &#123;<br>						key = toLowerCaseFirstOne(simpleName);<br>					&#125;<br>					Object instance = clazz.newInstance();<br>					context.put(key, instance);<br>				&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(clazz.isAnnotationPresent(CustomService.class)) &#123;<br>					CustomService service = clazz.getAnnotation(CustomService.class);<br>					String key = service.value();<br>					<span class="hljs-keyword">if</span>(StringUtils.isBlank(key)) &#123;<br>						key = toLowerCaseFirstOne(simpleName);<br>					&#125;<br>					Object instance = clazz.newInstance();<br>					context.put(key, instance);<br>				&#125; <span class="hljs-keyword">else</span> &#123;<br>					<span class="hljs-keyword">continue</span>;<br>				&#125;<br>			&#125; <span class="hljs-keyword">catch</span> (ClassNotFoundException | InstantiationException | IllegalAccessException e) &#123;<br>				LOGGER.error(e.getMessage(), e);<br>			&#125;<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initArgumentResolver</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">if</span>(context.isEmpty()) &#123;<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>		<span class="hljs-keyword">for</span>(Map.Entry&lt;String, Object&gt; entry : context.entrySet()) &#123;<br>			Object bean = entry.getValue();<br>			<span class="hljs-comment">// 判定此 Class 对象所表示的类或接口与指定的 Class 参数所表示的类或接口是否相同，或是否是其超类或超接口</span><br>			<span class="hljs-keyword">if</span>(ArgumentResolver.class.isAssignableFrom(bean.getClass())) &#123;<br>				argumentResolverMap.put(entry.getKey(), (ArgumentResolver) bean);<br>			&#125;<br>		&#125;<br>	&#125;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initInstance</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">if</span>(context.isEmpty()) &#123;<br>			LOGGER.error(<span class="hljs-string">&quot;no bean is instanced.&quot;</span>);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>		<span class="hljs-keyword">for</span>(Map.Entry&lt;String, Object&gt; entry : context.entrySet()) &#123;<br>			Object bean = entry.getValue();<br>			Class&lt;? extends Object&gt; clazz = bean.getClass();<br>			<span class="hljs-keyword">if</span>(clazz.isAnnotationPresent(CustomController.class)) &#123;<br>				Field[] declaredFields = clazz.getDeclaredFields();<br>				<span class="hljs-keyword">for</span> (Field field : declaredFields) &#123;<br>					<span class="hljs-keyword">if</span>(field.isAnnotationPresent(CustomQualifer.class)) &#123;<br>						CustomQualifer qualifer = field.getAnnotation(CustomQualifer.class);<br>						String beanName = qualifer.value();<br>						Object value = context.get(beanName);<br>						<span class="hljs-keyword">try</span> &#123;<br>							<span class="hljs-keyword">if</span>(!field.isAccessible()) &#123;<br>								field.setAccessible(<span class="hljs-keyword">true</span>);<br>							&#125;<br>							field.set(bean, value);<br>						&#125; <span class="hljs-keyword">catch</span> (IllegalArgumentException | IllegalAccessException e) &#123;<br>							LOGGER.error(e.getMessage(), e);<br>						&#125;<br>					&#125;<br>				&#125;<br>			&#125;<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initHandlerMapping</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">if</span>(context.isEmpty()) &#123;<br>			LOGGER.error(<span class="hljs-string">&quot;no bean is instanced.&quot;</span>);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>		<span class="hljs-keyword">for</span>(Map.Entry&lt;String, Object&gt; entry : context.entrySet()) &#123;<br>			Object bean = entry.getValue();<br>			Class&lt;? extends Object&gt; clazz = bean.getClass();<br>			<span class="hljs-keyword">if</span>(clazz.isAnnotationPresent(CustomController.class)) &#123;<br>				String classRequestMappingVal = <span class="hljs-string">&quot;&quot;</span>;<br>				<span class="hljs-keyword">if</span>(clazz.isAnnotationPresent(CustomRequestMapping.class)) &#123;<br>					CustomRequestMapping classRequestMapping = clazz.getAnnotation(CustomRequestMapping.class);<br>					classRequestMappingVal = classRequestMapping.value();<br>				&#125;<br>				Method[] declaredMethods = clazz.getDeclaredMethods();<br>				List&lt;String&gt; uris = <span class="hljs-keyword">new</span> ArrayList&lt;String&gt;();<br>				<span class="hljs-keyword">for</span> (Method method : declaredMethods) &#123;<br>					String methodRequestMappingVal = <span class="hljs-string">&quot;&quot;</span>;<br>					<span class="hljs-keyword">if</span>(method.isAnnotationPresent(CustomRequestMapping.class)) &#123;<br>						CustomRequestMapping methodRequestMapping = method.getAnnotation(CustomRequestMapping.class);<br>						methodRequestMappingVal = classRequestMappingVal + methodRequestMapping.value();<br>					&#125;<br>					<span class="hljs-keyword">if</span>(StringUtils.isNotBlank(methodRequestMappingVal)) &#123;<br>						<span class="hljs-keyword">if</span>(uris.contains(methodRequestMappingVal)) &#123;<br>							<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;Duplicate mapping for &quot;</span> + methodRequestMappingVal);<br>						&#125;<br>						handlerMapping.add(<span class="hljs-keyword">new</span> CustomHandlerMapping(bean, method, Pattern.compile(methodRequestMappingVal)));<br>						uris.add(methodRequestMappingVal);<br>					&#125;<br>				&#125;<br>				uris = <span class="hljs-keyword">null</span>;<br>			&#125;<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initHandlerAdapter</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">if</span>(context.isEmpty()) &#123;<br>			LOGGER.error(<span class="hljs-string">&quot;no bean is instanced.&quot;</span>);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>		<span class="hljs-keyword">for</span>(Map.Entry&lt;String, Object&gt; entry : context.entrySet()) &#123;<br>			Object bean = entry.getValue();<br>			<span class="hljs-comment">// 判定此 Class 对象所表示的类或接口与指定的 Class 参数所表示的类或接口是否相同，或是否是其超类或超接口</span><br>			<span class="hljs-keyword">if</span>(CustomHandlerAdapter.class.isAssignableFrom(bean.getClass())) &#123;<br>				handlerAdapter.add((CustomHandlerAdapter) bean);<br>			&#125;<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> String <span class="hljs-title">toLowerCaseFirstOne</span><span class="hljs-params">(String s)</span></span>&#123;<br>		<span class="hljs-keyword">if</span>(Character.isLowerCase(s.charAt(<span class="hljs-number">0</span>)))<br>			<span class="hljs-keyword">return</span> s;<br>		<span class="hljs-keyword">else</span><br>			<span class="hljs-keyword">return</span> (<span class="hljs-keyword">new</span> StringBuilder()).append(Character.toLowerCase(s.charAt(<span class="hljs-number">0</span>))).append(s.substring(<span class="hljs-number">1</span>)).toString();<br>	&#125;<br>	<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doGet</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;<br>		doPost(request, response);<br>	&#125;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doPost</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;<br>		CustomHandlerMapping handler = getHandler(request);<br>		CustomHandlerAdapter handlerAdapter = getHandlerAdapter(handler);<br>		CustomModelAndView modelAndView = handlerAdapter.handle(request, response, handler, argumentResolverMap);<br>	&#125;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">private</span> CustomHandlerAdapter <span class="hljs-title">getHandlerAdapter</span><span class="hljs-params">(CustomHandlerMapping handler)</span> </span>&#123;<br>		<span class="hljs-keyword">for</span> (CustomHandlerAdapter customHandlerAdapter : handlerAdapter) &#123;<br>			<span class="hljs-keyword">if</span>(customHandlerAdapter.support(handler)) &#123;<br>				<span class="hljs-keyword">return</span> customHandlerAdapter;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;There is no handlerAdapter for &quot;</span> + handler);<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> CustomHandlerMapping <span class="hljs-title">getHandler</span><span class="hljs-params">(HttpServletRequest request)</span> </span>&#123;<br>		String requestURI = request.getRequestURI();<br>		String path = requestURI.replaceAll(request.getContextPath(), <span class="hljs-string">&quot;&quot;</span>);<br>		<span class="hljs-keyword">for</span> (CustomHandlerMapping handler : handlerMapping) &#123;<br>			Pattern pattern = handler.getPattern();<br>			Matcher matcher = pattern.matcher(path);<br>			<span class="hljs-keyword">if</span>(matcher.matches()) &#123;<br>				<span class="hljs-keyword">return</span> handler;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;There is no mapping for &quot;</span> + path);<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="处理映射器"><a href="#处理映射器" class="headerlink" title="处理映射器"></a>处理映射器</h2><p>CustomHandlerMapping.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.servlet;<br><br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><span class="hljs-keyword">import</span> java.util.regex.Pattern;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 自定义handlerMapping</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomHandlerMapping</span></span>&#123;<br>	<br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * controller对应的bean</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">private</span> Object controller;<br>	<br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 具体处理方法</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">private</span> Method method;<br>	<br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 用来验证是否是当前url对应的处理方法</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">private</span> Pattern pattern;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CustomHandlerMapping</span><span class="hljs-params">(Object controller, Method method, Pattern pattern)</span> </span>&#123;<br>		<span class="hljs-keyword">super</span>();<br>		<span class="hljs-keyword">this</span>.controller = controller;<br>		<span class="hljs-keyword">this</span>.method = method;<br>		<span class="hljs-keyword">this</span>.pattern = pattern;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">getController</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> controller;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setController</span><span class="hljs-params">(Object controller)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.controller = controller;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Method <span class="hljs-title">getMethod</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> method;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setMethod</span><span class="hljs-params">(Method method)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.method = method;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Pattern <span class="hljs-title">getPattern</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> pattern;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setPattern</span><span class="hljs-params">(Pattern pattern)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.pattern = pattern;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="处理适配器"><a href="#处理适配器" class="headerlink" title="处理适配器"></a>处理适配器</h2><p>CustomHandlerAdapter.java,作为接口，由实现类实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.servlet;<br><br><span class="hljs-keyword">import</span> java.util.Map;<br><br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletRequest;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletResponse;<br><br><span class="hljs-keyword">import</span> com.hgl.mvc.resolver.ArgumentResolver;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> * 自定义适配器</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">CustomHandlerAdapter</span> </span>&#123;<br>	<br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 是否支持处理</span><br><span class="hljs-comment">	 * 是则调用本类handle方法</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> handler 处理器</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@return</span> boolean</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">support</span><span class="hljs-params">(Object handler)</span></span>;<br>	<br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 具体处理方法</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> request</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> response</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> handler</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> argumentResolverMap</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@return</span> CustomModelAndView</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> CustomModelAndView <span class="hljs-title">handle</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response, CustomHandlerMapping handler,</span></span><br><span class="hljs-function"><span class="hljs-params">			Map&lt;String, ArgumentResolver&gt; argumentResolverMap)</span></span>;<br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>实现类CustomSimpleHandlerAdapter.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.servlet;<br><br><span class="hljs-keyword">import</span> java.lang.reflect.InvocationTargetException;<br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><span class="hljs-keyword">import</span> java.util.Map;<br><br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletRequest;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletResponse;<br><br><span class="hljs-keyword">import</span> org.slf4j.Logger;<br><span class="hljs-keyword">import</span> org.slf4j.LoggerFactory;<br><br><span class="hljs-keyword">import</span> com.hgl.mvc.annotation.CustomService;<br><span class="hljs-keyword">import</span> com.hgl.mvc.resolver.ArgumentResolver;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 对处理适配器的实现</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@CustomService(&quot;customSimpleHandlerAdapter&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomSimpleHandlerAdapter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">CustomHandlerAdapter</span></span>&#123;<br>	<br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(CustomDispatcherServlet.class);<br>	<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> CustomModelAndView <span class="hljs-title">handle</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response, CustomHandlerMapping handler,</span></span><br><span class="hljs-function"><span class="hljs-params">			Map&lt;String, ArgumentResolver&gt; argumentResolverMap)</span> </span>&#123;<br>		Method method = handler.getMethod();<br>		Object controller = handler.getController();<br>		Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();<br>		Object[] args = <span class="hljs-keyword">new</span> Object[parameterTypes.length];<br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; parameterTypes.length; i++) &#123;<br>			Class&lt;?&gt; parameterClass = parameterTypes[i];<br>			<span class="hljs-keyword">for</span> (Map.Entry&lt;String, ArgumentResolver&gt; entry : argumentResolverMap.entrySet()) &#123;<br>				ArgumentResolver argumentResolver = entry.getValue();<br>				<span class="hljs-keyword">if</span>(argumentResolver.support(parameterClass, i, method)) &#123;<br>					Object resolver = argumentResolver.argumentResolver(request, response, parameterClass, i, method);<br>					args[i] = resolver;<br>					<span class="hljs-keyword">break</span>;<br>				&#125;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">try</span> &#123;<br>			method.invoke(controller, args);<br>		&#125; <span class="hljs-keyword">catch</span> (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) &#123;<br>			LOGGER.error(e.getMessage(), e);<br>		&#125;<br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> CustomModelAndView();<br>	&#125;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">support</span><span class="hljs-params">(Object handler)</span> </span>&#123;<br>		<span class="hljs-comment">// 暂定实现为true</span><br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>	&#125;<br>	<br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="参数解析器"><a href="#参数解析器" class="headerlink" title="参数解析器"></a>参数解析器</h2><p>ArgumentResolver.java,作为上层接口，具体由实现类实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.resolver;<br><br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletRequest;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletResponse;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 参数解析器</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ArgumentResolver</span> </span>&#123;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">support</span><span class="hljs-params">(Class&lt;?&gt; type, <span class="hljs-keyword">int</span> paramIndex, Method method)</span></span>;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">argumentResolver</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response,</span></span><br><span class="hljs-function"><span class="hljs-params">			Class&lt;?&gt; type, <span class="hljs-keyword">int</span> paramIndex, Method method)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>HttpServletRequestArgumentResolver.java，用于解析HttpServletRequest参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.resolver;<br><br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><br><span class="hljs-keyword">import</span> javax.servlet.ServletRequest;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletRequest;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletResponse;<br><br><span class="hljs-keyword">import</span> com.hgl.mvc.annotation.CustomService;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * HttpServletRequest参数解析器</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@CustomService(&quot;httpServletRequestArgumentResolver&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpServletRequestArgumentResolver</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ArgumentResolver</span> </span>&#123;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">support</span><span class="hljs-params">(Class&lt;?&gt; type, <span class="hljs-keyword">int</span> paramIndex, Method method)</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> ServletRequest.class.isAssignableFrom(type);<br>	&#125;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">argumentResolver</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response, Class&lt;?&gt; type,</span></span><br><span class="hljs-function"><span class="hljs-params">			<span class="hljs-keyword">int</span> paramIndex, Method method)</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> request;<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>HttpServletResponseArgumentResolver.java，用于解析HttpServletResponse参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.resolver;<br><br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><br><span class="hljs-keyword">import</span> javax.servlet.ServletResponse;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletRequest;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletResponse;<br><br><span class="hljs-keyword">import</span> com.hgl.mvc.annotation.CustomService;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * HttpServletResponse参数解析器</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@CustomService(&quot;httpServletResponseArgumentResolver&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpServletResponseArgumentResolver</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ArgumentResolver</span> </span>&#123;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">support</span><span class="hljs-params">(Class&lt;?&gt; type, <span class="hljs-keyword">int</span> paramIndex, Method method)</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> ServletResponse.class.isAssignableFrom(type);<br>	&#125;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">argumentResolver</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response, Class&lt;?&gt; type,</span></span><br><span class="hljs-function"><span class="hljs-params">			<span class="hljs-keyword">int</span> paramIndex, Method method)</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> response;<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>RequestParamArgumentResolver.java，用于解析CustomRequestParam定义的参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.hgl.mvc.resolver;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.Annotation;<br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletRequest;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletResponse;<br><br><span class="hljs-keyword">import</span> com.hgl.mvc.annotation.CustomRequestParam;<br><span class="hljs-keyword">import</span> com.hgl.mvc.annotation.CustomService;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * RequestParam参数解析器</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> guilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@CustomService(&quot;requestParamArgumentResolver&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RequestParamArgumentResolver</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ArgumentResolver</span> </span>&#123;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">support</span><span class="hljs-params">(Class&lt;?&gt; type, <span class="hljs-keyword">int</span> paramIndex, Method method)</span> </span>&#123;<br>		Annotation[][] annotations = method.getParameterAnnotations();<br>		Annotation[] currentField = annotations[paramIndex];<br>		<span class="hljs-keyword">for</span> (Annotation annotation : currentField) &#123;<br>			<span class="hljs-keyword">if</span>(CustomRequestParam.class.isAssignableFrom(annotation.getClass())) &#123;<br>				<span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>	&#125;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">argumentResolver</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response, Class&lt;?&gt; type,</span></span><br><span class="hljs-function"><span class="hljs-params">			<span class="hljs-keyword">int</span> paramIndex, Method method)</span> </span>&#123;<br>		Annotation[][] annotations = method.getParameterAnnotations();<br>		Annotation[] currentField = annotations[paramIndex];<br>		<span class="hljs-keyword">for</span> (Annotation annotation : currentField) &#123;<br>			<span class="hljs-keyword">if</span>(CustomRequestParam.class.isAssignableFrom(annotation.getClass())) &#123;<br>				CustomRequestParam requestParam = (CustomRequestParam) annotation;<br>				String parameterName = requestParam.value();<br>				String parameterVal = request.getParameter(parameterName);<br>				<span class="hljs-keyword">return</span> parameterVal;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/09/%E7%90%86%E8%A7%A3%E5%B9%B6%E6%89%8B%E5%86%99%E7%AE%80%E6%98%93%E7%9A%84SpringMVC%E6%A1%86%E6%9E%B6/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;09&#x2F;%E7%90%86%E8%A7%A3%E5%B9%B6%E6%89%8B%E5%86%99%E7%AE%80%E6%98%93%E7%9A%84SpringMVC%E6%A1%86%E6%9E%B6&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;09&#x2F;%E7%90%86%E8%A7%A3%E5%B9%B6%E6%89%8B%E5%86%99%E7%AE%80%E6%98%93%E7%9A%84SpringMVC%E6%A1%86%E6%9E%B6&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringMVC/" rel="tag">SpringMVC</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2020/12/07/Java%E4%B8%ADAQS%E5%9F%BA%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Java中AQS基本实现原理<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "雁过留痕",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-2">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81SpringMVC%E6%B5%81%E7%A8%8B"><span class="toc-text">二、SpringMVC流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E7%AE%80%E8%BF%B0%EF%BC%9A"><span class="toc-text">流程简述：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E6%A0%B8%E5%BF%83%E9%83%A8%E5%88%86%E6%A6%82%E8%A7%88"><span class="toc-text">源码核心部分概览</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%89%8B%E5%86%99Spring-MVC"><span class="toc-text">三、手写Spring MVC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95"><span class="toc-text">项目目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%9C%B0%E5%9D%80%EF%BC%9A"><span class="toc-text">源码地址：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%EF%BC%9A"><span class="toc-text">环境配置：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E8%A7%A3%E7%B1%BB%EF%BC%9A"><span class="toc-text">注解类：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE%E7%B1%BB"><span class="toc-text">核心配置类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E6%98%A0%E5%B0%84%E5%99%A8"><span class="toc-text">处理映射器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E9%80%82%E9%85%8D%E5%99%A8"><span class="toc-text">处理适配器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90%E5%99%A8"><span class="toc-text">参数解析器</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</html>
