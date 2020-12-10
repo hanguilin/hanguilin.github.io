@@ -1873,7 +1873,7 @@ body span {
   margin-left: 15px;
 }
 .categories {
-  max-width: 576px;
+  max-width: 800px;
   min-height: calc(100vh - 350px);
   margin: 0 auto;
 }
@@ -1907,7 +1907,7 @@ body span {
   content: ']';
 }
 .tags {
-  max-width: 576px;
+  max-width: 800px;
   min-height: calc(100vh - 350px);
   margin: 0 auto;
 }
