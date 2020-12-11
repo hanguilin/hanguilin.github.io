@@ -1,0 +1,736 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>分布式数据库HBase实践指南 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="一、HBase简介
+ HBase官方网站：http:/...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/h-loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+    </div>
+    <div class="center">分布式数据库HBase实践指南</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/100355-15002570356b2c.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">分布式数据库HBase实践指南</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 11, 2020</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/11/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93HBase%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/" class="leancloud" data-flag-title="分布式数据库HBase实践指南"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>16809</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="一、HBase简介"><a href="#一、HBase简介" class="headerlink" title="一、HBase简介"></a>一、HBase简介</h1><p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620133757300.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> HBase官方网站：<a target="_blank" rel="noopener" href="http://hbase.apache.org/">http://hbase.apache.org/</a></p>
+<p>HBase是一个分布式的、面向列的开源数据库，该技术来源于 Fay Chang 所撰写的Google论文《Bigtable：一个结构化数据的分布式存储系统》。就像Bigtable利用了Google文件系统（File System）所提供的分布式数据存储一样，HBase在Hadoop之上提供了类似于Bigtable的能力。HBase是Apache的Hadoop项目的子项目。HBase不同于一般的关系数据库，它是一个适合于非结构化数据存储的数据库。另一个不同的是HBase基于列的而不是基于行的模式。</p>
+<p>HBase以表的形式存储数据，表有行和列组成，列划分为多个列族/列簇（column family）。</p>
+<p>HBase的运行有三种模式：单机模式、伪分布式模式、分布式模式。</p>
+<ul>
+<li>单机模式</li>
+</ul>
+<p>在一台计算机上安装和使用HBase，不涉及数据的分布式存储。</p>
+<ul>
+<li>伪分布式模式</li>
+</ul>
+<p>在一台计算机上模拟一个小的集群。</p>
+<ul>
+<li>分布式模式</li>
+</ul>
+<p>使用多台计算机实现物理意义上的分布式存储。</p>
+<h1 id="二、安装教程"><a href="#二、安装教程" class="headerlink" title="二、安装教程"></a>二、安装教程</h1><p>本文示例的运行环境为CentOS7。HBase版本为1.1.2，Hadoop版本为2.7.7，JDK1.8。</p>
+<p>在安装HBase之前，<strong>需要安装Hadoop</strong>。可根据《<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37171817/article/details/106728161">分布式处理框架Hadoop的安装与使用</a>》进行安装。由于HBase对Hadoop版本具有依赖性，所以安装其他版本前需要查看两者版本之间是否匹配。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620152524329.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="1、下载HBase"><a href="#1、下载HBase" class="headerlink" title="1、下载HBase"></a>1、下载HBase</h2><p>下载地址：<a target="_blank" rel="noopener" href="http://archive.apache.org/dist/hbase/1.3.2/">http://archive.apache.org/dist/hbase/1.3.2/</a></p>
+<p>下载*-bin.tar.gz文件</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020062111145442.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 下载后将压缩包放到/home/hadoop/download路径下。我这里download文件夹是为了存放下载的文件，下载文件夹不限制位置。“~”路径代表当前用户文件夹，此处为hadoop用户，所以对应的路径就是“/home/hadoop”。</p>
+<h2 id="2、安装HBase"><a href="#2、安装HBase" class="headerlink" title="2、安装HBase"></a>2、安装HBase</h2><p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200621112913656.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 解压到/usr/local/路径下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ tar -zxf /home/hadoop/download/hbase-1.3.2-bin.tar.gz -C /usr/<span class="hljs-built_in">local</span><br></code></pre></td></tr></table></figure>
+
+<p>切换到root用户，重命名hbase-1.3.2文件夹，将解压后的文件赋权给hadoop用户。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">cd</span> /usr/<span class="hljs-built_in">local</span><br>$ mv ./hbase-1.3.2 ./hbase<br>$ chown -R hadoop:hadoop hbase/<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200621113134531.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>配置环境变量</p>
+<p>切回到hadoop用户：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ su hadoop<br></code></pre></td></tr></table></figure>
+
+<p>编辑环境变量文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ vi ~/.bashrc<br></code></pre></td></tr></table></figure>
+
+<p> 添加Hbase环境变量。其中“:”，冒号是起分隔符的作用。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020070113122381.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 编辑完成后，使用source命令，让配置文件在当前终端立即生效。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">source</span> ~/.bashrc<br></code></pre></td></tr></table></figure>
+
+<p>查看HBase版本，确定是否安装成功。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hbase version<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020062111361975.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h1 id="三、配置HBase"><a href="#三、配置HBase" class="headerlink" title="三、配置HBase"></a>三、配置HBase</h1><p>HBase有三种运行模式，单机模式、伪分布式模式、分布式模式，我们这里案例使用单机模式与伪分布模式。</p>
+<p>在配置之前，必须要满足如下条件：</p>
+<ul>
+<li>jdk</li>
+<li>Hadoop( 单机模式不需要，伪分布式模式和分布式模式需要)</li>
+<li>SSH</li>
+</ul>
+<p>如果以上三者均为安装，请根据文章《<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37171817/article/details/106728161">分布式处理框架Hadoop的安装与使用</a>》进行安装。</p>
+<h2 id="1-单机模式配置"><a href="#1-单机模式配置" class="headerlink" title="1.单机模式配置"></a>1.单机模式配置</h2><h3 id="修改-usr-local-hbase-conf-hbase-env-sh配置"><a href="#修改-usr-local-hbase-conf-hbase-env-sh配置" class="headerlink" title="修改/usr/local/hbase/conf/hbase-env.sh配置"></a>修改/usr/local/hbase/conf/hbase-env.sh配置</h3><p>增加如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">export JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;jdk1.8.0_51<br>export HBASE_MANAGES_ZK&#x3D;true <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>JAVA_HOME</li>
+</ul>
+<p>jdk安装目录。</p>
+<ul>
+<li>HBASE_MANAGES_ZK</li>
+</ul>
+<p>true:表示由hbase自己管理zookeeper，不需要单独的zookeeper。</p>
+<h3 id="1-1配置-usr-local-hbase-conf-hbase-site-xml"><a href="#1-1配置-usr-local-hbase-conf-hbase-site-xml" class="headerlink" title="1.1配置/usr/local/hbase/conf/hbase-site.xml"></a>1.1配置/usr/local/hbase/conf/hbase-site.xml</h3><p>在启动HBase前需要设置属性hbase.rootdir，用于指定HBase数据的存储位置，因为如果不设置的话，hbase.rootdir默认为/tmp/hbase-${user.name}，这意味着每次重启系统都会丢失数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;configuration&gt;<br>        &lt;property&gt;<br>                &lt;name&gt;hbase.rootdir&lt;&#x2F;name&gt;<br>                &lt;value&gt;file:&#x2F;&#x2F;&#x2F;usr&#x2F;local&#x2F;hbase&#x2F;hbase-tmp&lt;&#x2F;value&gt;<br>        &lt;&#x2F;property&gt;<br>&lt;&#x2F;configuration&gt;<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620171431536.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620171401216.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h3 id="1-2测试运行"><a href="#1-2测试运行" class="headerlink" title="1.2测试运行"></a>1.2测试运行</h3><p>启动HBase，并打开Shell命令模式，使用户可以通过shell命令操作数据库。由于前面配置了环境变量，所以可以直接运行，实际上这两条命令都应该在/usr/local/hbase/bin目录下运行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ start-hbase.sh<br>$ hbase shell<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620172112679.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h3 id="1-3停止HBase"><a href="#1-3停止HBase" class="headerlink" title="1.3停止HBase"></a>1.3停止HBase</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ stop-hbase.sh<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620172245724.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="2-伪分布式配置，使用外部Zookeeper"><a href="#2-伪分布式配置，使用外部Zookeeper" class="headerlink" title="2.伪分布式配置，使用外部Zookeeper"></a>2.伪分布式配置，使用外部Zookeeper</h2><h2 id="2-1配置主机别名"><a href="#2-1配置主机别名" class="headerlink" title="2.1配置主机别名"></a>2.1配置主机别名</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ vi /etc/hosts<br></code></pre></td></tr></table></figure>
+
+<p> 为本节点的ip设置一个别名：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020070113040252.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="2-2下载安装zookeeper"><a href="#2-2下载安装zookeeper" class="headerlink" title="2.2下载安装zookeeper"></a>2.2下载安装zookeeper</h2><p>官方下载地址：<a target="_blank" rel="noopener" href="http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.4.14/zookeeper-3.4.14.tar.gz">http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.4.14/zookeeper-3.4.14.tar.gz</a></p>
+<p>将安装包放到/home/hadoop/download下</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200701131718560.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 解压文件到/usr/local/，会在此路径下生成zookeeper-3.4.14文件夹。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ tar -zxvf ./zookeeper-3.4.14.tar.gz -C /usr/<span class="hljs-built_in">local</span><br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200701132718475.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>将zookeeper文件夹所有权更改为hadoop:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ chown -R hadoop:hadoop zookeeper-3.4.14/<br></code></pre></td></tr></table></figure>
+
+<p>切换回hadoop用户：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ su hadoop<br></code></pre></td></tr></table></figure>
+
+<p> 编辑zookeeper环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ vi ~/.bashrc<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200701133449722.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 使环境变量生效:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">source</span> ~/.bashrc<br></code></pre></td></tr></table></figure>
+
+<p>进入zookeeper配置文件路径：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">cd</span> /usr/<span class="hljs-built_in">local</span>/zookeeper-3.4.14/conf/<br></code></pre></td></tr></table></figure>
+
+<p>复制zoo-sample.cfg，并将新文件命名为zoo.cfg </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ cp zoo_sample.cfg zoo.cfg<br></code></pre></td></tr></table></figure>
+
+<p> 配置zoo.cfg</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200701140434566.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<ul>
+<li>dataDir</li>
+</ul>
+<p>zookeeper文件存放位置，此文件夹需要hadoop用户有权限使用，否则会报错。</p>
+<h3 id="2-3配置-usr-local-hbase-conf-hbase-env-sh"><a href="#2-3配置-usr-local-hbase-conf-hbase-env-sh" class="headerlink" title="2.3配置/usr/local/hbase/conf/hbase-env.sh"></a>2.3配置/usr/local/hbase/conf/hbase-env.sh</h3><p>配置下列项：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">export JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;jdk1.8.0_51<br>export HBASE_CLASSPATH&#x3D;&#x2F;usr&#x2F;local&#x2F;hbase&#x2F;conf <br>export HBASE_MANAGES_ZK&#x3D;false<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>JAVA_HOME </li>
+</ul>
+<p>jdk安装路径。</p>
+<ul>
+<li>HBASE_CLASSPATH</li>
+</ul>
+<p>设置为本机HBase安装目录下的conf目录。</p>
+<ul>
+<li>HBASE_MANAGES_ZK</li>
+</ul>
+<p>此处设置为false，表示不使用自带zookeeper，使用外部zk。</p>
+<h3 id="2-4配置-usr-local-hbase-conf-hbase-site-xml"><a href="#2-4配置-usr-local-hbase-conf-hbase-site-xml" class="headerlink" title="2.4配置/usr/local/hbase/conf/hbase-site.xml"></a>2.4配置/usr/local/hbase/conf/hbase-site.xml</h3><p>配置内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;configuration&gt;<br>	&lt;property&gt;<br>                &lt;name&gt;hbase.rootdir&lt;&#x2F;name&gt;<br>                &lt;value&gt;hdfs:&#x2F;&#x2F;master:9000&#x2F;hbase&lt;&#x2F;value&gt;<br>        &lt;&#x2F;property&gt;<br>        &lt;property&gt;<br>                &lt;name&gt;hbase.cluster.distributed&lt;&#x2F;name&gt;<br>                &lt;value&gt;true&lt;&#x2F;value&gt;<br>        &lt;&#x2F;property&gt;<br>	&lt;property&gt;<br>        	&lt;name&gt;hbase.master.info.port&lt;&#x2F;name&gt;<br>    		&lt;value&gt;16010&lt;&#x2F;value&gt; <br>        &lt;&#x2F;property&gt;<br>	&lt;property&gt;<br>                &lt;name&gt;hbase.master&lt;&#x2F;name&gt;<br>                &lt;value&gt;master:16000&lt;&#x2F;value&gt;<br>        &lt;&#x2F;property&gt;<br>	&lt;property&gt;<br>     		&lt;name&gt;zookeeper.znode.parent&lt;&#x2F;name&gt;<br>     		&lt;value&gt;&#x2F;hbase&#x2F;master&lt;&#x2F;value&gt;<br>	 &lt;&#x2F;property&gt;<br>	&lt;property&gt;<br>		&lt;name&gt;hbase.zookeeper.quorum&lt;&#x2F;name&gt;<br>		&lt;value&gt;master:2181&lt;&#x2F;value&gt;<br>	&lt;&#x2F;property&gt; <br>&lt;&#x2F;configuration&gt;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>hbase.rootdir</li>
+</ul>
+<p>指定HBase的存储目录。9000为HDFS端口（NameNode端口），hbase文件夹必须在hdfs中存在，如果不存在，请使用</p>
+<ul>
+<li>hbase.cluster.distributed</li>
+</ul>
+<p>设置集群处于分布式模式。</p>
+<ul>
+<li>hbase.master.info.port</li>
+</ul>
+<p>hmater管理界面端口，可通过ip+port在web界面查看hmaster状态。</p>
+<ul>
+<li>hbase.master</li>
+</ul>
+<p>hmater的ip和端口信息。</p>
+<ul>
+<li>hbase.zookeeper.quorum</li>
+</ul>
+<p>zookeeper的ip和端口信息。</p>
+<h2 id="2-5修改regionservers"><a href="#2-5修改regionservers" class="headerlink" title="2.5修改regionservers"></a>2.5修改regionservers</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ vi /usr/<span class="hljs-built_in">local</span>/hbase/conf/regionservers<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200701135247129.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>此处暂时只有一个节点，为本机，此处master已在/etc/hosts文件中做了映射。</p>
+<h3 id="2-6测试运行"><a href="#2-6测试运行" class="headerlink" title="2.6测试运行"></a>2.6测试运行</h3><p>关闭防火墙</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ systemctl <span class="hljs-built_in">disable</span> firewalld<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623132244303.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>关闭SElinux </p>
+<p>编辑/etc/selinux/config，将SELINUX=enforcing 修改为”SELINUX=disabled”</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623132542806.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>启动hadoop:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ start-dfs.sh<br></code></pre></td></tr></table></figure>
+
+<p>出现如下说明启动Hadoop成功</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620220710605.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>启动zookeeper</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ zkServer.sh start<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200701140552875.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>启动HBase:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ start-hbase.sh<br></code></pre></td></tr></table></figure>
+
+<p>出现如下说明启动HBase成功</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200701140636729.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>关闭HBase:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ stop-hbase.sh<br></code></pre></td></tr></table></figure>
+
+<p> 如果一直关闭不了，可以先使用如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hbase-daemon.sh stop master<br>$ stop-hbase.sh<br></code></pre></td></tr></table></figure>
+
+<p> 关闭zookeeper</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">$ zkServer.sh stop<br></code></pre></td></tr></table></figure>
+
+<p>关闭Hadoop: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ stop-dfs.sh<br></code></pre></td></tr></table></figure>
+
+<p>启动顺序：Hadoop-&gt;Zookeeper-&gt;HBase</p>
+<p>关闭顺序：HBase-&gt;Zookeeper-&gt;Hadoop</p>
+<p>错误日志位置：HBase安装目录下的logs文件夹，本例日志位于/usr/local/hbase/logs。</p>
+<h2 id="2-7解决错误"><a href="#2-7解决错误" class="headerlink" title="2.7解决错误"></a>2.7解决错误</h2><p>日志目录： /usr/local/hbase/logs/</p>
+<p>mater节点日志：hbase-hadoop-master-localhost.localdomain.log </p>
+<p>zookeeper日志：hbase-hadoop-zookeeper-localhost.localdomain.log</p>
+<p>当启动HBase报错org.apache.hadoop.hbase.PleaseHoldException: Master is initializing：</p>
+<p>进入zk客户端：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ zkCli.sh -server localhost:2181<br></code></pre></td></tr></table></figure>
+
+<p>查看所有文件夹：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620213903956.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>删除文件夹：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620214027848.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>退出客户端：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620214218846.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 删除hdfs中hbase文件夹下内容：</p>
+<p>由于本文在写时换了两种不同环境的网络，所以ip有所不同，172.20.10.6与192.168.0.121均为我虚拟机的ip，在实践时只需要统一即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hadoop fs -rm -r hdfs://172.20.10.6:9000/hbase/*<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200620220540461.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>重启HBase。 </p>
+<p>使用shell操作数据时：The node /hbase is not in ZooKeeper. It should have been written by the master. Check the value configured in ‘zookeeper.znode.parent’. There could be a mismatch with the one configured in the master.</p>
+<p>缺少配置，在/usr/local/hbase/conf/hbase-site.xml中添加下列配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;property&gt;  <br>    &lt;name&gt;zookeeper.znode.parent&lt;&#x2F;name&gt;  <br>    &lt;value&gt;&#x2F;hbase&lt;&#x2F;value&gt;  <br>&lt;&#x2F;property&gt; <br></code></pre></td></tr></table></figure>
+
+<p>本人遇到的一个很坑的问题：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623130852377.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>根据教学配置，完全按照步骤来，但是就是zookeeper连接不上，各种问题搜索了一大堆所谓的解决答案，同时也换了很多个HBase版本进行安装，但是问题根本就没有得以解决，反而浪费了两天时间。</p>
+<p>以下是我安装过的HBase版本：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623130711426.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 就在我心灰意冷的时候，突然想到会不会是hdfs的问题，然后改了hdfs的配置文件/usr/local/hadoop/etc/hadoop/core-site.xml：</p>
+<p>将172.20.10.6(本机ip)改成了localhost</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020062313144819.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>接着启动Hadoop，启动HBase，错误完美解决。问题就是这样，有时候你越刚它越解决不出来，但是在之后的某一个时间，突然就意外解决了。</p>
+<h1 id="四、编程实践"><a href="#四、编程实践" class="headerlink" title="四、编程实践"></a>四、编程实践</h1><h2 id="1、Shell命令"><a href="#1、Shell命令" class="headerlink" title="1、Shell命令"></a>1、Shell命令</h2><h3 id="1-1HBase创建表"><a href="#1-1HBase创建表" class="headerlink" title="1.1HBase创建表"></a>1.1HBase创建表</h3><p>创建用户user表，有name、password、age、address属性。且还有HBase默认创建的行键。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">create <span class="hljs-string">&#x27;user&#x27;</span>,<span class="hljs-string">&#x27;name&#x27;</span>,<span class="hljs-string">&#x27;password&#x27;</span>,<span class="hljs-string">&#x27;age&#x27;</span>,<span class="hljs-string">&#x27;address&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623132804786.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> describe命令查看表信息:</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623132950182.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="1-2HBase增删改查"><a href="#1-2HBase增删改查" class="headerlink" title="1.2HBase增删改查"></a>1.2HBase增删改查</h2><p>在添加数据时，HBase会自动给数据添加一个时间戳，在需要改数据时，只需要新增一条数据就行，因为有时间戳作为版本区别，HBase会定时回收旧数据，只留下最新的几个版本，单条的记录留存的版本数量在创建的时候指定。</p>
+<ul>
+<li>写入数据</li>
+</ul>
+<p>写入行键为1，名称为‘han’的记录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">put <span class="hljs-string">&#x27;user&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>, <span class="hljs-string">&#x27;name&#x27;</span>, <span class="hljs-string">&#x27;han&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623133949406.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<ul>
+<li> 删除数据</li>
+</ul>
+<p>delete：删除数据，是put的反向操作。</p>
+<p>deleteall：删除一行数据。</p>
+<p>删除行键为1的数据的name列：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623134700773.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p> 我这里是因为之前给行键为1的数据写入了4个name值，分别为‘han’,’han1’,’han2’,’han3’，所以删除时会逐级删除。</p>
+<p>删除行键为1的数据：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623134940928.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<ul>
+<li>查看数据 </li>
+</ul>
+<p>get：查看表中某一行数据。</p>
+<p>scan：查表中所有数据。</p>
+<p>查看user表的行键为2的数据：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623135322135.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>查看user表所有数据： </p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623135346801.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<ul>
+<li>删除表 </li>
+</ul>
+<p>先让表不可用，再删除。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">disable</span> <span class="hljs-string">&#x27;user&#x27;</span>  <br>drop <span class="hljs-string">&#x27;user&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623135602265.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<ul>
+<li>查询表历史数据 </li>
+</ul>
+<p>指定历史版本(5)来创建表：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">create <span class="hljs-string">&#x27;user&#x27;</span>,&#123;NAME=&gt;<span class="hljs-string">&#x27;name&#x27;</span>,VERSIONS=&gt;5&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020062313585092.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>插入数据： </p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623140019407.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>指定历史版本数查询的数据： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">get <span class="hljs-string">&#x27;user&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,&#123;COLUMN=&gt;<span class="hljs-string">&#x27;name&#x27;</span>,VERSIONS=&gt;2&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200623140206780.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>退出hbase shell命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">exit</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2、Java-API"><a href="#2、Java-API" class="headerlink" title="2、Java API"></a>2、Java API</h2><p>由于本文是在虚拟机上搭建hadoop、hbase环境，在本地物理机上写代码运行，所以需要在物理机上配变量：</p>
+<p>编辑C:\Windows\System32\drivers\etc\hosts文件：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200701141259414.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>说明：192.168.0.121为虚拟机ip，mater为虚拟机别名。</p>
+<p>完整项目请查看本片文章上传资源。</p>
+<p>maven依赖：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;dependencies&gt;<br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;<br>		&lt;artifactId&gt;hbase-client&lt;/artifactId&gt;<br>		&lt;version&gt;1.3.1&lt;/version&gt;<br>	&lt;/dependency&gt;<br><br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;<br>		&lt;artifactId&gt;hbase-server&lt;/artifactId&gt;<br>		&lt;version&gt;1.3.1&lt;/version&gt;<br>	&lt;/dependency&gt;<br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;<br>		&lt;artifactId&gt;hbase-common&lt;/artifactId&gt;<br>		&lt;version&gt;1.3.1&lt;/version&gt;<br>	&lt;/dependency&gt;<br><br>	&lt;dependency&gt;<br>		&lt;groupId&gt;commons-logging&lt;/groupId&gt;<br>		&lt;artifactId&gt;commons-logging&lt;/artifactId&gt;<br>		&lt;version&gt;1.2&lt;/version&gt;<br>	&lt;/dependency&gt;<br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;<br>		&lt;artifactId&gt;hadoop-hdfs&lt;/artifactId&gt;<br>		&lt;version&gt;2.5.1&lt;/version&gt;<br>	&lt;/dependency&gt;<br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;<br>		&lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;<br>		&lt;version&gt;2.5.1&lt;/version&gt;<br>	&lt;/dependency&gt;<br><br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;<br>		&lt;artifactId&gt;hadoop-common&lt;/artifactId&gt;<br>		&lt;version&gt;2.5.1&lt;/version&gt;<br>	&lt;/dependency&gt;<br>	&lt;dependency&gt;<br>		&lt;groupId&gt;log4j&lt;/groupId&gt;<br>		&lt;artifactId&gt;log4j&lt;/artifactId&gt;<br>		&lt;version&gt;1.2.17&lt;/version&gt;<br>	&lt;/dependency&gt;<br>	&lt;dependency&gt;<br>		&lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br>		&lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;<br>		&lt;version&gt;1.7.12&lt;/version&gt;<br>	&lt;/dependency&gt;<br>	&lt;dependency&gt;<br>		&lt;groupId&gt;junit&lt;/groupId&gt;<br>		&lt;artifactId&gt;junit&lt;/artifactId&gt;<br>		&lt;version&gt;3.8.1&lt;/version&gt;<br>		&lt;scope&gt;test&lt;/scope&gt;<br>	&lt;/dependency&gt;<br>&lt;/dependencies&gt;<br></code></pre></td></tr></table></figure>
+
+<p>本段代码包含对hbase数据库的增删改查，建表删除表的功能。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.hbase;<br><br><span class="hljs-keyword">import</span> java.io.IOException;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">import</span> org.apache.hadoop.conf.Configuration;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.Cell;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.CellUtil;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.HBaseConfiguration;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.HColumnDescriptor;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.HTableDescriptor;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.TableName;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.client.Admin;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.client.Connection;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.client.ConnectionFactory;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.client.Delete;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.client.Get;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.client.Put;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.client.Result;<br><span class="hljs-keyword">import</span> org.apache.hadoop.hbase.client.Table;<br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * HBASE的JAVA API</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Example</span> </span>&#123;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Configuration conf;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Admin admin;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Connection conn;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br><span class="hljs-comment">//		// 创建一个列族为name、age、address的名为test_user的表</span><br><span class="hljs-comment">//		createTable(&quot;test_user&quot;, Lists.newArrayList(&quot;name&quot;, &quot;age&quot;, &quot;address&quot;));</span><br><span class="hljs-comment">//		// 显示所有表</span><br><span class="hljs-comment">//		listTable();</span><br><span class="hljs-comment">//		// 向test_user表中行键为1，列族为name的列添加值（此处name列族没有子列，所以col列为空）</span><br><span class="hljs-comment">//		insertRow(&quot;test_user&quot;, &quot;1&quot;, &quot;name&quot;, &quot;&quot;, &quot;hanguilin&quot;);</span><br><span class="hljs-comment">//		// 获取test_user表中行键为1，列族为name的值</span><br><span class="hljs-comment">//		getRow(&quot;test_user&quot;, &quot;1&quot;, &quot;name&quot;, &quot;&quot;);</span><br><span class="hljs-comment">//		// 删除test_user表中行键为1，列族为name中的值</span><br><span class="hljs-comment">//		deleteRow(&quot;test_user&quot;, &quot;1&quot;, &quot;name&quot;, &quot;&quot;);</span><br><span class="hljs-comment">//		// 删除test_user表</span><br><span class="hljs-comment">//		deleteTable(&quot;test_user&quot;);</span><br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 初始化</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span> </span>&#123;<br>		<br>		conf = HBaseConfiguration.create();<br>		conf.set(<span class="hljs-string">&quot;hbase.rootdir&quot;</span>, <span class="hljs-string">&quot;hdfs://192.168.0.121:9000/hbase&quot;</span>);<br>		conf.set(<span class="hljs-string">&quot;hbase.cluster.distributed&quot;</span>, <span class="hljs-string">&quot;true&quot;</span>);<br>		conf.set(<span class="hljs-string">&quot;hbase.master.info.port&quot;</span>, <span class="hljs-string">&quot;16010&quot;</span>);<br>		conf.set(<span class="hljs-string">&quot;hbase.zookeeper.property.dataDir&quot;</span>, <span class="hljs-string">&quot;/usr/local/hbase/data/zookeeper&quot;</span>);<br>		conf.set(<span class="hljs-string">&quot;hbase.master&quot;</span>, <span class="hljs-string">&quot;192.168.0.121:16000&quot;</span>);<br>		conf.set(<span class="hljs-string">&quot;zookeeper.znode.parent&quot;</span>, <span class="hljs-string">&quot;/hbase/master&quot;</span>);<br>		conf.set(<span class="hljs-string">&quot;hbase.zookeeper.quorum&quot;</span>, <span class="hljs-string">&quot;192.168.0.121:2181&quot;</span>);<br>		<span class="hljs-keyword">try</span> &#123;<br>			conn = ConnectionFactory.createConnection(conf);<br>			admin = conn.getAdmin();<br>		&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>			e.printStackTrace();<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 关闭连接</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">close</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">try</span> &#123;<br>			<span class="hljs-keyword">if</span>(admin != <span class="hljs-keyword">null</span>) &#123;<br>				admin.close();<br>			&#125;<br>			<span class="hljs-keyword">if</span>(conn != <span class="hljs-keyword">null</span>) &#123;<br>				conn.close();<br>			&#125;<br>		&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>			e.printStackTrace();<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 创建表</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> tableName 表明</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> columnFamily 列族</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">createTable</span><span class="hljs-params">(String tableName, List&lt;String&gt; columnFamily)</span> </span>&#123;<br>		init();<br>		TableName table = TableName.valueOf(tableName);<br>		<span class="hljs-keyword">try</span> &#123;<br>			<span class="hljs-comment">// 判断表是否已存在</span><br>			<span class="hljs-keyword">if</span>(admin.tableExists(table)) &#123;<br>				System.out.println(tableName + <span class="hljs-string">&quot;已存在&quot;</span>);<br>			&#125;<br>			HTableDescriptor hTableDescriptor = <span class="hljs-keyword">new</span> HTableDescriptor(table); <br>			<span class="hljs-keyword">if</span>(columnFamily != <span class="hljs-keyword">null</span> &amp;&amp; !columnFamily.isEmpty()) &#123;<br>				columnFamily.forEach(column -&gt; &#123;<br>					HColumnDescriptor hColumnDescriptor = <span class="hljs-keyword">new</span> HColumnDescriptor(column);<br>					hTableDescriptor.addFamily(hColumnDescriptor);<br>				&#125;);<br>			&#125;<br>			admin.createTable(hTableDescriptor);<br>			System.out.println(<span class="hljs-string">&quot;创建表成功&quot;</span>);<br>		&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>			e.printStackTrace();<br>		&#125; <span class="hljs-keyword">finally</span> &#123;<br>			close();<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 删除表</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> tableName 表名称</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">deleteTable</span><span class="hljs-params">(String tableName)</span> </span>&#123;<br>		init();<br>		TableName table = TableName.valueOf(tableName);<br>		<span class="hljs-keyword">try</span> &#123;<br>			<span class="hljs-keyword">if</span>(admin.tableExists(table)) &#123;<br>				<span class="hljs-comment">// 弃用表</span><br>				admin.disableTable(table);<br>				<span class="hljs-comment">// 删除表</span><br>				admin.deleteTable(table);<br>				System.out.println(<span class="hljs-string">&quot;删除表成功&quot;</span>);<br>			&#125;<br>		&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>			e.printStackTrace();<br>		&#125; <span class="hljs-keyword">finally</span> &#123;<br>			close();<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 获取所有表</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">listTable</span><span class="hljs-params">()</span> </span>&#123;<br>		init();<br>		<span class="hljs-keyword">try</span> &#123;<br>			HTableDescriptor[] listTables = admin.listTables();<br>			<span class="hljs-keyword">for</span> (HTableDescriptor hTableDescriptor : listTables) &#123;<br>				System.out.println(hTableDescriptor.getTableName().getNameAsString());<br>			&#125;<br>		&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>			e.printStackTrace();<br>		&#125; <span class="hljs-keyword">finally</span> &#123;<br>			close();<br>		&#125;<br><br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 插入行数据</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> tableName 表名称</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> rowKey 行键</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> colFamily 列族</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> col 列名称</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> value 值</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">insertRow</span><span class="hljs-params">(String tableName, String rowKey, String colFamily, String col, String value)</span> </span>&#123;<br>		init();<br>		<span class="hljs-keyword">try</span> &#123;<br>			Table table = conn.getTable(TableName.valueOf(tableName));<br>			Put put = <span class="hljs-keyword">new</span> Put(rowKey.getBytes());<br>			put.addColumn(colFamily.getBytes(), col.getBytes(), value.getBytes());<br>			table.put(put);<br>			table.close();<br>			System.out.println(<span class="hljs-string">&quot;插入数据成功&quot;</span>);<br>		&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>			e.printStackTrace();<br>		&#125; <span class="hljs-keyword">finally</span> &#123;<br>			close();<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 删除行数据</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> tableName 表名称</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> rowKey 行键</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> colFamily 列族</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> col 列名称</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">deleteRow</span><span class="hljs-params">(String tableName, String rowKey, String colFamily, String col)</span> </span>&#123;<br>		init();<br>		<span class="hljs-keyword">try</span> &#123;<br>			Table table = conn.getTable(TableName.valueOf(tableName));<br>			Delete delete = <span class="hljs-keyword">new</span> Delete(rowKey.getBytes());<br>			delete.addColumn(colFamily.getBytes(), col.getBytes());<br>			table.delete(delete);<br>			System.out.println(<span class="hljs-string">&quot;删除数据成功&quot;</span>);<br>		&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>			e.printStackTrace();<br>		&#125; <span class="hljs-keyword">finally</span> &#123;<br>			close();<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 获取行数据</span><br><span class="hljs-comment">	 * </span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> tableName 表名称</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> rowKey 行键</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> colFamily 列族</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> col 列名称</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">getRow</span><span class="hljs-params">(String tableName, String rowKey, String colFamily, String col)</span> </span>&#123;<br>		init();<br>		<span class="hljs-keyword">try</span> &#123;<br>			Table table = conn.getTable(TableName.valueOf(tableName));<br>			Get get = <span class="hljs-keyword">new</span> Get(rowKey.getBytes());<br>			get.addColumn(colFamily.getBytes(), col.getBytes());<br>			Result result = table.get(get);<br>			Cell[] rawCells = result.rawCells();<br>			<span class="hljs-keyword">for</span> (Cell cell : rawCells) &#123;<br>				System.out.println(<span class="hljs-string">&quot;RowName:&quot;</span> + <span class="hljs-keyword">new</span> String(CellUtil.cloneRow(cell)) + <span class="hljs-string">&quot; &quot;</span>);<br>				System.out.println(<span class="hljs-string">&quot;Timetamp:&quot;</span> + cell.getTimestamp() + <span class="hljs-string">&quot; &quot;</span>);<br>				System.out.println(<span class="hljs-string">&quot;column Family:&quot;</span> + <span class="hljs-keyword">new</span> String(CellUtil.cloneFamily(cell)) + <span class="hljs-string">&quot; &quot;</span>);<br>				System.out.println(<span class="hljs-string">&quot;row Name:&quot;</span> + <span class="hljs-keyword">new</span> String(CellUtil.cloneQualifier(cell)) + <span class="hljs-string">&quot; &quot;</span>);<br>				System.out.println(<span class="hljs-string">&quot;value:&quot;</span> + <span class="hljs-keyword">new</span> String(CellUtil.cloneValue(cell)) + <span class="hljs-string">&quot; &quot;</span>);<br>			&#125;<br>			table.close();<br>		&#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>			e.printStackTrace();<br>		&#125; <span class="hljs-keyword">finally</span> &#123;<br>			close();<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/11/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93HBase%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;11&#x2F;%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93HBase%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;11&#x2F;%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93HBase%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/" rel="tag">HBase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2020/12/10/Linux%E7%B3%BB%E7%BB%9F%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E4%B8%8B%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip%E5%9C%B0%E5%9D%80/">Linux系统桥接模式下配置静态ip地址<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="/js/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "雁过留痕",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-2">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81HBase%E7%AE%80%E4%BB%8B"><span class="toc-text">一、HBase简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B"><span class="toc-text">二、安装教程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E4%B8%8B%E8%BD%BDHBase"><span class="toc-text">1、下载HBase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E5%AE%89%E8%A3%85HBase"><span class="toc-text">2、安装HBase</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%85%8D%E7%BD%AEHBase"><span class="toc-text">三、配置HBase</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%8D%95%E6%9C%BA%E6%A8%A1%E5%BC%8F%E9%85%8D%E7%BD%AE"><span class="toc-text">1.单机模式配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-usr-local-hbase-conf-hbase-env-sh%E9%85%8D%E7%BD%AE"><span class="toc-text">修改&#x2F;usr&#x2F;local&#x2F;hbase&#x2F;conf&#x2F;hbase-env.sh配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E9%85%8D%E7%BD%AE-usr-local-hbase-conf-hbase-site-xml"><span class="toc-text">1.1配置&#x2F;usr&#x2F;local&#x2F;hbase&#x2F;conf&#x2F;hbase-site.xml</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E6%B5%8B%E8%AF%95%E8%BF%90%E8%A1%8C"><span class="toc-text">1.2测试运行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3%E5%81%9C%E6%AD%A2HBase"><span class="toc-text">1.3停止HBase</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%EF%BC%8C%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8Zookeeper"><span class="toc-text">2.伪分布式配置，使用外部Zookeeper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E5%88%AB%E5%90%8D"><span class="toc-text">2.1配置主机别名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85zookeeper"><span class="toc-text">2.2下载安装zookeeper</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3%E9%85%8D%E7%BD%AE-usr-local-hbase-conf-hbase-env-sh"><span class="toc-text">2.3配置&#x2F;usr&#x2F;local&#x2F;hbase&#x2F;conf&#x2F;hbase-env.sh</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4%E9%85%8D%E7%BD%AE-usr-local-hbase-conf-hbase-site-xml"><span class="toc-text">2.4配置&#x2F;usr&#x2F;local&#x2F;hbase&#x2F;conf&#x2F;hbase-site.xml</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5%E4%BF%AE%E6%94%B9regionservers"><span class="toc-text">2.5修改regionservers</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6%E6%B5%8B%E8%AF%95%E8%BF%90%E8%A1%8C"><span class="toc-text">2.6测试运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7%E8%A7%A3%E5%86%B3%E9%94%99%E8%AF%AF"><span class="toc-text">2.7解决错误</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5"><span class="toc-text">四、编程实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81Shell%E5%91%BD%E4%BB%A4"><span class="toc-text">1、Shell命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1HBase%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="toc-text">1.1HBase创建表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2HBase%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5"><span class="toc-text">1.2HBase增删改查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81Java-API"><span class="toc-text">2、Java API</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</html>
