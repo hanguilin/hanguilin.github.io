@@ -1,0 +1,478 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Docker部署Tomcat项目 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="1.设置yum源下载yum工具
+1$ yum -y i...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/h-loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+    </div>
+    <div class="center">Docker部署Tomcat项目</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/132235-155038095593f7.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Docker部署Tomcat项目</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 14, 2020</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/14/Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE/" class="leancloud" data-flag-title="Docker部署Tomcat项目"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1123</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h2 id="1-设置yum源"><a href="#1-设置yum源" class="headerlink" title="1.设置yum源"></a>1.设置yum源</h2><p>下载yum工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ yum -y install yum-utils<br></code></pre></td></tr></table></figure>
+<p>设置aliyun为yum源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">yum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo<br></code></pre></td></tr></table></figure>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707140146330.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="2-搜索tomcat"><a href="#2-搜索tomcat" class="headerlink" title="2.搜索tomcat"></a>2.搜索tomcat</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ docker search tomcat<br></code></pre></td></tr></table></figure>
+<p>如果出现：</p>
+<p>Error response from daemon: Get <a target="_blank" rel="noopener" href="https://index.docker.io/v1/search?q=tomcat&amp;n=25">https://index.docker.io/v1/search?q=tomcat&amp;n=25</a>: dial tcp: lookup index.docker.io on 61.128.128.68:53: no such host</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707140950166.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>就需要修改DNS解析，首先查看你当前物理机的DNS地址：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707142919329.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ vi &#x2F;etc&#x2F;resolv.conf<br></code></pre></td></tr></table></figure>
+<p>设置DNS地址：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020070714303840.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>保存后重启network:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ systemctl restart network<br></code></pre></td></tr></table></figure>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707143225723.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="3-拉取tomcat8-5"><a href="#3-拉取tomcat8-5" class="headerlink" title="3.拉取tomcat8.5"></a>3.拉取tomcat8.5</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ docker pull tomcat:8.5<br></code></pre></td></tr></table></figure>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707143552288.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="4-查看本地镜像"><a href="#4-查看本地镜像" class="headerlink" title="4.查看本地镜像"></a>4.查看本地镜像</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ docker images|grep tomcat<br></code></pre></td></tr></table></figure>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707143820378.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="5-启动一个tomcat实例"><a href="#5-启动一个tomcat实例" class="headerlink" title="5.启动一个tomcat实例"></a>5.启动一个tomcat实例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ docker run -d -v &#x2F;root&#x2F;tomcat1:&#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;webapps -p 8080:8080 --name tomcat1 docker.io&#x2F;tomcat:8.5  <br></code></pre></td></tr></table></figure>
+<ul>
+<li>-d<br>  表示后台启动</li>
+<li>-v<br>  表示挂载，将容器中的/usr/local/tomcat/webapps挂载到宿主机的/root/tomcat1文件夹</li>
+<li>-p<br>  表示设置访问端口，第一个端口为外部访问的端口，第二个为容器内端口</li>
+<li>–name<br>  设置容器名称</li>
+<li>docker.io/tomcat:8.5<br>  docker.io/tomcat镜像名称，8.5为TAG，就是版本号，如果没有TAG，将会选取最新的镜像运行，如果本地仓库没有最新的镜像，将会pull最新的镜像到本地，并运行。<h2 id="6-部署自己的项目"><a href="#6-部署自己的项目" class="headerlink" title="6.部署自己的项目"></a>6.部署自己的项目</h2>将物理机上的Tomcat-&gt;webapps中的ROOT文件夹加放到宿主机的/root/tomcat1中，作为上传jar包的演示。</li>
+</ul>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707224906540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br>在外部网站访问8080端口：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707224557491.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>如果连接拒绝，可能是由于虚拟机的端口未开放，需要关闭防火墙或者开放端口，可以参考文章《<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37171817/article/details/106731470">CentOS7 中开放端口</a>》解决。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/14/Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;14&#x2F;Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;14&#x2F;Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tomcat/" rel="tag">Tomcat</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2020/12/14/%E5%9F%BA%E4%BA%8ECentOS7%E5%AE%89%E8%A3%85docker/">基于CentOS7安装docker<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="/js/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "雁过留痕",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-2">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%AE%BE%E7%BD%AEyum%E6%BA%90"><span class="toc-text">1.设置yum源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%90%9C%E7%B4%A2tomcat"><span class="toc-text">2.搜索tomcat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8B%89%E5%8F%96tomcat8-5"><span class="toc-text">3.拉取tomcat8.5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E9%95%9C%E5%83%8F"><span class="toc-text">4.查看本地镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AAtomcat%E5%AE%9E%E4%BE%8B"><span class="toc-text">5.启动一个tomcat实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E9%83%A8%E7%BD%B2%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="toc-text">6.部署自己的项目</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</html>
