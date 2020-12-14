@@ -6,13 +6,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Docker部署Tomcat项目 - 与李的个人博客</title>
+  <title>Docker安装mysql57 - 与李的个人博客</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   
-  <meta name="description" content="1.设置yum源下载yum工具
-1$ yum -y i...">
+  <meta name="description" content="搜索docker中的mysql镜像：
+1$ docke...">
   <meta name="author" content="韩桂林 (与李)">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
@@ -138,7 +138,7 @@
         <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
       
     </div>
-    <div class="center">Docker部署Tomcat项目</div>
+    <div class="center">Docker安装mysql57</div>
     <div class="right">
       <i class="iconfont iconmenu j-navbar-menu"></i>
     </div>
@@ -179,54 +179,57 @@
       <div class="col-xl-8"><article class="article">
   <div class="wrap">
     <section class="head">
-  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/132235-155038095593f7.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/112650-154346201017da.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">Docker部署Tomcat项目</h1>
+    <h1 class="head-title">Docker安装mysql57</h1>
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 14, 2020</span>
       
         <span class="post-info-item">
-          <i class="iconfont iconeye"></i><span id="/2020/12/14/Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE/" class="leancloud" data-flag-title="Docker部署Tomcat项目"></span>
+          <i class="iconfont iconeye"></i><span id="/2020/12/14/Docker%E5%AE%89%E8%A3%85mysql57/" class="leancloud" data-flag-title="Docker安装mysql57"></span>
         </span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1123</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>604</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <h2 id="1-设置yum源"><a href="#1-设置yum源" class="headerlink" title="1.设置yum源"></a>1.设置yum源</h2><p>下载yum工具</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ yum -y install yum-utils<br></code></pre></td></tr></table></figure>
-<p>设置aliyun为yum源</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">yum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo<br></code></pre></td></tr></table></figure>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707140146330.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<h2 id="2-搜索tomcat"><a href="#2-搜索tomcat" class="headerlink" title="2.搜索tomcat"></a>2.搜索tomcat</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ docker search tomcat<br></code></pre></td></tr></table></figure>
-<p>如果出现：</p>
-<p>Error response from daemon: Get <a target="_blank" rel="noopener" href="https://index.docker.io/v1/search?q=tomcat&amp;n=25">https://index.docker.io/v1/search?q=tomcat&amp;n=25</a>: dial tcp: lookup index.docker.io on 61.128.128.68:53: no such host</p>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707140950166.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<p>就需要修改DNS解析，首先查看你当前物理机的DNS地址：</p>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707142919329.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ vi &#x2F;etc&#x2F;resolv.conf<br></code></pre></td></tr></table></figure>
-<p>设置DNS地址：</p>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020070714303840.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<p>保存后重启network:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ systemctl restart network<br></code></pre></td></tr></table></figure>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707143225723.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<h2 id="3-拉取tomcat8-5"><a href="#3-拉取tomcat8-5" class="headerlink" title="3.拉取tomcat8.5"></a>3.拉取tomcat8.5</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ docker pull tomcat:8.5<br></code></pre></td></tr></table></figure>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707143552288.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<h2 id="4-查看本地镜像"><a href="#4-查看本地镜像" class="headerlink" title="4.查看本地镜像"></a>4.查看本地镜像</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ docker images|grep tomcat<br></code></pre></td></tr></table></figure>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707143820378.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<h2 id="5-启动一个tomcat实例"><a href="#5-启动一个tomcat实例" class="headerlink" title="5.启动一个tomcat实例"></a>5.启动一个tomcat实例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ docker run -d -v &#x2F;root&#x2F;tomcat1:&#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;webapps -p 8080:8080 --name tomcat1 docker.io&#x2F;tomcat:8.5  <br></code></pre></td></tr></table></figure>
-<ul>
-<li>-d<br>  表示后台启动</li>
-<li>-v<br>  表示挂载，将容器中的/usr/local/tomcat/webapps挂载到宿主机的/root/tomcat1文件夹</li>
-<li>-p<br>  表示设置访问端口，第一个端口为外部访问的端口，第二个为容器内端口</li>
-<li>–name<br>  设置容器名称</li>
-<li>docker.io/tomcat:8.5<br>  docker.io/tomcat镜像名称，8.5为TAG，就是版本号，如果没有TAG，将会选取最新的镜像运行，如果本地仓库没有最新的镜像，将会pull最新的镜像到本地，并运行。<h2 id="6-部署自己的项目"><a href="#6-部署自己的项目" class="headerlink" title="6.部署自己的项目"></a>6.部署自己的项目</h2>将物理机上的Tomcat-&gt;webapps中的ROOT文件夹加放到宿主机的/root/tomcat1中，作为上传jar包的演示。</li>
-</ul>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707224906540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br>在外部网站访问8080端口：</p>
-<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200707224557491.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
-<p>如果连接拒绝，可能是由于虚拟机的端口未开放，需要关闭防火墙或者开放端口，可以参考文章《<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37171817/article/details/106731470">CentOS7 中开放端口</a>》解决。</p>
+        <p>搜索docker中的mysql镜像：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker search mysql<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200708175314234.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>拉取mysql57:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker pull docker.io/mysql:5.7<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/2020070817540399.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>查看已下载的镜像：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker images<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200708180503607.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>创建容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">$ docker run -d -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD&#x3D;root --restart&#x3D;always  docker.io&#x2F;mysql:5.7<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200708180538988.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>查看已运行的容器，查看容器id：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker ps<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200708180603921.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>进入容器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker <span class="hljs-built_in">exec</span> -it 146c196fef3a /bin/bash<br></code></pre></td></tr></table></figure>
+
+<p>进入mysql:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">$ mysql -u root -p<br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200708180914294.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>修改root用户允许远程访问：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">identified</span> <span class="hljs-keyword">with</span> mysql_native_password <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;root&#x27;</span>;<br><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">ALL</span> <span class="hljs-keyword">PRIVILEGES</span> <span class="hljs-keyword">ON</span> *.* <span class="hljs-keyword">TO</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">IDENTIFIED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;123456&#x27;</span> <br></code></pre></td></tr></table></figure>
+
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200708180935756.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>通过navicat远程连接：</p>
+<img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200708181015415.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  alt="" style="zoom:67%;" />
+
+<p>安装成功。</p>
 
       </section>
       <section class="extra">
@@ -234,7 +237,7 @@
           <ul class="copyright">
   
     <li><strong>本文作者：</strong>韩桂林 (与李)</li>
-    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/14/Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;14&#x2F;Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;14&#x2F;Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE&#x2F;index.html</a></li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/14/Docker%E5%AE%89%E8%A3%85mysql57/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;14&#x2F;Docker%E5%AE%89%E8%A3%85mysql57&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;14&#x2F;Docker%E5%AE%89%E8%A3%85mysql57&#x2F;index.html</a></li>
     <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
   
 </ul>
@@ -251,12 +254,12 @@
 </section>
         
         
-  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Tomcat/" rel="tag">Tomcat</a></li></ul> 
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/" rel="tag">Mysql</a></li></ul> 
 
         
   <nav class="nav">
-    <a href="/2020/12/14/Docker%E5%AE%89%E8%A3%85mysql57/"><i class="iconfont iconleft"></i>Docker安装mysql57</a>
-    <a href="/2020/12/14/%E5%9F%BA%E4%BA%8ECentOS7%E5%AE%89%E8%A3%85docker/">基于CentOS7安装docker<i class="iconfont iconright"></i></a>
+    <a href="/2020/12/14/Docker%E5%AE%89%E8%A3%85Redis/"><i class="iconfont iconleft"></i>Docker安装Redis</a>
+    <a href="/2020/12/14/Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE/">Docker部署Tomcat项目<i class="iconfont iconright"></i></a>
   </nav>
 
       </section>
@@ -302,7 +305,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%AE%BE%E7%BD%AEyum%E6%BA%90"><span class="toc-text">1.设置yum源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%90%9C%E7%B4%A2tomcat"><span class="toc-text">2.搜索tomcat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8B%89%E5%8F%96tomcat8-5"><span class="toc-text">3.拉取tomcat8.5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E9%95%9C%E5%83%8F"><span class="toc-text">4.查看本地镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AAtomcat%E5%AE%9E%E4%BE%8B"><span class="toc-text">5.启动一个tomcat实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E9%83%A8%E7%BD%B2%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="toc-text">6.部署自己的项目</span></a></li></ol>
+    
   </aside>
 
         
