@@ -1,9 +1,3 @@
-console.log("%c Github %c", "background:#333333; color:#ffffff", "", "https://github.com/hanguilin");
-console.log("%c CSDN %c", "background:#333333; color:#ffffff", "", "https://blog.csdn.net/qq_37171817");
-console.log("%c 博客园 %c", "background:#333333; color:#ffffff", "", "https://www.cnblogs.com/yl-space/");
-console.log("%c 掘金 %c", "background:#333333; color:#ffffff", "", "https://juejin.im/user/5d3e80235188253c143b92d4/posts");
-console.log("%c 简书 %c", "background:#333333; color:#ffffff", "", "https://www.jianshu.com/u/58b4076f1f1a");
-
 (function ($) {
   "use strict";
 
@@ -128,6 +122,13 @@ console.log("%c 简书 %c", "background:#333333; color:#ffffff", "", "https://ww
   }
 
   var action = {
+	showConsoleInfo: function () {
+		console.log("%c Github %c", "background:#333333; color:#ffffff", "", "https://github.com/hanguilin");
+		console.log("%c CSDN %c", "background:#333333; color:#ffffff", "", "https://blog.csdn.net/qq_37171817");
+		console.log("%c 博客园 %c", "background:#333333; color:#ffffff", "", "https://www.cnblogs.com/yl-space/");
+		console.log("%c 掘金 %c", "background:#333333; color:#ffffff", "", "https://juejin.im/user/5d3e80235188253c143b92d4/posts");
+		console.log("%c 简书 %c", "background:#333333; color:#ffffff", "", "https://www.jianshu.com/u/58b4076f1f1a");
+	},
     smoothScroll: function () {
       // a[href *=#], area[href *=#]
       $(".smooth-scroll, .toc-link").click(function () {
@@ -332,6 +333,7 @@ console.log("%c 简书 %c", "background:#333333; color:#ffffff", "", "https://ww
   }
 
   $(function () {
+	action.showConsoleInfo();
     action.smoothScroll();
     action.loading();
     action.fab();
