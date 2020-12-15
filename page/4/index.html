@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
-  
+  <meta name="keywords" content="Java、Mysql、Redis、Spring、SpringBoot、SpringCloud">
   <meta name="description" content="分享JAVA知识">
   <meta name="author" content="韩桂林 (与李)">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
@@ -155,13 +155,25 @@
 </nav>
   <main id="main">
   
-    <div class="preview">
-  <nav class="navbar j-navbar-menu">
-    <i class="iconfont iconmenu"></i>
-  </nav>
+    <div class="preview" id="light-preview">
+	<nav class="navbar">
+		<div class="left">
+		  
+			<i class="iconfont iconqrcode j-navbar-qrcode"></i>
+		  
+		  
+			<i class="iconfont iconmoono color-toggle" id="light-color-toggle" color-toggle="light"></i>
+		  
+		</div>
+		<div class="right">
+		  <i class="iconfont iconmenu j-navbar-menu "></i>
+		</div>
+		
+		  <div id="qrcode-navbar"></div>
+		
+	</nav>
   <div class="preview-image">
-    <h2 class="preview-motto" id="motto"></h2>
-    <!-- <span class="preview-cursor">|</span> -->
+    <h2 class="preview-motto" id="light-motto"></h2>
     
       <div class="preview-overlay">
         <svg class="preview-waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -182,6 +194,35 @@
   <div class="preview-scroll">
     <a href="#container" class="smooth-scroll"><i class="iconfont iconMouse"></i></a>
   </div>
+</div>
+  
+  
+    <div id="dark-preview" style="display:none">
+	<iframe src="https://www.jq22.com/js/a8.html" id="dark-preview-frame"></iframe>
+	<div id="dark-preview-motto">
+		<nav class="navbar">
+			<div class="left">
+			  
+				<i class="iconfont iconqrcode j-navbar-qrcode"></i>
+			  
+			  
+				<i class="iconfont iconmoono color-toggle" id="dark-color-toggle" color-toggle="light"></i>
+			  
+			</div>
+			<div class="right">
+			  <i class="iconfont iconmenu j-navbar-menu "></i>
+			</div>
+			
+			  <div id="qrcode-navbar"></div>
+			
+		</nav>
+		<div class="motto_area">
+			<h2 class="preview-motto" id="dark-motto"></h2>
+		</div>
+		<div class="preview-scroll">
+			<a href="#container" class="smooth-scroll"><i class="iconfont iconMouse"></i></a>
+		</div>
+	</div>
 </div>
   
   <div class="container" id="container">

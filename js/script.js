@@ -84,21 +84,21 @@
         }, 500));
       },
     },
-    motto: function () {
+    motto: function (elem) {
       if (CONFIG.preview.motto.jinrishici) {
         jinrishici && jinrishici.load(function (result) {
           var data = result.data;
           if (!data || !data.content) {
             return;
           }
-          $("#motto").text(data.content);
+          $('#'+elem).text(data.content);
         });
       } else if (CONFIG.preview.motto.api) {
         $.get(CONFIG.preview.motto.api, function (data) {
-          data && $("#motto").text(data);
+          data && $('#'+elem).text(data);
         });
       } else {
-		  var boxObj = document.getElementById('motto');
+		  var boxObj = document.getElementById(elem);
 		  if (boxObj) {
 			  new Typed(boxObj, {
 			  // 注意：输出的可以是标签，将标签当节点运行。比如下面的h2
@@ -119,6 +119,102 @@
 	beat: function () {
 	   
 	}
+  }
+  
+  var color_mode = {
+	  $rootElement: $("html"),
+	  lightColorToggle: "#light-color-toggle",
+	  darkColorToggle: "#dark-color-toggle",
+	  toggleElement: '.color-toggle',
+	  $highlightElement: $('[name=highlight-style]'),
+	  modeStorageKey: 'color-mode',
+	  mediaQueryStorageKey: 'color-mode-media-query',
+	  htmlAttribute: 'color-mode',
+	  toggleAttribute: 'color-toggle',
+
+	  getMediaQuery: function () {
+		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	  },
+
+	  getModeStorage: function () {
+		return localStorage.getItem(color_mode.modeStorageKey);
+	  },
+
+	  setModeStorage: function (mode) {
+		localStorage.setItem(color_mode.modeStorageKey, mode);
+	  },
+
+	  getMediaQueryStorage: function () {
+		return localStorage.getItem(color_mode.mediaQueryStorageKey);
+	  },
+
+	  setMediaQueryStorage: function (mode) {
+		localStorage.setItem(color_mode.mediaQueryStorageKey, mode);
+	  },
+
+	  setColorMode: function (mode) {
+		color_mode.$rootElement.attr(color_mode.htmlAttribute, mode)
+		color_mode.setModeStorage(mode);
+	  },
+
+	  setIcon: function (mode) {
+		if (!$(color_mode.toggleElement)) return;
+		var addIconName = mode === 'light' ? 'iconmoono' : 'iconsuno';
+		var removeIconName = mode === 'light' ? 'iconsuno' : 'iconmoono';
+		$(color_mode.toggleElement).removeClass(removeIconName)
+		$(color_mode.toggleElement).addClass(addIconName)
+		$(color_mode.toggleElement).attr(color_mode.toggleAttribute, mode);
+	  },
+
+	  setHighlightStyle: function (mode) {
+		for (var i = 0; i < color_mode.$highlightElement.length; i++) {
+			var $item = color_mode.$highlightElement.eq(i)
+			$item.attr('disabled', !($item.attr('mode') === mode));
+		}
+	  },
+
+	  loadColorMode: function (mode) {
+		var mode = mode || color_mode.getModeStorage() || color_mode.getMediaQuery();
+		if (color_mode.getMediaQuery() === color_mode.getMediaQueryStorage()) {
+		  mode = color_mode.getModeStorage();
+		} else {
+		  mode = color_mode.getMediaQuery();
+		  color_mode.setMediaQueryStorage(mode);
+		}
+		console.log('mode', mode)
+
+		action.previewChange(mode)
+		color_mode.setColorMode(mode);
+		color_mode.setIcon(mode);
+		color_mode.setHighlightStyle(mode);
+	  },
+
+	  switchColorMode: function () {
+		$("body").on("click", color_mode.lightColorToggle, function(){
+		  color_mode.modeBindFun($(this))
+		})
+		
+		$("body").on("click", color_mode.darkColorToggle, function(){
+			color_mode.modeBindFun($(this))
+		})
+		$("#color-toggle").click(function(){
+			color_mode.modeBindFun($(this), $(this))
+		})
+	  },
+	  modeBindFun: function (e, toggleElement) {
+		  color_mode.clearMotto()  
+		  var mode = e.attr(color_mode.toggleAttribute) === 'light' ? 'dark' : 'light';
+
+		  action.previewChange(mode)
+		  color_mode.setColorMode(mode);
+		  color_mode.setIcon(mode);
+		  color_mode.setHighlightStyle(mode);
+	  },
+	  clearMotto () {
+		  $("#light-motto").empty()
+		  $("#dark-motto").empty()
+		  $(".typed-cursor").remove()
+	  }
   }
 
   var action = {
@@ -252,11 +348,6 @@
         }
       });
     },
-    preview: function () {
-      fn.background();
-      fn.motto();
-	  fn.beat();
-    },
     qrcode: function () {
       if (CONFIG.qrcode.type === 'url') {
         $("#qrcode-navbar").qrcode({
@@ -329,7 +420,49 @@
       playList.forEach(function (item) {
         ZHAOO.zui.notification({ title: item.title, content: item.content, delay: delay });
       });
-    }
+    },
+	initLightPreview: function () {
+	  $("#dark-preview").css('display', 'none')
+	  $("#light-preview").css('display', 'block')
+	  
+      fn.background();
+      fn.motto('light-motto');
+	  fn.beat();
+    },
+	initDarkPreview: function () {
+		$("#light-preview").css('display', 'none')
+		$("#dark-preview").css('display', 'block')
+
+		var iframeUrlArr = []
+			for (var i = 1; i <= 15; i++) {
+				if (i === 6) {
+					continue
+				}
+				iframeUrlArr.push(`https://www.jq22.com/js/a${i}.html`)
+			}
+		var index = localStorage.getItem('frame_index') || 0
+		if (index >= iframeUrlArr.length) {
+			index = 0
+		} else {
+			index ++
+		}
+		$("#dark-preview-frame").attr('src', iframeUrlArr[index])
+		localStorage.setItem('frame_index', index)
+		fn.motto('dark-motto');
+		fn.beat();
+	},
+	previewChange: function (mode) {
+		switch (mode) {
+			case 'light':
+				action.initLightPreview()
+				break
+			case 'dark':
+				action.initDarkPreview()
+				break
+			default:
+				action.initLightPreview()
+		}
+	}
   }
 
   $(function () {
@@ -340,7 +473,10 @@
     action.navbar();
     action.menu();
     action.scroolToTop();
-    action.preview();
+	
+	color_mode.loadColorMode();
+	color_mode.switchColorMode();
+    
     CONFIG.fancybox && action.fancybox();
     CONFIG.pjax && action.pjax();
     CONFIG.lazyload.enable && action.lazyload();
