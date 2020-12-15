@@ -1,0 +1,582 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>浅谈JPA - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="一、关于JPA&emsp;JPA全称Java Pers...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/h-loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+    </div>
+    <div class="center">浅谈JPA</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/231718-1493565438628b.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">浅谈JPA</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 15, 2020</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/15/%E6%B5%85%E8%B0%88JPA/" class="leancloud" data-flag-title="浅谈JPA"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>16992</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="一、关于JPA"><a href="#一、关于JPA" class="headerlink" title="一、关于JPA"></a>一、关于JPA</h1><p>&emsp;JPA全称Java Persistence API，是Sun官方在JDK5.0后提出的Java持久化规范（JSR 338），这些类存在于java.persistence包中。JPA的出现主要是为了简化持久层开发以及整合ORM实体映射技术，结束Hibernate、TopLink、ORM各自为营的局面。</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/20200718202041189.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br>&emsp;JPA是吸收现有ORM架构的基础再发展，它易于使用，伸缩性强。总的来说，其具有以下三个特点：</p>
+<ul>
+<li>ORM映射元数据<br>支持xml和注解两种形式，元数据描述对象和表之间的映射关系。</li>
+<li>API<br>操作实体对象来进行数据库CRUD。</li>
+<li>查询语言<br>通过面向对象，而非面向数据库的查询语言查询数据，降低与数据库的耦合。<h2 id="二、Spring-Data-JPA"><a href="#二、Spring-Data-JPA" class="headerlink" title="二、Spring Data JPA"></a>二、Spring Data JPA</h2>&emsp;官方网址：<a target="_blank" rel="noopener" href="https://spring.io/projects/spring-data-jpa">https://spring.io/projects/spring-data-jpa</a><br><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718202404362.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></li>
+</ul>
+<p>&emsp;官方给出的说明中总结几点：</p>
+<ol>
+<li>Spring Data JPA是开源项目Spring Data中的一员。</li>
+<li>可以轻松的实现基于JPA的存储库。</li>
+<li>让你Spring项目中操作数据库更简便。</li>
+<li>不用再书写太多样板化的代码。</li>
+<li>可以基于一定规则给你自动提供实现。<h1 id="三、JPA、Hibernate、Spring-Data-JPA三者之间的关系"><a href="#三、JPA、Hibernate、Spring-Data-JPA三者之间的关系" class="headerlink" title="三、JPA、Hibernate、Spring Data JPA三者之间的关系"></a>三、JPA、Hibernate、Spring Data JPA三者之间的关系</h1>&emsp;JPA是一种规范，内部是由接口和抽象类组成的。而Hibernate是一套成熟的ORM框架，且实现了JPA规范，理论上来说也可以成其为JPA的一种实现方式。Spring Data JPA是Spring中提供的一套基于JPA规范封装的更高级的框架，它的基础实现还是使用Hibernate。<h1 id="四、Spring-Data-JPA在Java中的实现"><a href="#四、Spring-Data-JPA在Java中的实现" class="headerlink" title="四、Spring Data JPA在Java中的实现"></a>四、Spring Data JPA在Java中的实现</h1><h2 id="1-1-创建并配置SpringBoot项目"><a href="#1-1-创建并配置SpringBoot项目" class="headerlink" title="1.1 创建并配置SpringBoot项目"></a>1.1 创建并配置SpringBoot项目</h2>本例直接在官网上创建和下载，创建SpringBoot项目可以参考《<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37171817/article/details/107413296">从零到一搭建一个SpringBoot2.0项目</a>》</li>
+</ol>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718205126450.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;查看mysql-connector-java版本，如果用的6.0以上，数据库驱动类就要用com.mysql.cj.jdbc.Driver而不是com.mysql.jdbc.Driver，并且给数据库连接就爱上serverTimezone参数，否则就会报错。</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718210759613.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;mysql配置名称在SpringBoot2.x和1.x之间还有区别，所以配置的时候先看org.springframework.boot.autoconfigure.jdbc.DataSourceProperties类：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718211941142.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;根据名称来对应，比如驱动类的配置就需要spring.datasource.driverClassName。</p>
+<p>&emsp;mysql连接配置（在application.properties中配置）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># mysql连接配置</span><br><span class="hljs-string">spring.datasource.driverClassName=com.mysql.jdbc.Driver</span><br><span class="hljs-string">spring.datasource.url=jdbc:mysql://localhost:3306/demo?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;nullCatalogMeansCurrent=true&amp;serverTimezone=GMT</span><br><span class="hljs-string">spring.datasource.username=root</span><br><span class="hljs-string">spring.datasource.password=root</span><br></code></pre></td></tr></table></figure>
+<p>&emsp;同样JPA的配置名称也可以在JpaProperties中找，完整路径：org.springframework.boot.autoconfigure.orm.jpa.JpaProperties</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718212240208.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;jpa配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># Spring Data JPA配置</span><br><span class="hljs-string">spring.jpa.show-sql=true</span><br><span class="hljs-string">spring.jpa.properties.hibernate.hbm2ddl.auto=update</span><br><span class="hljs-string">spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect</span><br></code></pre></td></tr></table></figure>
+<p>&emsp;hbm2ddl.auto的四种选项：</p>
+<ul>
+<li>create<br>每次运行该程序，没有表格会新建表格，表内有数据会清空；</li>
+<li>create-drop<br>每次程序结束的时候会清空表；</li>
+<li>update<br>每次运行程序，没有表格会新建表格，表内有数据不会清空，只会更新；</li>
+<li>validate<br>运行程序会校验数据与数据库的字段类型是否相同，不同会报错；</li>
+</ul>
+<p>&emsp;完整配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">server.port=8080</span><br><br><span class="hljs-comment"># mysql连接配置</span><br><span class="hljs-string">spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver</span><br><span class="hljs-string">spring.datasource.url=jdbc:mysql://localhost:3306/demo?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;nullCatalogMeansCurrent=true&amp;serverTimezone=GMT</span><br><span class="hljs-string">spring.datasource.username=root</span><br><span class="hljs-string">spring.datasource.password=root</span><br><br><span class="hljs-comment"># Spring Data JPA配置</span><br><span class="hljs-string">spring.jpa.show-sql=true</span><br><span class="hljs-string">spring.jpa.properties.hibernate.hbm2ddl.auto=update</span><br><span class="hljs-string">spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect</span><br></code></pre></td></tr></table></figure>
+<h2 id="1-2-简单接口调用"><a href="#1-2-简单接口调用" class="headerlink" title="1.2 简单接口调用"></a>1.2 简单接口调用</h2><p>&emsp;项目结构：<br><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718220958211.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;新建<strong>学生</strong>实体类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.jpa.entity;<br><br><span class="hljs-keyword">import</span> javax.persistence.Column;<br><span class="hljs-keyword">import</span> javax.persistence.Entity;<br><span class="hljs-keyword">import</span> javax.persistence.GeneratedValue;<br><span class="hljs-keyword">import</span> javax.persistence.Id;<br><span class="hljs-keyword">import</span> javax.persistence.Table;<br><br><span class="hljs-keyword">import</span> org.hibernate.annotations.GenericGenerator;<br><br><span class="hljs-meta">@Entity</span><br><span class="hljs-meta">@Table(name = &quot;student&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span> </span>&#123;<br>	<br>	<span class="hljs-meta">@Id</span><br>	<span class="hljs-meta">@GenericGenerator(name = &quot;uuidGenerator&quot;, strategy = &quot;uuid&quot;)</span><br>	<span class="hljs-meta">@GeneratedValue(generator = &quot;uuidGenerator&quot;)</span><br>	<span class="hljs-keyword">private</span> String id;<br>	<br>	<span class="hljs-meta">@Column</span><br>	<span class="hljs-keyword">private</span> String name;<br>	<br>	<span class="hljs-meta">@Column</span><br>	<span class="hljs-keyword">private</span> Integer age;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setId</span><span class="hljs-params">(String id)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.id = id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> name;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setName</span><span class="hljs-params">(String name)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.name = name;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Integer <span class="hljs-title">getAge</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> age;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAge</span><span class="hljs-params">(Integer age)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.age = age;<br>	&#125;<br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>@Entity<br>表示其是ORM实体;</li>
+<li>@Table(name = “student”)<br>表示对应表的名称为student；</li>
+<li>@Id<br>表示本字段为主键；</li>
+<li>@GenericGenerator(name = “uuidGenerator”, strategy = “uuid”)<br>表示主键生成器，命名为uuidGenerator，策略为uuid；</li>
+<li>@GeneratedValue(generator = “uuidGenerator”)<br>自动生成值，生成规则为上面定义的名称；</li>
+<li>@column<br>表示是表中的一个字段，名称会根据驼峰自动映射。如果该实体中某字段不需要称为表中一个字段，需要在字段上加@Transient注解。<br><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718220235782.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></li>
+</ul>
+<p>&emsp;这种形式表示主键自动递增。</p>
+<p>&emsp;数据访问层：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.jpa.dao;<br><br><span class="hljs-keyword">import</span> org.springframework.data.jpa.repository.JpaRepository;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Repository;<br><br><span class="hljs-keyword">import</span> com.yl.jpa.entity.Student;<br><br><span class="hljs-meta">@Repository</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">StudentDao</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">JpaRepository</span>&lt;<span class="hljs-title">Student</span>, <span class="hljs-title">String</span>&gt; </span>&#123;<br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;需要加上@Repository注解，继承JpaRepository，Studnet为其实体类，String为主键类型。</p>
+<p>&emsp;继承类之后，就可以调用默认方法了，如：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718220704568.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;业务层：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.jpa.service.impl;<br><br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-keyword">import</span> com.yl.jpa.dao.StudentDao;<br><span class="hljs-keyword">import</span> com.yl.jpa.entity.Student;<br><span class="hljs-keyword">import</span> com.yl.jpa.service.IStudentService;<br><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StudentServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">IStudentService</span> </span>&#123;<br>	<br>	<span class="hljs-meta">@Autowired</span><br>	<span class="hljs-keyword">private</span> StudentDao studentDao;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">save</span><span class="hljs-params">(Student student)</span> </span>&#123;<br>		studentDao.save(student);<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;业务接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.jpa.service;<br><br><span class="hljs-keyword">import</span> com.yl.jpa.entity.Student;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">IStudentService</span> </span>&#123;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">save</span><span class="hljs-params">(Student student)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;控制层：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.jpa.controller;<br><br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.PostMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestBody;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-keyword">import</span> com.yl.jpa.entity.Student;<br><span class="hljs-keyword">import</span> com.yl.jpa.service.IStudentService;<br><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/student&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StudentController</span> </span>&#123;<br>	<br>	<span class="hljs-meta">@Autowired</span><br>	<span class="hljs-keyword">private</span> IStudentService studentService;<br>	<br>	<span class="hljs-meta">@PostMapping(&quot;/save&quot;)</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">doSave</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> Student student)</span> </span>&#123;<br>		studentService.save(student);<br>		<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;success&quot;</span>;<br>	&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>&emsp;启动项目，项目启动成功后，可以看到自动运行了创建表语句：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718221343257.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718221315401.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;使用postman进行接口测试：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718221443470.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;控制台中打印insert语句：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718221505899.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br>&emsp;查看新增的记录：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718221542222.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="1-3-查询"><a href="#1-3-查询" class="headerlink" title="1.3 查询"></a>1.3 查询</h2><h3 id="1-3-1-名称匹配查询"><a href="#1-3-1-名称匹配查询" class="headerlink" title="1.3.1 名称匹配查询"></a>1.3.1 名称匹配查询</h3><p>&emsp;在Spring Data JPA中，只要你根据规则写了repository方法，就不用自己写sql语句，JPA会自动生成对应的sql语句。<br>| 关键词           | 示例                          | 生成语句                          |<br>| —————- | —————————– | ——————————— |<br>| And              | findByNameAndAge              | where name = ?1 and age = ?2      |<br>| Or               | findByNameOrAge               | where name = ?1 or age = ?2       |<br>| Is,Equals        | findByNameIs,findByNameEquals | where name = ?1                   |<br>| Between          | findByAgeBetween              | where age between ?1 and ?2       |<br>| LessThan         | findByAgeLessThan             | where age &lt; ?1                    |<br>| LessThanEqual    | findByAgeLessThanEqual        | where age &lt;= ?1                   |<br>| GreaterThan      | findByAgeGreaterThan          | where age &gt; ?1                    |<br>| GreaterThanEqual | findByAgeGreaterThanEqual     | where age &gt;= ?1                   |<br>| After            | findByCreateDateAfter         | where create_date &gt; ?1            |<br>| Before           | findByCreateDateBefore        | where create_date &lt; ?1            |<br>| IsNull           | findByAgeIsNull               | where age is null                 |<br>| IsNotNull        | findByAgeIsNotNull            | where age is not null             |<br>| Like             | findByNameLike                | where name like %?1%              |<br>| NotLike          | findByNameNotLike             | where name not like %?1%          |<br>| OrderBy          | findByNameOrderByAgeDesc      | where name = ?1 order by age desc |<br>| In               | findByNameIn                  | where name in (?1)                |<br>| NotIn            | findByNameNotIn               | where name not in (?1)            |<br>| …              |                               |                                   |</p>
+<h3 id="1-3-2-限制查询"><a href="#1-3-2-限制查询" class="headerlink" title="1.3.2 限制查询"></a>1.3.2 限制查询</h3><table>
+<thead>
+<tr>
+<th>关键词</th>
+<th>示例</th>
+<th>生成语句</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Top10</td>
+<td>findTop10ByName</td>
+<td>where name = ?1 limit 10</td>
+</tr>
+<tr>
+<td>First</td>
+<td>findFirstByName</td>
+<td>where name =? limit 1</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-3-自定义查询"><a href="#1-3-3-自定义查询" class="headerlink" title="1.3.3 自定义查询"></a>1.3.3 自定义查询</h3><p>&emsp;使用@Query可以实现自定义查询</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Query(&quot;select s from Student s where name = :name&quot;)</span><br><span class="hljs-function">List&lt;Student&gt; <span class="hljs-title">queryByName</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;name&quot;)</span> String name)</span></span>;<br><br><span class="hljs-meta">@Query(&quot;select s from Student s where name = ?1&quot;)</span><br><span class="hljs-function">List&lt;Student&gt; <span class="hljs-title">queryByName2</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;name&quot;)</span> String name)</span></span>;<br><br><span class="hljs-meta">@Query(value = &quot;select * from student where age = ?1&quot;, nativeQuery = true)</span><br><span class="hljs-function">List&lt;Student&gt; <span class="hljs-title">queryByAge</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;age&quot;)</span> Integer age)</span></span>;<br><br><span class="hljs-meta">@Query(value = &quot;select * from student where age = :age&quot;, nativeQuery = true)</span><br><span class="hljs-function">List&lt;Student&gt; <span class="hljs-title">queryByAge2</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;age&quot;)</span> Integer age)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>&emsp;这四种方式都可以实现查询，但是需要注意，nativeQuery=true表示是原生sql查询，不能写入java实体，比如Student 。</p>
+<h3 id="1-3-4-分页查询"><a href="#1-3-4-分页查询" class="headerlink" title="1.3.4 分页查询"></a>1.3.4 分页查询</h3><p>&emsp;可以使用PageRequest封装页码分页大小，排序数据，并传入findAll方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> Page&lt;Student&gt; <span class="hljs-title">findPage</span><span class="hljs-params">(PageRequest pageRequest)</span> </span>&#123;<br>	<span class="hljs-keyword">return</span> studentDao.findAll(pageRequest);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;page&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> Page&lt;Student&gt; <span class="hljs-title">doGetPage</span><span class="hljs-params">(HttpServletRequest request)</span></span>&#123;<br>	Integer no = Integer.valueOf(request.getParameter(<span class="hljs-string">&quot;no&quot;</span>));<br>	Integer size = Integer.valueOf(request.getParameter(<span class="hljs-string">&quot;size&quot;</span>));<br>	Sort sort = Sort.by(Direction.DESC, <span class="hljs-string">&quot;age&quot;</span>);<br>	<span class="hljs-keyword">return</span> studentService.findPage(PageRequest.of(no, size, sort));<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="1-4-修改删除"><a href="#1-4-修改删除" class="headerlink" title="1.4 修改删除"></a>1.4 修改删除</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Transactional</span><br><span class="hljs-meta">@Modifying</span><br><span class="hljs-meta">@Query(&quot;delete from Student where name = ?1&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">deleteByName</span><span class="hljs-params">(String name)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>&emsp;需要在方法上添加@Modifying注解，且在调用方法内加@Transactional注解，否则报错。</p>
+<h2 id="1-5-关联操作"><a href="#1-5-关联操作" class="headerlink" title="1.5 关联操作"></a>1.5 关联操作</h2><h3 id="1-5-1-多对多"><a href="#1-5-1-多对多" class="headerlink" title="1.5.1 多对多"></a>1.5.1 多对多</h3><p>&emsp;修改<strong>学生</strong>实体类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.jpa.entity;<br><br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">import</span> javax.persistence.CascadeType;<br><span class="hljs-keyword">import</span> javax.persistence.Column;<br><span class="hljs-keyword">import</span> javax.persistence.Entity;<br><span class="hljs-keyword">import</span> javax.persistence.FetchType;<br><span class="hljs-keyword">import</span> javax.persistence.GeneratedValue;<br><span class="hljs-keyword">import</span> javax.persistence.Id;<br><span class="hljs-keyword">import</span> javax.persistence.JoinColumn;<br><span class="hljs-keyword">import</span> javax.persistence.JoinTable;<br><span class="hljs-keyword">import</span> javax.persistence.ManyToMany;<br><span class="hljs-keyword">import</span> javax.persistence.Table;<br><br><span class="hljs-keyword">import</span> org.hibernate.annotations.GenericGenerator;<br><br><span class="hljs-meta">@Entity</span><br><span class="hljs-meta">@Table(name = &quot;student&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span> </span>&#123;<br>	<br>	<span class="hljs-meta">@Id</span><br>	<span class="hljs-meta">@GenericGenerator(name = &quot;uuidGenerator&quot;, strategy = &quot;uuid&quot;)</span><br>	<span class="hljs-meta">@GeneratedValue(generator = &quot;uuidGenerator&quot;)</span><br>	<span class="hljs-keyword">private</span> String id;<br>	<br>	<span class="hljs-meta">@Column</span><br>	<span class="hljs-keyword">private</span> String name;<br>	<br>	<span class="hljs-meta">@Column</span><br>	<span class="hljs-keyword">private</span> Integer age;<br>	<br>	<span class="hljs-meta">@ManyToMany(targetEntity = Course.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)</span><br>    <span class="hljs-meta">@JoinTable(name = &quot;student_course&quot;, joinColumns = &#123;@JoinColumn(name = &quot;student_id&quot;, referencedColumnName = &quot;id&quot;)&#125;,</span><br><span class="hljs-meta">            inverseJoinColumns = &#123;@JoinColumn(name = &quot;course_id&quot;, referencedColumnName = &quot;id&quot;)&#125;)</span><br>	<span class="hljs-keyword">private</span> List&lt;Course&gt; courseList;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123; <br>		<span class="hljs-keyword">return</span> id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setId</span><span class="hljs-params">(String id)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.id = id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> name;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setName</span><span class="hljs-params">(String name)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.name = name;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Integer <span class="hljs-title">getAge</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> age;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAge</span><span class="hljs-params">(Integer age)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.age = age;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Course&gt; <span class="hljs-title">getCourseList</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> courseList;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setCourseList</span><span class="hljs-params">(List&lt;Course&gt; courseList)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.courseList = courseList;<br>	&#125;<br>	<br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&emsp;新建<strong>课程</strong>实体类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.jpa.entity;<br><br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">import</span> javax.persistence.Column;<br><span class="hljs-keyword">import</span> javax.persistence.Entity;<br><span class="hljs-keyword">import</span> javax.persistence.FetchType;<br><span class="hljs-keyword">import</span> javax.persistence.GeneratedValue;<br><span class="hljs-keyword">import</span> javax.persistence.Id;<br><span class="hljs-keyword">import</span> javax.persistence.JoinColumn;<br><span class="hljs-keyword">import</span> javax.persistence.JoinTable;<br><span class="hljs-keyword">import</span> javax.persistence.ManyToMany;<br><span class="hljs-keyword">import</span> javax.persistence.Table;<br><br><span class="hljs-keyword">import</span> org.hibernate.annotations.GenericGenerator;<br><br><span class="hljs-meta">@Entity</span><br><span class="hljs-meta">@Table(name = &quot;course&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Course</span> </span>&#123;<br>	<br>	<span class="hljs-meta">@Id</span><br>	<span class="hljs-meta">@GenericGenerator(name = &quot;uuidGenerator&quot;, strategy = &quot;uuid&quot;)</span><br>	<span class="hljs-meta">@GeneratedValue(generator = &quot;uuidGenerator&quot;)</span><br>	<span class="hljs-keyword">private</span> String id;<br>	<br>	<span class="hljs-meta">@Column</span><br>	<span class="hljs-keyword">private</span> String courseName;<br>	<br>	<span class="hljs-meta">@ManyToMany(targetEntity = Student.class, fetch = FetchType.LAZY)</span><br>    <span class="hljs-meta">@JoinTable(name = &quot;student_course&quot;, joinColumns = &#123;@JoinColumn(name = &quot;course_id&quot;, referencedColumnName = &quot;id&quot;)&#125;,</span><br><span class="hljs-meta">            inverseJoinColumns = &#123;@JoinColumn(name = &quot;student_id&quot;, referencedColumnName = &quot;id&quot;)&#125;)</span><br>	<span class="hljs-keyword">private</span> List&lt;Student&gt; studentList;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setId</span><span class="hljs-params">(String id)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.id = id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getCourseName</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> courseName;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setCourseName</span><span class="hljs-params">(String courseName)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.courseName = courseName;<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;学生和课程是多对多，所以需要设置@ManyToMany。</p>
+<p>&emsp;joinColumns表示当前对象的配置，其中course_id为表student_course中的字段，对应着本对象中的id值。</p>
+<p>&emsp;inverseJoinColumns表示对方对象的配置，其中student_id为表student_course中的字段，对应着对方对象中的id值。<br>重启项目，会发现自动创建了student_course表：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200718235712645.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br>&emsp;保存学生实体：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200719000121793.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;其中的课程以及关联表也会新增：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200719000154831.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200719000208242.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200719000218539.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br>&emsp;查询学生实体：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200719000455963.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>&emsp;关联信息也被查询出来。</p>
+<h3 id="1-5-2-一对多"><a href="#1-5-2-一对多" class="headerlink" title="1.5.2 一对多"></a>1.5.2 一对多</h3><p>&emsp;新建Address类，学生对地址是一对多的关系。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.jpa.entity;<br><br><span class="hljs-keyword">import</span> javax.persistence.CascadeType;<br><span class="hljs-keyword">import</span> javax.persistence.Entity;<br><span class="hljs-keyword">import</span> javax.persistence.GeneratedValue;<br><span class="hljs-keyword">import</span> javax.persistence.Id;<br><span class="hljs-keyword">import</span> javax.persistence.JoinColumn;<br><span class="hljs-keyword">import</span> javax.persistence.ManyToOne;<br><span class="hljs-keyword">import</span> javax.persistence.Table;<br><br><span class="hljs-keyword">import</span> org.hibernate.annotations.GenericGenerator;<br><br><span class="hljs-meta">@Entity</span><br><span class="hljs-meta">@Table(name = &quot;address&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Address</span> </span>&#123;<br>	<br>	<span class="hljs-meta">@Id</span><br>	<span class="hljs-meta">@GenericGenerator(name = &quot;uuidGenerator&quot;, strategy = &quot;uuid&quot;)</span><br>	<span class="hljs-meta">@GeneratedValue(generator = &quot;uuidGenerator&quot;)</span><br>	<span class="hljs-keyword">private</span> String id;<br>	<br>	<span class="hljs-keyword">private</span> String address;<br>	<br>	<span class="hljs-meta">@ManyToOne(cascade = CascadeType.ALL)</span><br>	<span class="hljs-meta">@JoinColumn(name = &quot;student_id&quot;)</span><br>	<span class="hljs-keyword">private</span> Student student;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Student <span class="hljs-title">getStudent</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> student;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setStudent</span><span class="hljs-params">(Student student)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.student = student;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setId</span><span class="hljs-params">(String id)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.id = id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getAddress</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> address;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAddress</span><span class="hljs-params">(String address)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.address = address;<br>	&#125;<br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><p>@JoinColumn(name = “student_id”)</p>
+<p>表示在Address表中增加一列，列名叫做student_id，关联student的id。</p>
+<h3 id="1-5-3-多对一"><a href="#1-5-3-多对一" class="headerlink" title="1.5.3 多对一"></a>1.5.3 多对一</h3><p>&emsp;地址对学生是多对一的关系，所以修改Student类：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.jpa.entity;<br><br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">import</span> javax.persistence.CascadeType;<br><span class="hljs-keyword">import</span> javax.persistence.Column;<br><span class="hljs-keyword">import</span> javax.persistence.Entity;<br><span class="hljs-keyword">import</span> javax.persistence.FetchType;<br><span class="hljs-keyword">import</span> javax.persistence.GeneratedValue;<br><span class="hljs-keyword">import</span> javax.persistence.Id;<br><span class="hljs-keyword">import</span> javax.persistence.JoinColumn;<br><span class="hljs-keyword">import</span> javax.persistence.JoinTable;<br><span class="hljs-keyword">import</span> javax.persistence.ManyToMany;<br><span class="hljs-keyword">import</span> javax.persistence.OneToMany;<br><span class="hljs-keyword">import</span> javax.persistence.Table;<br><br><span class="hljs-keyword">import</span> org.hibernate.annotations.GenericGenerator;<br><br><span class="hljs-meta">@Entity</span><br><span class="hljs-meta">@Table(name = &quot;student&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span> </span>&#123;<br>	<br>	<span class="hljs-meta">@Id</span><br>	<span class="hljs-meta">@GenericGenerator(name = &quot;uuidGenerator&quot;, strategy = &quot;uuid&quot;)</span><br>	<span class="hljs-meta">@GeneratedValue(generator = &quot;uuidGenerator&quot;)</span><br>	<span class="hljs-keyword">private</span> String id;<br>	<br>	<span class="hljs-meta">@Column</span><br>	<span class="hljs-keyword">private</span> String name;<br>	<br>	<span class="hljs-meta">@Column</span><br>	<span class="hljs-keyword">private</span> Integer age;<br>	<br>	<span class="hljs-meta">@ManyToMany(targetEntity = Course.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)</span><br>    <span class="hljs-meta">@JoinTable(name = &quot;student_course&quot;, joinColumns = &#123;@JoinColumn(name = &quot;student_id&quot;, referencedColumnName = &quot;id&quot;)&#125;,</span><br><span class="hljs-meta">            inverseJoinColumns = &#123;@JoinColumn(name = &quot;course_id&quot;, referencedColumnName = &quot;id&quot;)&#125;)</span><br>	<span class="hljs-keyword">private</span> List&lt;Course&gt; courseList;<br>	<br>	<span class="hljs-meta">@OneToMany(mappedBy = &quot;student&quot;)</span><br>	<span class="hljs-keyword">private</span> List&lt;Address&gt; addressList;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>&#123; <br>		<span class="hljs-keyword">return</span> id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setId</span><span class="hljs-params">(String id)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.id = id;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> name;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setName</span><span class="hljs-params">(String name)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.name = name;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> Integer <span class="hljs-title">getAge</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> age;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAge</span><span class="hljs-params">(Integer age)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.age = age;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Course&gt; <span class="hljs-title">getCourseList</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> courseList;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setCourseList</span><span class="hljs-params">(List&lt;Course&gt; courseList)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.courseList = courseList;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Address&gt; <span class="hljs-title">getAddressList</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">return</span> addressList;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAddressList</span><span class="hljs-params">(List&lt;Address&gt; addressList)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.addressList = addressList;<br>	&#125;<br>	<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<ul>
+<li><p>@OneToMany(mappedBy = “student”)</p>
+<p>表示关系由student方维护。</p>
+<h2 id="1-6-对象状态"><a href="#1-6-对象状态" class="headerlink" title="1.6 对象状态"></a>1.6 对象状态</h2><p>&emsp;Spring Data JPA中对象的状态如下：</p>
+</li>
+<li><p>瞬时状态（new/transient）：没有主键，不与持久化上下文关联，即 new 出的对象（但不能指定id的值，若指定则是游离态而非瞬时态）</p>
+</li>
+<li><p>托管状态（persistent）：使用EntityManager进行find或者persist操作返回的对象即处于托管状态，此时该对象已经处于持久化上下文中（被EntityManager监控），任何对该实体的修改都会在提交事务时同步到数据库中。</p>
+</li>
+<li><p>游离状态（detached）：有主键，但是没有跟持久化上下文关联的实体对象。</p>
+</li>
+<li><p>删除状态 （deleted）：当调用EntityManger对实体进行remove后，该实体对象就处于删除状态。其本质也就是一个瞬时状态的对象。<br><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200719005959685.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+</li>
+</ul>
+<p>&emsp;需要注意的是，在一个事务方法中，即使你是在调用save方法之后对实体重新赋值，那么新赋的值也会被修改到数据库里。因为此时是在一个事务中，且对象还是托管状态。<br>如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Transactional</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">save</span><span class="hljs-params">(Student student)</span> </span>&#123;<br>	studentDao.save(student);<br>	student.setAge(<span class="hljs-number">100</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&emsp;save之后对age赋值。使用postman测试：</p>
+<p><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200719004018240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br><img   class="lazyload" data-original="https://img-blog.csdnimg.cn/20200719004031358.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ><br>&emsp;得出的结果是100，这显然不是我们预期的结果。</p>
+<p>&emsp;我们可以用BeanUtils.copyProperties克隆一份对象进行操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Transactional</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">save</span><span class="hljs-params">(Student student)</span> </span>&#123;<br>	studentDao.saveAndFlush(student);<br>	<br>	Student student2 = <span class="hljs-keyword">new</span> Student();<br>	BeanUtils.copyProperties(student, student2);<br>	student2.setAge(<span class="hljs-number">100</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/15/%E6%B5%85%E8%B0%88JPA/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;15&#x2F;%E6%B5%85%E8%B0%88JPA&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;15&#x2F;%E6%B5%85%E8%B0%88JPA&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JPA/" rel="tag">JPA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%81%E4%B9%85%E5%8C%96/" rel="tag">持久化</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2020/12/15/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AASpringCloud2%E9%A1%B9%E7%9B%AE/"><i class="iconfont iconleft"></i>如何搭建一个SpringCloud2项目</a>
+    <a href="/2020/12/15/%E6%90%9E%E6%87%82ThreadLocal%E5%8E%9F%E7%90%86/">搞懂ThreadLocal原理<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="/js/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "雁过留痕",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-2">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%85%B3%E4%BA%8EJPA"><span class="toc-text">一、关于JPA</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Spring-Data-JPA"><span class="toc-text">二、Spring Data JPA</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81JPA%E3%80%81Hibernate%E3%80%81Spring-Data-JPA%E4%B8%89%E8%80%85%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">三、JPA、Hibernate、Spring Data JPA三者之间的关系</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Spring-Data-JPA%E5%9C%A8Java%E4%B8%AD%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">四、Spring Data JPA在Java中的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E5%88%9B%E5%BB%BA%E5%B9%B6%E9%85%8D%E7%BD%AESpringBoot%E9%A1%B9%E7%9B%AE"><span class="toc-text">1.1 创建并配置SpringBoot项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E7%AE%80%E5%8D%95%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8"><span class="toc-text">1.2 简单接口调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E6%9F%A5%E8%AF%A2"><span class="toc-text">1.3 查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-1-%E5%90%8D%E7%A7%B0%E5%8C%B9%E9%85%8D%E6%9F%A5%E8%AF%A2"><span class="toc-text">1.3.1 名称匹配查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-2-%E9%99%90%E5%88%B6%E6%9F%A5%E8%AF%A2"><span class="toc-text">1.3.2 限制查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-3-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9F%A5%E8%AF%A2"><span class="toc-text">1.3.3 自定义查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-4-%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="toc-text">1.3.4 分页查询</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E4%BF%AE%E6%94%B9%E5%88%A0%E9%99%A4"><span class="toc-text">1.4 修改删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-%E5%85%B3%E8%81%94%E6%93%8D%E4%BD%9C"><span class="toc-text">1.5 关联操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-1-%E5%A4%9A%E5%AF%B9%E5%A4%9A"><span class="toc-text">1.5.1 多对多</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-2-%E4%B8%80%E5%AF%B9%E5%A4%9A"><span class="toc-text">1.5.2 一对多</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-3-%E5%A4%9A%E5%AF%B9%E4%B8%80"><span class="toc-text">1.5.3 多对一</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-6-%E5%AF%B9%E8%B1%A1%E7%8A%B6%E6%80%81"><span class="toc-text">1.6 对象状态</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</html>

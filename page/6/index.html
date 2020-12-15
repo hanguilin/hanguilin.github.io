@@ -1,0 +1,636 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="分享JAVA知识">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: true,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/h-loading.gif'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个在互联网行业苟且偷生的人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      }
+    }
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  
+    <div class="preview">
+  <nav class="navbar j-navbar-menu">
+    <i class="iconfont iconmenu"></i>
+  </nav>
+  <div class="preview-image">
+    <h2 class="preview-motto" id="motto"></h2>
+    <!-- <span class="preview-cursor">|</span> -->
+    
+      <div class="preview-overlay">
+        <svg class="preview-waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+          <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+          </defs>
+          <g class="preview-parallax">
+            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(var(--color-background-rgb),0.7"></use>
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(var(--color-background-rgb),0.5)"></use>
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(var(--color-background-rgb),0.3)"></use>
+            <use xlink:href="#gentle-wave" x="48" y="7" fill="var(--color-background)"></use>
+          </g>
+        </svg>
+      </div>
+    
+  </div>
+  <div class="preview-scroll">
+    <a href="#container" class="smooth-scroll"><i class="iconfont iconMouse"></i></a>
+  </div>
+</div>
+  
+  <div class="container" id="container">
+    <section class="row post">
+  
+    
+
+<div class="col-lg-4 col-md-6 col-sm-12 post-item">
+  <div class="post-wrap">
+    
+    <a href="/2020/12/04/%E7%90%86%E8%A7%A3JAVA%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="post-image">
+      <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/213624-1507815384878a.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+    </a>
+    <div class="post-content">
+      <div class="post-content-wrap">
+        <h3 class="post-title"><a href="/2020/12/04/%E7%90%86%E8%A7%A3JAVA%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" title="理解JAVA内存模型" >理解JAVA内存模型</a></h3>
+        <div class="post-excerpt">
+          <p class="substr-3">一、关于JAVA内存模型JAVA内存模型是java基础，每个开发人员都需要有一定的了解，只有更好更多的了解底层的东西，才能促进自己更好的进步。
+本文记录的是JDK1.8之前的内存模型。在java...</p>
+        </div>
+      </div>
+      <div class="post-info">
+        <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 04, 2020</span>
+        
+          <span class="post-info-item">
+            <i class="iconfont iconeye"></i><span id="/2020/12/04/%E7%90%86%E8%A7%A3JAVA%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="leancloud" data-flag-title="理解JAVA内存模型"></span>
+          </span>
+        
+        <span class="post-info-item"><i class="iconfont iconfont-size"></i>889</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+    
+
+<div class="col-lg-4 col-md-6 col-sm-12 post-item">
+  <div class="post-wrap">
+    
+    <a href="/2020/12/04/SpringBoot-Shiro-JPA-LayUI%E7%9A%84%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/" class="post-image">
+      <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/155222-1529481142eabe.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+    </a>
+    <div class="post-content">
+      <div class="post-content-wrap">
+        <h3 class="post-title"><a href="/2020/12/04/SpringBoot-Shiro-JPA-LayUI%E7%9A%84%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/" title="SpringBoot+Shiro+JPA+LayUI的后台管理系统" >SpringBoot+Shiro+JPA+LayUI的后台管理系统</a></h3>
+        <div class="post-excerpt">
+          <p class="substr-3">一、系统说明资源下载路径：https://download.csdn.net/download/qq_37171817/12056804
+本系统是一个用SpringBoot做后台开发框架，Shi...</p>
+        </div>
+      </div>
+      <div class="post-info">
+        <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 04, 2020</span>
+        
+          <span class="post-info-item">
+            <i class="iconfont iconeye"></i><span id="/2020/12/04/SpringBoot-Shiro-JPA-LayUI%E7%9A%84%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/" class="leancloud" data-flag-title="SpringBoot+Shiro+JPA+LayUI的后台管理系统"></span>
+          </span>
+        
+        <span class="post-info-item"><i class="iconfont iconfont-size"></i>933</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+    
+
+<div class="col-lg-4 col-md-6 col-sm-12 post-item">
+  <div class="post-wrap">
+    
+    <a href="/2020/12/04/%E5%AD%A6%E4%BC%9A%E4%BD%BF%E7%94%A8BeanUtils%EF%BC%8C%E6%8F%90%E9%AB%98%E4%BD%A0%E7%9A%84%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87/" class="post-image">
+      <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/2095423-1531014863f773.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+    </a>
+    <div class="post-content">
+      <div class="post-content-wrap">
+        <h3 class="post-title"><a href="/2020/12/04/%E5%AD%A6%E4%BC%9A%E4%BD%BF%E7%94%A8BeanUtils%EF%BC%8C%E6%8F%90%E9%AB%98%E4%BD%A0%E7%9A%84%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87/" title="学会使用BeanUtils，提高你的开发效率" >学会使用BeanUtils，提高你的开发效率</a></h3>
+        <div class="post-excerpt">
+          <p class="substr-3">一、关于BeanUtils一说到BeanUtils，大家可能不清楚指的哪个BeanUtils。因为它在很多包里面都有，其中挺常用的就是
+（1）org.apache.commons.beanuti...</p>
+        </div>
+      </div>
+      <div class="post-info">
+        <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 04, 2020</span>
+        
+          <span class="post-info-item">
+            <i class="iconfont iconeye"></i><span id="/2020/12/04/%E5%AD%A6%E4%BC%9A%E4%BD%BF%E7%94%A8BeanUtils%EF%BC%8C%E6%8F%90%E9%AB%98%E4%BD%A0%E7%9A%84%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87/" class="leancloud" data-flag-title="学会使用BeanUtils，提高你的开发效率"></span>
+          </span>
+        
+        <span class="post-info-item"><i class="iconfont iconfont-size"></i>3547</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+    
+
+<div class="col-lg-4 col-md-6 col-sm-12 post-item">
+  <div class="post-wrap">
+    
+    <a href="/2020/12/04/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%95%99%E4%BD%A0%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7swagger/" class="post-image">
+      <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/001552-15909417528022.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+    </a>
+    <div class="post-content">
+      <div class="post-content-wrap">
+        <h3 class="post-title"><a href="/2020/12/04/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%95%99%E4%BD%A0%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7swagger/" title="一篇文章教你快速上手接口管理工具swagger" >一篇文章教你快速上手接口管理工具swagger</a></h3>
+        <div class="post-excerpt">
+          <p class="substr-3">一、关于swagger1、什么是swagger?
+swagger是spring fox的一套产品，可以作为后端开发者测试接口的工具，也可以作为前端取数据的接口文档。
+2、为什么使用？
+相比于传统...</p>
+        </div>
+      </div>
+      <div class="post-info">
+        <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 04, 2020</span>
+        
+          <span class="post-info-item">
+            <i class="iconfont iconeye"></i><span id="/2020/12/04/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%95%99%E4%BD%A0%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7swagger/" class="leancloud" data-flag-title="一篇文章教你快速上手接口管理工具swagger"></span>
+          </span>
+        
+        <span class="post-info-item"><i class="iconfont iconfont-size"></i>2707</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+    
+
+<div class="col-lg-4 col-md-6 col-sm-12 post-item">
+  <div class="post-wrap">
+    
+    <a href="/2020/12/04/%E5%85%A5%E9%97%A8alibaba%E7%9A%84EasyExcel/" class="post-image">
+      <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/110521-1574910321ebbc.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+    </a>
+    <div class="post-content">
+      <div class="post-content-wrap">
+        <h3 class="post-title"><a href="/2020/12/04/%E5%85%A5%E9%97%A8alibaba%E7%9A%84EasyExcel/" title="入门alibaba的EasyExcel" >入门alibaba的EasyExcel</a></h3>
+        <div class="post-excerpt">
+          <p class="substr-3">一、关于EasyExcel1、什么是EasyExcel，有什么作用？
+  EasyExcel是一个基于Java的简单、省内存的读写Excel的开源项目。在尽可能节约内存的情况下支持读写百M的Ex...</p>
+        </div>
+      </div>
+      <div class="post-info">
+        <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 04, 2020</span>
+        
+          <span class="post-info-item">
+            <i class="iconfont iconeye"></i><span id="/2020/12/04/%E5%85%A5%E9%97%A8alibaba%E7%9A%84EasyExcel/" class="leancloud" data-flag-title="入门alibaba的EasyExcel"></span>
+          </span>
+        
+        <span class="post-info-item"><i class="iconfont iconfont-size"></i>6288</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+    
+
+<div class="col-lg-4 col-md-6 col-sm-12 post-item">
+  <div class="post-wrap">
+    
+    <a href="/2020/12/03/%E5%85%B3%E4%BA%8E%E7%BB%99Tomcat%E8%AE%BE%E7%BD%AEmaxPostSize%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-image">
+      <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20201203130947.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+    </a>
+    <div class="post-content">
+      <div class="post-content-wrap">
+        <h3 class="post-title"><a href="/2020/12/03/%E5%85%B3%E4%BA%8E%E7%BB%99Tomcat%E8%AE%BE%E7%BD%AEmaxPostSize%E7%9A%84%E9%97%AE%E9%A2%98/" title="关于给Tomcat设置maxPostSize的问题" >关于给Tomcat设置maxPostSize的问题</a></h3>
+        <div class="post-excerpt">
+          <p class="substr-3">一、为什么要设置maxPostSizetomcat容器对传输数据的大小有限制，如果上传了超过此值的文件，就会报错，使得程序不能正常使用。
+二、设置方法找到tomcat目录下的/conf/serv...</p>
+        </div>
+      </div>
+      <div class="post-info">
+        <span class="post-info-item"><i class="iconfont iconcalendar"></i>December 03, 2020</span>
+        
+          <span class="post-info-item">
+            <i class="iconfont iconeye"></i><span id="/2020/12/03/%E5%85%B3%E4%BA%8E%E7%BB%99Tomcat%E8%AE%BE%E7%BD%AEmaxPostSize%E7%9A%84%E9%97%AE%E9%A2%98/" class="leancloud" data-flag-title="关于给Tomcat设置maxPostSize的问题"></span>
+          </span>
+        
+        <span class="post-info-item"><i class="iconfont iconfont-size"></i>429</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+    
+
+<div class="col-lg-4 col-md-6 col-sm-12 post-item">
+  <div class="post-wrap">
+    
+    <a href="/2020/11/29/Windows%E4%B8%8B%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8jenkins%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9E%84%E5%BB%BA%E4%B8%8E%E9%83%A8%E7%BD%B2war%E5%8C%85/" class="post-image">
+      <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/img_202011291745445.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+    </a>
+    <div class="post-content">
+      <div class="post-content-wrap">
+        <h3 class="post-title"><a href="/2020/11/29/Windows%E4%B8%8B%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8jenkins%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9E%84%E5%BB%BA%E4%B8%8E%E9%83%A8%E7%BD%B2war%E5%8C%85/" title="windows下安装使用jenkins实现自动化构建与部署war包" >windows下安装使用jenkins实现自动化构建与部署war包</a></h3>
+        <div class="post-excerpt">
+          <p class="substr-3">一、jenkins安装jenkins官方下载路径：https://jenkins.io/zh/
+本例版本：jenkins-2.190.3，windows版
+选择长期支持版本下载，版本按需所取。
+...</p>
+        </div>
+      </div>
+      <div class="post-info">
+        <span class="post-info-item"><i class="iconfont iconcalendar"></i>November 29, 2020</span>
+        
+          <span class="post-info-item">
+            <i class="iconfont iconeye"></i><span id="/2020/11/29/Windows%E4%B8%8B%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8jenkins%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9E%84%E5%BB%BA%E4%B8%8E%E9%83%A8%E7%BD%B2war%E5%8C%85/" class="leancloud" data-flag-title="windows下安装使用jenkins实现自动化构建与部署war包"></span>
+          </span>
+        
+        <span class="post-info-item"><i class="iconfont iconfont-size"></i>1347</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+    
+
+<div class="col-lg-4 col-md-6 col-sm-12 post-item">
+  <div class="post-wrap">
+    
+    <a href="/2020/11/29/Tomcat-Nginx-Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB/" class="post-image">
+      <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/221642-159058900274ce.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+    </a>
+    <div class="post-content">
+      <div class="post-content-wrap">
+        <h3 class="post-title"><a href="/2020/11/29/Tomcat-Nginx-Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB/" title="Tomcat+Nginx+Redis实现session共享" >Tomcat+Nginx+Redis实现session共享</a></h3>
+        <div class="post-excerpt">
+          <p class="substr-3">一、准备工作中间件：Tomcat、Redis、Nginx
+jar包：commons-pool2-2.4.2.jar、jedis-2.8.0.jar、tomcat-redis-session-ma...</p>
+        </div>
+      </div>
+      <div class="post-info">
+        <span class="post-info-item"><i class="iconfont iconcalendar"></i>November 29, 2020</span>
+        
+          <span class="post-info-item">
+            <i class="iconfont iconeye"></i><span id="/2020/11/29/Tomcat-Nginx-Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB/" class="leancloud" data-flag-title="Tomcat+Nginx+Redis实现session共享"></span>
+          </span>
+        
+        <span class="post-info-item"><i class="iconfont iconfont-size"></i>741</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+    
+
+<div class="col-lg-4 col-md-6 col-sm-12 post-item">
+  <div class="post-wrap">
+    
+    <a href="/2020/11/29/MarkDown%E6%9C%AC%E5%9C%B0%E7%BC%96%E8%BE%91%E7%A5%9E%E7%BB%84%E5%90%88/" class="post-image">
+      <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/Typora.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+    </a>
+    <div class="post-content">
+      <div class="post-content-wrap">
+        <h3 class="post-title"><a href="/2020/11/29/MarkDown%E6%9C%AC%E5%9C%B0%E7%BC%96%E8%BE%91%E7%A5%9E%E7%BB%84%E5%90%88/" title="MarkDown本地编辑神组合" >MarkDown本地编辑神组合</a></h3>
+        <div class="post-excerpt">
+          <p class="substr-3">TyporaTypora官方版是一款界面简约且专业可靠的跨平台Markdown编辑器,，支持markdown的标准语法，支持动态预览、一键预览。同时，Typora还支持代码块的语法高亮，对于表格...</p>
+        </div>
+      </div>
+      <div class="post-info">
+        <span class="post-info-item"><i class="iconfont iconcalendar"></i>November 29, 2020</span>
+        
+          <span class="post-info-item">
+            <i class="iconfont iconeye"></i><span id="/2020/11/29/MarkDown%E6%9C%AC%E5%9C%B0%E7%BC%96%E8%BE%91%E7%A5%9E%E7%BB%84%E5%90%88/" class="leancloud" data-flag-title="MarkDown本地编辑神组合"></span>
+          </span>
+        
+        <span class="post-info-item"><i class="iconfont iconfont-size"></i>1393</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+</section>
+    <section class="paginator">
+  
+    <a class="extend prev" rel="prev" href="/page/5/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+  
+</section>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</html>
