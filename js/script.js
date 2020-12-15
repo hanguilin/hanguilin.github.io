@@ -181,7 +181,6 @@
 		  mode = color_mode.getMediaQuery();
 		  color_mode.setMediaQueryStorage(mode);
 		}
-		console.log('mode', mode)
 
 		action.previewChange(mode)
 		color_mode.setColorMode(mode);
@@ -190,21 +189,13 @@
 	  },
 
 	  switchColorMode: function () {
-		$("body").on("click", color_mode.lightColorToggle, function(){
-		  color_mode.modeBindFun($(this))
-		})
-		
-		$("body").on("click", color_mode.darkColorToggle, function(){
+		$("#color-toggle").click(function(){
 			color_mode.modeBindFun($(this))
 		})
-		$("#color-toggle").click(function(){
-			color_mode.modeBindFun($(this), $(this))
-		})
 	  },
-	  modeBindFun: function (e, toggleElement) {
+	  modeBindFun: function (e) {
 		  color_mode.clearMotto()  
 		  var mode = e.attr(color_mode.toggleAttribute) === 'light' ? 'dark' : 'light';
-
 		  action.previewChange(mode)
 		  color_mode.setColorMode(mode);
 		  color_mode.setIcon(mode);
