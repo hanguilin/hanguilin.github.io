@@ -189,7 +189,7 @@
 	  },
 
 	  switchColorMode: function () {
-		$("#color-toggle").click(function(){
+		$(".color-toggle").click(function(){
 			color_mode.modeBindFun($(this))
 		})
 	  },
@@ -202,8 +202,7 @@
 		  color_mode.setHighlightStyle(mode);
 	  },
 	  clearMotto () {
-		  $("#light-motto").empty()
-		  $("#dark-motto").empty()
+		  $(".preview-motto").empty()
 		  $(".typed-cursor").remove()
 	  }
   }
