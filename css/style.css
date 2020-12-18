@@ -1786,20 +1786,35 @@ body span {
   background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.75));
   padding: 30px;
 }
-.article .wrap .head .head-mask .head-title {
+.article .wrap .head .head-mask .head-mark-text {
+  width: 90%;
+  float: left;
+}
+.article .wrap .head .head-mask .head-mark-text .head-title {
   color: #fff;
   font-size: 2em;
 }
-.article .wrap .head .head-mask .head-info {
+.article .wrap .head .head-mask .head-mark-text .head-info {
   color: #fff;
   margin-top: 10px;
 }
-.article .wrap .head .head-mask .head-info .post-info-item {
+.article .wrap .head .head-mask .head-mark-text .head-info .post-info-item {
   margin-right: 10px;
 }
-.article .wrap .head .head-mask .head-info .post-info-item i {
+.article .wrap .head .head-mask .head-mark-text .head-info .post-info-item i {
   font-size: 1em;
   margin-right: 5px;
+}
+.article .wrap .head .head-mask .head-mask-avatar {
+  width: 10%;
+  float: left;
+  text-align: right;
+}
+.article .wrap .head .head-mask .head-mask-avatar img {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  position: relative;
 }
 .article .wrap .main {
   padding: 30px;
