@@ -437,11 +437,8 @@
 		$("#dark-preview").css('display', 'block')
 
 		var iframeUrlArr = []
-			for (var i = 1; i <= 15; i++) {
-				if (i === 6) {
-					continue
-				}
-				iframeUrlArr.push(`https://www.jq22.com/js/a${i}.html`)
+			for (var i = 1; i <= 12; i++) {
+				iframeUrlArr.push(`/html/a${i}.html`)
 			}
 		var index = localStorage.getItem('frame_index') || 0
 		if (index >= iframeUrlArr.length) {
