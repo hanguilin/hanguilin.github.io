@@ -82,6 +82,12 @@
   }
 
   ZHAOO.zui = {
+    /**
+     * 弹出消息
+     * @param text 消息内容
+     * @param type info success danger warning
+     * @param delay 延迟时间(ms),默认300
+     */
     message: function ({ text, type, delay }) {
       var message = '<div class="zui-message ' + (type || "info") + '"><p>' + text + '</p></div>';
       $("body").append(message);
@@ -96,6 +102,13 @@
         }, delay || 3000);
       });
     },
+    /**
+     * 弹出提示
+     * @param title 提示标题
+     * @param content 提示内容
+     * @param type info success danger warning
+     * @param delay 延迟时间(ms),默认300
+     */
     notification: function ({ title, content, type, delay }) {
       var storage = JSON.parse(localStorage.getItem("notification-closed"));
       if (storage && storage.indexOf(title) >= 0) return;
