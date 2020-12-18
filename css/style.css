@@ -1235,6 +1235,15 @@ body span {
   font-size: 15px;
   padding: 0 40px 0 15px;
 }
+.preview-search::-webkit-input-placeholder {
+  color: #fff;
+}
+.preview-search::-moz-placeholder {
+  color: #fff;
+}
+.preview-search::-ms-input-placeholder {
+  color: #fff;
+}
 @-moz-keyframes move-forever {
   0% {
     transform: translate3d(-90px, 0, 0);
@@ -1511,6 +1520,15 @@ body span {
   color: #fff;
   font-size: 15px;
   padding: 0 40px 0 15px;
+}
+#dark-preview-div .preview-search::-webkit-input-placeholder {
+  color: #fff;
+}
+#dark-preview-div .preview-search::-moz-placeholder {
+  color: #fff;
+}
+#dark-preview-div .preview-search::-ms-input-placeholder {
+  color: #fff;
 }
 @-moz-keyframes move-forever {
   0% {
