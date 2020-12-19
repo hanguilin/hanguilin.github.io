@@ -264,6 +264,34 @@
       </tags>
   </entry>
   <entry>
+    <title>Eclipse安装Mat工具分析教程</title>
+    <url>/2020/12/05/Eclipse%E5%AE%89%E8%A3%85Mat%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="一、关于Mat"><a href="#一、关于Mat" class="headerlink" title="一、关于Mat"></a>一、关于Mat</h1><p>MAT是Memory Analyzer的简称，它是一款功能强大的Java堆内存分析器。可以用于查找内存泄露以及查看内存消耗情况。MAT是基于Eclipse开发的，是一款免费的性能分析工具。可以再官网<a href="http://www.eclipse.org/mat/%E4%B8%8B%E8%BD%BD%EF%BC%8C%E6%88%96%E8%80%85%E7%9B%B4%E6%8E%A5%E5%9C%A8Eclipse%E9%87%8C%E4%B8%8B%E8%BD%BD%E3%80%82">http://www.eclipse.org/mat/下载，或者直接在Eclipse里下载。</a></p>
+<h1 id="二、Eclipse安装Mat"><a href="#二、Eclipse安装Mat" class="headerlink" title="二、Eclipse安装Mat"></a>二、Eclipse安装Mat</h1><p>Eclipse首页 点击help&gt;Eclipse Marketplace</p>
+<img src="https://img-blog.csdnimg.cn/20200103100321787.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
+
+<p>安装完成后重启Eclipse，如果在Window&gt;Perspective&gt;Open Perspective&gt;other能找到Memory Alalysis就表示安装成功。</p>
+<p>点击Memory Alalysis，弹出分析界面：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200103140754471.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p> 点击左上角File&gt;Open Heap Dump,并选则Dump下来的文件</p>
+<img src="https://img-blog.csdnimg.cn/20200103115535786.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
+
+<p><img src="https://img-blog.csdnimg.cn/20200103115557186.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200103115641925.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<img src="https://img-blog.csdnimg.cn/20200103115728989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
+
+<p>可以清楚的看到问题信息。 </p>
+]]></content>
+      <categories>
+        <category>Eclipse</category>
+      </categories>
+      <tags>
+        <tag>Eclipse</tag>
+        <tag>Mat</tag>
+        <tag>内存分析</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker部署之私服管理</title>
     <url>/2020/12/15/Docker%E9%83%A8%E7%BD%B2%E4%B9%8B%E7%A7%81%E6%9C%8D%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>docker私服是存放镜像的本地仓库，类似于docker hub。不过私服是本地的仓库，方便自己公司部署管理由微服务打包成的docker镜像。</p>
@@ -363,104 +391,6 @@
       <tags>
         <tag>Docker</tag>
         <tag>Docker私服</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java 8 Funciton、Consumer、Predicate的作用及用法</title>
-    <url>/2020/12/10/Java%208%20Funciton%E3%80%81Consumer%E3%80%81Predicate%E7%9A%84%E4%BD%9C%E7%94%A8%E5%8F%8A%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="一、简述"><a href="#一、简述" class="headerlink" title="一、简述"></a>一、简述</h1><p>Funciton、Consumer、Predicate是Java8中的新特性。他们都是函数式接口，位于java.util包中。</p>
-<p>关于函数式接口，其外部特征是类上使用@FunctionalInterface注解。它有以下特点：</p>
-<ul>
-<li>只能注解到有且仅有一个抽象方法的类上。</li>
-<li>接口显示声明或覆盖了java.lang.Object类中方法的方法也不算做抽象方法。</li>
-<li>Java8接口中static方法与default方法不算抽象方法。</li>
-</ul>
-<p>他们各自的使用场景如下：</p>
-<ul>
-<li>Function</li>
-</ul>
-<p>需要执行目标方法后得到返回值。</p>
-<p>接口修饰：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Function</span>&lt;<span class="hljs-title">T</span>, <span class="hljs-title">R</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
-
-<p>该类需要设置两个泛型，T为入参类型，R为返回值类型。</p>
-<p>主要方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Applies this function to the given argument.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t the function argument</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> the function result</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function">R <span class="hljs-title">apply</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
-
-<ul>
-<li>Consumer</li>
-</ul>
-<p>仅需要执行目标方法，不需要得到返回值。</p>
-<p>接口修饰：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Consumer</span>&lt;<span class="hljs-title">T</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
-
-<p>该类需要设置一个泛型，T为参数类型。</p>
-<p>主要方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 对给定的参数执行此操作。</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t 入参</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
-
-<ul>
-<li>Predicate</li>
-</ul>
-<p>经过比较，得到比较逻辑执行过后的结果，其返回类型为true、false。</p>
-<p>接口修饰：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Predicate</span>&lt;<span class="hljs-title">T</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
-
-<p> 该类需要设置一个泛型，T为参数类型。</p>
-<p>主要方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据给定参数比较</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t 入参</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@code</span> true&#125; 满足条件返回true,</span><br><span class="hljs-comment"> * otherwise &#123;<span class="hljs-doctag">@code</span> false&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">test</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
-
-<h1 id="二、实例"><a href="#二、实例" class="headerlink" title="二、实例"></a>二、实例</h1><p>1、输入数字3，得到输入值加100的结果并转为字符创，并返回。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"># 定义函数执行方法<br>Function&lt;Integer, String&gt; func = o -&gt; &#123;<span class="hljs-keyword">return</span> String.valueOf((o + <span class="hljs-number">100</span>));&#125;;<br># 传入3，执行方法，获取返回结果<br>String result = func.apply(<span class="hljs-number">3</span>);<br>System.out.println(<span class="hljs-string">&quot;result : &quot;</span> + result);<br></code></pre></td></tr></table></figure>
-
-<p> 结果：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200618130909383.png"></p>
-<p>2、输入字符“hello”，拼接字符串“ word”并输出。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Consumer&lt;String&gt; consumer = o -&gt; &#123;System.out.println(o + <span class="hljs-string">&quot; world&quot;</span>);&#125;;<br>consumer.accept(<span class="hljs-string">&quot;hello&quot;</span>);<br></code></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200618131310966.png"></p>
-<p>3、输入字符串“hello”，判断长度是否等于5。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Predicate&lt;String&gt; predicate = o -&gt; &#123;<span class="hljs-keyword">return</span> o.length() == <span class="hljs-number">5</span>;&#125;;<br><span class="hljs-keyword">boolean</span> test = predicate.test(<span class="hljs-string">&quot;hello&quot;</span>);<br>System.out.println(<span class="hljs-string">&quot;result : &quot;</span> + test);<br></code></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200618131601419.png"></p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java8</tag>
-        <tag>Function</tag>
-        <tag>Consumer</tag>
-        <tag>Predicate</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Eclipse安装Mat工具分析教程</title>
-    <url>/2020/12/05/Eclipse%E5%AE%89%E8%A3%85Mat%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<h1 id="一、关于Mat"><a href="#一、关于Mat" class="headerlink" title="一、关于Mat"></a>一、关于Mat</h1><p>MAT是Memory Analyzer的简称，它是一款功能强大的Java堆内存分析器。可以用于查找内存泄露以及查看内存消耗情况。MAT是基于Eclipse开发的，是一款免费的性能分析工具。可以再官网<a href="http://www.eclipse.org/mat/%E4%B8%8B%E8%BD%BD%EF%BC%8C%E6%88%96%E8%80%85%E7%9B%B4%E6%8E%A5%E5%9C%A8Eclipse%E9%87%8C%E4%B8%8B%E8%BD%BD%E3%80%82">http://www.eclipse.org/mat/下载，或者直接在Eclipse里下载。</a></p>
-<h1 id="二、Eclipse安装Mat"><a href="#二、Eclipse安装Mat" class="headerlink" title="二、Eclipse安装Mat"></a>二、Eclipse安装Mat</h1><p>Eclipse首页 点击help&gt;Eclipse Marketplace</p>
-<img src="https://img-blog.csdnimg.cn/20200103100321787.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
-
-<p>安装完成后重启Eclipse，如果在Window&gt;Perspective&gt;Open Perspective&gt;other能找到Memory Alalysis就表示安装成功。</p>
-<p>点击Memory Alalysis，弹出分析界面：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200103140754471.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p> 点击左上角File&gt;Open Heap Dump,并选则Dump下来的文件</p>
-<img src="https://img-blog.csdnimg.cn/20200103115535786.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
-
-<p><img src="https://img-blog.csdnimg.cn/20200103115557186.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p><img src="https://img-blog.csdnimg.cn/20200103115641925.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<img src="https://img-blog.csdnimg.cn/20200103115728989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
-
-<p>可以清楚的看到问题信息。 </p>
-]]></content>
-      <categories>
-        <category>Eclipse</category>
-      </categories>
-      <tags>
-        <tag>Eclipse</tag>
-        <tag>Mat</tag>
-        <tag>内存分析</tag>
       </tags>
   </entry>
   <entry>
@@ -564,6 +494,76 @@
       <tags>
         <tag>Java</tag>
         <tag>Stream</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java 8 Funciton、Consumer、Predicate的作用及用法</title>
+    <url>/2020/12/10/Java%208%20Funciton%E3%80%81Consumer%E3%80%81Predicate%E7%9A%84%E4%BD%9C%E7%94%A8%E5%8F%8A%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="一、简述"><a href="#一、简述" class="headerlink" title="一、简述"></a>一、简述</h1><p>Funciton、Consumer、Predicate是Java8中的新特性。他们都是函数式接口，位于java.util包中。</p>
+<p>关于函数式接口，其外部特征是类上使用@FunctionalInterface注解。它有以下特点：</p>
+<ul>
+<li>只能注解到有且仅有一个抽象方法的类上。</li>
+<li>接口显示声明或覆盖了java.lang.Object类中方法的方法也不算做抽象方法。</li>
+<li>Java8接口中static方法与default方法不算抽象方法。</li>
+</ul>
+<p>他们各自的使用场景如下：</p>
+<ul>
+<li>Function</li>
+</ul>
+<p>需要执行目标方法后得到返回值。</p>
+<p>接口修饰：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Function</span>&lt;<span class="hljs-title">T</span>, <span class="hljs-title">R</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>该类需要设置两个泛型，T为入参类型，R为返回值类型。</p>
+<p>主要方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Applies this function to the given argument.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t the function argument</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> the function result</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function">R <span class="hljs-title">apply</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Consumer</li>
+</ul>
+<p>仅需要执行目标方法，不需要得到返回值。</p>
+<p>接口修饰：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Consumer</span>&lt;<span class="hljs-title">T</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>该类需要设置一个泛型，T为参数类型。</p>
+<p>主要方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 对给定的参数执行此操作。</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t 入参</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Predicate</li>
+</ul>
+<p>经过比较，得到比较逻辑执行过后的结果，其返回类型为true、false。</p>
+<p>接口修饰：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Predicate</span>&lt;<span class="hljs-title">T</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p> 该类需要设置一个泛型，T为参数类型。</p>
+<p>主要方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据给定参数比较</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t 入参</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@code</span> true&#125; 满足条件返回true,</span><br><span class="hljs-comment"> * otherwise &#123;<span class="hljs-doctag">@code</span> false&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">test</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<h1 id="二、实例"><a href="#二、实例" class="headerlink" title="二、实例"></a>二、实例</h1><p>1、输入数字3，得到输入值加100的结果并转为字符创，并返回。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"># 定义函数执行方法<br>Function&lt;Integer, String&gt; func = o -&gt; &#123;<span class="hljs-keyword">return</span> String.valueOf((o + <span class="hljs-number">100</span>));&#125;;<br># 传入3，执行方法，获取返回结果<br>String result = func.apply(<span class="hljs-number">3</span>);<br>System.out.println(<span class="hljs-string">&quot;result : &quot;</span> + result);<br></code></pre></td></tr></table></figure>
+
+<p> 结果：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200618130909383.png"></p>
+<p>2、输入字符“hello”，拼接字符串“ word”并输出。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Consumer&lt;String&gt; consumer = o -&gt; &#123;System.out.println(o + <span class="hljs-string">&quot; world&quot;</span>);&#125;;<br>consumer.accept(<span class="hljs-string">&quot;hello&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200618131310966.png"></p>
+<p>3、输入字符串“hello”，判断长度是否等于5。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Predicate&lt;String&gt; predicate = o -&gt; &#123;<span class="hljs-keyword">return</span> o.length() == <span class="hljs-number">5</span>;&#125;;<br><span class="hljs-keyword">boolean</span> test = predicate.test(<span class="hljs-string">&quot;hello&quot;</span>);<br>System.out.println(<span class="hljs-string">&quot;result : &quot;</span> + test);<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200618131601419.png"></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java8</tag>
+        <tag>Function</tag>
+        <tag>Consumer</tag>
+        <tag>Predicate</tag>
       </tags>
   </entry>
   <entry>
@@ -724,6 +724,54 @@
       </tags>
   </entry>
   <entry>
+    <title>Java中如何优雅对null值进行处理</title>
+    <url>/2020/12/15/Java%E4%B8%AD%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%AF%B9null%E5%80%BC%E8%BF%9B%E8%A1%8C%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[<h1 id="一、空指针"><a href="#一、空指针" class="headerlink" title="一、空指针"></a>一、空指针</h1><p><img src="https://img-blog.csdnimg.cn/20200716124743446.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70#pic_center"></p>
+<p>NPE(NullPointerException)一直是让java程序员头疼的问题，稍微不注意被调用就会让功能无法使用。所以项目里面很多地方都需要对对象进行非空判断。</p>
+<h1 id="二、非空处理"><a href="#二、非空处理" class="headerlink" title="二、非空处理"></a>二、非空处理</h1><p>那么我们通常是怎样的判空的呢？</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (obj == <span class="hljs-keyword">null</span>) &#123;<br>	<span class="hljs-comment">// do something</span><br>&#125; <span class="hljs-keyword">else</span> &#123;<br>	<span class="hljs-comment">// do something</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这段代码是不是很常见？如果obj为null，那么就执行一段逻辑，否则执行另外一段逻辑。</p>
+<p>由于这样的逻辑会占用很多代码行，也会让代码看起来变得臃肿，所以java官方在java8中优化了相关的链式处理，比如java8中的stream流，而在这里，也有对应的Optional类来处理判空问题。</p>
+<p>首先来解读一下Optional类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.util;<br><br><span class="hljs-keyword">import</span> java.util.function.Consumer;<br><span class="hljs-keyword">import</span> java.util.function.Function;<br><span class="hljs-keyword">import</span> java.util.function.Predicate;<br><span class="hljs-keyword">import</span> java.util.function.Supplier;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Optional</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;<br>   <span class="hljs-comment">// 空的Optional对象</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Optional&lt;?&gt; EMPTY = <span class="hljs-keyword">new</span> Optional&lt;&gt;();<br><br>    <span class="hljs-comment">// 如果非空，就是value值，如果为空，就没有值</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> T value;<br><br>	<span class="hljs-comment">// 无参构造，将value初始化为null</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Optional</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.value = <span class="hljs-keyword">null</span>;<br>    &#125;<br><br>   <span class="hljs-comment">// 获取一个Optional对象，value为null</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span>&lt;T&gt; Optional&lt;T&gt; <span class="hljs-title">empty</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span><br>        Optional&lt;T&gt; t = (Optional&lt;T&gt;) EMPTY;<br>        <span class="hljs-keyword">return</span> t;<br>    &#125;<br><br>   <span class="hljs-comment">// 使用构造器生成一个Optional对象，如果value值为null，就抛出空指针异常</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Optional</span><span class="hljs-params">(T value)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.value = Objects.requireNonNull(value);<br>    &#125;<br><br>	<span class="hljs-comment">// 使用静态方法获取一个Optional对象，如果value值为null，就抛出空指针异常</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function">Optional&lt;T&gt; <span class="hljs-title">of</span><span class="hljs-params">(T value)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Optional&lt;&gt;(value);<br>    &#125;<br><br>  	<span class="hljs-comment">// 如果value为null，返回value为null的Optional对象，否则生成一个value为传入value的对象</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function">Optional&lt;T&gt; <span class="hljs-title">ofNullable</span><span class="hljs-params">(T value)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value == <span class="hljs-keyword">null</span> ? empty() : of(value);<br>    &#125;<br><br>    <span class="hljs-comment">// 获取当前Optional对象的value值，如果value为null，则抛出异常</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (value == <span class="hljs-keyword">null</span>) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NoSuchElementException(<span class="hljs-string">&quot;No value present&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">return</span> value;<br>    &#125;<br><br>    <span class="hljs-comment">// 判断当前Optional对象value值是否非空，不为null则返回true</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isPresent</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value != <span class="hljs-keyword">null</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 对当前Optional对象的value值进行操作</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ifPresent</span><span class="hljs-params">(Consumer&lt;? <span class="hljs-keyword">super</span> T&gt; consumer)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span>)<br>        	<span class="hljs-comment">// 使用consumer消费者方法</span><br>            consumer.accept(value);<br>        <span class="hljs-comment">// 否则不做任何操作</span><br>    &#125;<br><br>    <span class="hljs-comment">// 根据条件过滤Optional对象</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Optional&lt;T&gt; <span class="hljs-title">filter</span><span class="hljs-params">(Predicate&lt;? <span class="hljs-keyword">super</span> T&gt; predicate)</span> </span>&#123;<br>    	 <span class="hljs-comment">// 如果predicate比较方法为null，则抛出空指针异常</span><br>        Objects.requireNonNull(predicate);<br>       	<span class="hljs-comment">// 如果value值为空，则返回当前Optional对象</span><br>        <span class="hljs-keyword">if</span> (!isPresent())<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        <span class="hljs-keyword">else</span><br>        	<span class="hljs-comment">// 如果value有值</span><br>        	<span class="hljs-comment">// 则使用predicate进行比较，如果匹配则返回当前Optional对象</span><br>        	<span class="hljs-comment">// 不匹配则返回一个value为null的Optional对象</span><br>            <span class="hljs-keyword">return</span> predicate.test(value) ? <span class="hljs-keyword">this</span> : empty();<br>    &#125;<br><br>	<span class="hljs-comment">// 将当前Optional对象的value根据mapper函数封装成另外的Optional对象</span><br>	<span class="hljs-comment">// mapper函数入参的类型为value类型的超类型，返回类型为U类型的子类型</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span>&lt;U&gt; Optional&lt;U&gt; <span class="hljs-title">map</span><span class="hljs-params">(Function&lt;? <span class="hljs-keyword">super</span> T, ? extends U&gt; mapper)</span> </span>&#123;<br>     	<span class="hljs-comment">// 如果mapper函数为null，则抛出空指针异常</span><br>        Objects.requireNonNull(mapper);<br>        <span class="hljs-comment">// 如果value值为空，则返回value为null的Optional对象</span><br>        <span class="hljs-keyword">if</span> (!isPresent())<br>            <span class="hljs-keyword">return</span> empty();<br>        <span class="hljs-keyword">else</span> &#123;<br>        	<span class="hljs-comment">// 如果value有值</span><br>        	<span class="hljs-comment">// 将mapper.apply(value)的返回值等装成一个Optional对象</span><br>            <span class="hljs-keyword">return</span> Optional.ofNullable(mapper.apply(value));<br>        &#125;<br>    &#125;<br><br>  	<span class="hljs-comment">// 将当前Optional对象的value根据mapper函数封装成另外的Optional对象</span><br>	<span class="hljs-comment">// mapper函数入参的类型为value类型的超类型，返回类型为value为U类型的Optional对象</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span>&lt;U&gt; Optional&lt;U&gt; <span class="hljs-title">flatMap</span><span class="hljs-params">(Function&lt;? <span class="hljs-keyword">super</span> T, Optional&lt;U&gt;&gt; mapper)</span> </span>&#123;<br>    	<span class="hljs-comment">// 如果mapper函数为null，则抛出空指针异常</span><br>        Objects.requireNonNull(mapper);<br>        <span class="hljs-comment">// 如果value值为空，则返回value为null的Optional对象</span><br>        <span class="hljs-keyword">if</span> (!isPresent())<br>            <span class="hljs-keyword">return</span> empty();<br>        <span class="hljs-keyword">else</span> &#123;<br>        	<span class="hljs-comment">// 如果value有值</span><br>        	<span class="hljs-comment">// 如果mapper.apply(value)为null，则抛出空指针异常</span><br>        	<span class="hljs-comment">// 返回mapper.apply(value)</span><br>            <span class="hljs-keyword">return</span> Objects.requireNonNull(mapper.apply(value));<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 如果value不为空则返回value，否则返回other</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">orElse</span><span class="hljs-params">(T other)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value != <span class="hljs-keyword">null</span> ? value : other;<br>    &#125;<br><br>    <span class="hljs-comment">// 如果value不为空则返回value，否则返回other.get()</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">orElseGet</span><span class="hljs-params">(Supplier&lt;? extends T&gt; other)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value != <span class="hljs-keyword">null</span> ? value : other.get();<br>    &#125;<br><br>    <span class="hljs-comment">// 如果value不为空则返回value，否则抛出exceptionSupplier.get()定义的异常</span><br>    <span class="hljs-keyword">public</span> &lt;X extends Throwable&gt; <span class="hljs-function">T <span class="hljs-title">orElseThrow</span><span class="hljs-params">(Supplier&lt;? extends X&gt; exceptionSupplier)</span> <span class="hljs-keyword">throws</span> X </span>&#123;<br>        <span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> value;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">throw</span> exceptionSupplier.get();<br>        &#125;<br>    &#125;<br><br>   	<span class="hljs-comment">// 比较当前Optional对象与obj是否相等</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">equals</span><span class="hljs-params">(Object obj)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> == obj) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (!(obj <span class="hljs-keyword">instanceof</span> Optional)) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>        &#125;<br><br>        Optional&lt;?&gt; other = (Optional&lt;?&gt;) obj;<br>        <span class="hljs-keyword">return</span> Objects.equals(value, other.value);<br>    &#125;<br><br>    <span class="hljs-comment">// 获取当前value的hashcode</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">hashCode</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> Objects.hashCode(value);<br>    &#125;<br><br>    <span class="hljs-comment">// toString</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value != <span class="hljs-keyword">null</span><br>            ? String.format(<span class="hljs-string">&quot;Optional[%s]&quot;</span>, value)<br>            : <span class="hljs-string">&quot;Optional.empty&quot;</span>;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>通过解读源代码，相信大家对Optional类有了一定的了解了吧！</p>
+<p>那么我们来举几个实例，加深一下印象。</p>
+<p>新建一个User实体，来进行测试：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 用户实体</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020年7月16日 下午1:32:36</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 姓名</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String name;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 年龄</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> Integer age;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">User</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>();<br>    &#125;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">User</span><span class="hljs-params">(String name, Integer age)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>();<br>        <span class="hljs-keyword">this</span>.name = name;<br>        <span class="hljs-keyword">this</span>.age = age;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> name;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setName</span><span class="hljs-params">(String name)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.name = name;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Integer <span class="hljs-title">getAge</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> age;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAge</span><span class="hljs-params">(Integer age)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.age = age;<br>    &#125;<br><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>如果user实例不为空，则打印年龄</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-keyword">import</span> java.util.Optional;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestMain</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        User user = <span class="hljs-keyword">null</span>;<br>        Optional&lt;User&gt; userOptional = Optional.ofNullable(user);<br>        userOptional.ifPresent(o -&gt; System.out.println(o.getAge()));<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>此时控制台没有任何输出。</p>
+<p>我们来测试一下user有值的情况：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">User user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">&quot;han&quot;</span>, <span class="hljs-number">20</span>);<br></code></pre></td></tr></table></figure>
+<p>此时：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200716134134102.png"></p>
+<p>如果想将链式写法运用足，那么上面就可以缩写成：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Optional.ofNullable(user).ifPresent(o -&gt; System.out.println(o.getAge()));<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>如果user实例不为空，则获取年龄，如果为空，新建一个实例，并获取年龄，此时获取的年龄为null</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-keyword">import</span> java.util.Optional;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestMain</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        User user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">&quot;han&quot;</span>, <span class="hljs-number">20</span>);<br>        Integer age = Optional.ofNullable(user).orElse(<span class="hljs-keyword">new</span> User()).getAge();<br>        System.out.println(age);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>如果user实例不为空，则获取年龄，如果为空，返回年龄为0</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-keyword">import</span> java.util.Optional;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestMain</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        User user = <span class="hljs-keyword">null</span>;<br>        Optional&lt;Integer&gt; map = Optional.ofNullable(user).map(User::getAge);<br>        Integer age = map.orElse(<span class="hljs-number">0</span>);<br>        System.out.println(age);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol start="4">
+<li>判断对象是否有值</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-keyword">import</span> java.util.Optional;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestMain</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        User user = <span class="hljs-keyword">null</span>;<br>        <span class="hljs-keyword">boolean</span> present = Optional.ofNullable(user).isPresent();<br>        System.out.println(present);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200716135125666.png"></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java单例模式的实现与破坏</title>
     <url>/2020/12/09/Java%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E7%A0%B4%E5%9D%8F/</url>
     <content><![CDATA[<p>单例模式是一种设计模式，是在整个运行过程中只需要产生一个实例。那么怎样去创建呢，以下提供了几种方案。</p>
@@ -779,54 +827,6 @@
         <tag>Java</tag>
         <tag>单例模式</tag>
         <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java中如何优雅对null值进行处理</title>
-    <url>/2020/12/15/Java%E4%B8%AD%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%AF%B9null%E5%80%BC%E8%BF%9B%E8%A1%8C%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[<h1 id="一、空指针"><a href="#一、空指针" class="headerlink" title="一、空指针"></a>一、空指针</h1><p><img src="https://img-blog.csdnimg.cn/20200716124743446.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70#pic_center"></p>
-<p>NPE(NullPointerException)一直是让java程序员头疼的问题，稍微不注意被调用就会让功能无法使用。所以项目里面很多地方都需要对对象进行非空判断。</p>
-<h1 id="二、非空处理"><a href="#二、非空处理" class="headerlink" title="二、非空处理"></a>二、非空处理</h1><p>那么我们通常是怎样的判空的呢？</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (obj == <span class="hljs-keyword">null</span>) &#123;<br>	<span class="hljs-comment">// do something</span><br>&#125; <span class="hljs-keyword">else</span> &#123;<br>	<span class="hljs-comment">// do something</span><br>&#125;<br></code></pre></td></tr></table></figure>
-<p>这段代码是不是很常见？如果obj为null，那么就执行一段逻辑，否则执行另外一段逻辑。</p>
-<p>由于这样的逻辑会占用很多代码行，也会让代码看起来变得臃肿，所以java官方在java8中优化了相关的链式处理，比如java8中的stream流，而在这里，也有对应的Optional类来处理判空问题。</p>
-<p>首先来解读一下Optional类：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.util;<br><br><span class="hljs-keyword">import</span> java.util.function.Consumer;<br><span class="hljs-keyword">import</span> java.util.function.Function;<br><span class="hljs-keyword">import</span> java.util.function.Predicate;<br><span class="hljs-keyword">import</span> java.util.function.Supplier;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Optional</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;<br>   <span class="hljs-comment">// 空的Optional对象</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Optional&lt;?&gt; EMPTY = <span class="hljs-keyword">new</span> Optional&lt;&gt;();<br><br>    <span class="hljs-comment">// 如果非空，就是value值，如果为空，就没有值</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> T value;<br><br>	<span class="hljs-comment">// 无参构造，将value初始化为null</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Optional</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.value = <span class="hljs-keyword">null</span>;<br>    &#125;<br><br>   <span class="hljs-comment">// 获取一个Optional对象，value为null</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span>&lt;T&gt; Optional&lt;T&gt; <span class="hljs-title">empty</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span><br>        Optional&lt;T&gt; t = (Optional&lt;T&gt;) EMPTY;<br>        <span class="hljs-keyword">return</span> t;<br>    &#125;<br><br>   <span class="hljs-comment">// 使用构造器生成一个Optional对象，如果value值为null，就抛出空指针异常</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Optional</span><span class="hljs-params">(T value)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.value = Objects.requireNonNull(value);<br>    &#125;<br><br>	<span class="hljs-comment">// 使用静态方法获取一个Optional对象，如果value值为null，就抛出空指针异常</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function">Optional&lt;T&gt; <span class="hljs-title">of</span><span class="hljs-params">(T value)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Optional&lt;&gt;(value);<br>    &#125;<br><br>  	<span class="hljs-comment">// 如果value为null，返回value为null的Optional对象，否则生成一个value为传入value的对象</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function">Optional&lt;T&gt; <span class="hljs-title">ofNullable</span><span class="hljs-params">(T value)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value == <span class="hljs-keyword">null</span> ? empty() : of(value);<br>    &#125;<br><br>    <span class="hljs-comment">// 获取当前Optional对象的value值，如果value为null，则抛出异常</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (value == <span class="hljs-keyword">null</span>) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NoSuchElementException(<span class="hljs-string">&quot;No value present&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">return</span> value;<br>    &#125;<br><br>    <span class="hljs-comment">// 判断当前Optional对象value值是否非空，不为null则返回true</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isPresent</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value != <span class="hljs-keyword">null</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 对当前Optional对象的value值进行操作</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ifPresent</span><span class="hljs-params">(Consumer&lt;? <span class="hljs-keyword">super</span> T&gt; consumer)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span>)<br>        	<span class="hljs-comment">// 使用consumer消费者方法</span><br>            consumer.accept(value);<br>        <span class="hljs-comment">// 否则不做任何操作</span><br>    &#125;<br><br>    <span class="hljs-comment">// 根据条件过滤Optional对象</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Optional&lt;T&gt; <span class="hljs-title">filter</span><span class="hljs-params">(Predicate&lt;? <span class="hljs-keyword">super</span> T&gt; predicate)</span> </span>&#123;<br>    	 <span class="hljs-comment">// 如果predicate比较方法为null，则抛出空指针异常</span><br>        Objects.requireNonNull(predicate);<br>       	<span class="hljs-comment">// 如果value值为空，则返回当前Optional对象</span><br>        <span class="hljs-keyword">if</span> (!isPresent())<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        <span class="hljs-keyword">else</span><br>        	<span class="hljs-comment">// 如果value有值</span><br>        	<span class="hljs-comment">// 则使用predicate进行比较，如果匹配则返回当前Optional对象</span><br>        	<span class="hljs-comment">// 不匹配则返回一个value为null的Optional对象</span><br>            <span class="hljs-keyword">return</span> predicate.test(value) ? <span class="hljs-keyword">this</span> : empty();<br>    &#125;<br><br>	<span class="hljs-comment">// 将当前Optional对象的value根据mapper函数封装成另外的Optional对象</span><br>	<span class="hljs-comment">// mapper函数入参的类型为value类型的超类型，返回类型为U类型的子类型</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span>&lt;U&gt; Optional&lt;U&gt; <span class="hljs-title">map</span><span class="hljs-params">(Function&lt;? <span class="hljs-keyword">super</span> T, ? extends U&gt; mapper)</span> </span>&#123;<br>     	<span class="hljs-comment">// 如果mapper函数为null，则抛出空指针异常</span><br>        Objects.requireNonNull(mapper);<br>        <span class="hljs-comment">// 如果value值为空，则返回value为null的Optional对象</span><br>        <span class="hljs-keyword">if</span> (!isPresent())<br>            <span class="hljs-keyword">return</span> empty();<br>        <span class="hljs-keyword">else</span> &#123;<br>        	<span class="hljs-comment">// 如果value有值</span><br>        	<span class="hljs-comment">// 将mapper.apply(value)的返回值等装成一个Optional对象</span><br>            <span class="hljs-keyword">return</span> Optional.ofNullable(mapper.apply(value));<br>        &#125;<br>    &#125;<br><br>  	<span class="hljs-comment">// 将当前Optional对象的value根据mapper函数封装成另外的Optional对象</span><br>	<span class="hljs-comment">// mapper函数入参的类型为value类型的超类型，返回类型为value为U类型的Optional对象</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span>&lt;U&gt; Optional&lt;U&gt; <span class="hljs-title">flatMap</span><span class="hljs-params">(Function&lt;? <span class="hljs-keyword">super</span> T, Optional&lt;U&gt;&gt; mapper)</span> </span>&#123;<br>    	<span class="hljs-comment">// 如果mapper函数为null，则抛出空指针异常</span><br>        Objects.requireNonNull(mapper);<br>        <span class="hljs-comment">// 如果value值为空，则返回value为null的Optional对象</span><br>        <span class="hljs-keyword">if</span> (!isPresent())<br>            <span class="hljs-keyword">return</span> empty();<br>        <span class="hljs-keyword">else</span> &#123;<br>        	<span class="hljs-comment">// 如果value有值</span><br>        	<span class="hljs-comment">// 如果mapper.apply(value)为null，则抛出空指针异常</span><br>        	<span class="hljs-comment">// 返回mapper.apply(value)</span><br>            <span class="hljs-keyword">return</span> Objects.requireNonNull(mapper.apply(value));<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 如果value不为空则返回value，否则返回other</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">orElse</span><span class="hljs-params">(T other)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value != <span class="hljs-keyword">null</span> ? value : other;<br>    &#125;<br><br>    <span class="hljs-comment">// 如果value不为空则返回value，否则返回other.get()</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">orElseGet</span><span class="hljs-params">(Supplier&lt;? extends T&gt; other)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value != <span class="hljs-keyword">null</span> ? value : other.get();<br>    &#125;<br><br>    <span class="hljs-comment">// 如果value不为空则返回value，否则抛出exceptionSupplier.get()定义的异常</span><br>    <span class="hljs-keyword">public</span> &lt;X extends Throwable&gt; <span class="hljs-function">T <span class="hljs-title">orElseThrow</span><span class="hljs-params">(Supplier&lt;? extends X&gt; exceptionSupplier)</span> <span class="hljs-keyword">throws</span> X </span>&#123;<br>        <span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> value;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">throw</span> exceptionSupplier.get();<br>        &#125;<br>    &#125;<br><br>   	<span class="hljs-comment">// 比较当前Optional对象与obj是否相等</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">equals</span><span class="hljs-params">(Object obj)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> == obj) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (!(obj <span class="hljs-keyword">instanceof</span> Optional)) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>        &#125;<br><br>        Optional&lt;?&gt; other = (Optional&lt;?&gt;) obj;<br>        <span class="hljs-keyword">return</span> Objects.equals(value, other.value);<br>    &#125;<br><br>    <span class="hljs-comment">// 获取当前value的hashcode</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">hashCode</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> Objects.hashCode(value);<br>    &#125;<br><br>    <span class="hljs-comment">// toString</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> value != <span class="hljs-keyword">null</span><br>            ? String.format(<span class="hljs-string">&quot;Optional[%s]&quot;</span>, value)<br>            : <span class="hljs-string">&quot;Optional.empty&quot;</span>;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-<p>通过解读源代码，相信大家对Optional类有了一定的了解了吧！</p>
-<p>那么我们来举几个实例，加深一下印象。</p>
-<p>新建一个User实体，来进行测试：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 用户实体</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020年7月16日 下午1:32:36</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 姓名</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String name;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 年龄</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> Integer age;<br><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">User</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>();<br>    &#125;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">User</span><span class="hljs-params">(String name, Integer age)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>();<br>        <span class="hljs-keyword">this</span>.name = name;<br>        <span class="hljs-keyword">this</span>.age = age;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> name;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setName</span><span class="hljs-params">(String name)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.name = name;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Integer <span class="hljs-title">getAge</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> age;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAge</span><span class="hljs-params">(Integer age)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.age = age;<br>    &#125;<br><br>&#125;<br><br></code></pre></td></tr></table></figure>
-
-<ol>
-<li>如果user实例不为空，则打印年龄</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-keyword">import</span> java.util.Optional;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestMain</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        User user = <span class="hljs-keyword">null</span>;<br>        Optional&lt;User&gt; userOptional = Optional.ofNullable(user);<br>        userOptional.ifPresent(o -&gt; System.out.println(o.getAge()));<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-<p>此时控制台没有任何输出。</p>
-<p>我们来测试一下user有值的情况：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">User user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">&quot;han&quot;</span>, <span class="hljs-number">20</span>);<br></code></pre></td></tr></table></figure>
-<p>此时：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200716134134102.png"></p>
-<p>如果想将链式写法运用足，那么上面就可以缩写成：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Optional.ofNullable(user).ifPresent(o -&gt; System.out.println(o.getAge()));<br></code></pre></td></tr></table></figure>
-<ol start="2">
-<li>如果user实例不为空，则获取年龄，如果为空，新建一个实例，并获取年龄，此时获取的年龄为null</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-keyword">import</span> java.util.Optional;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestMain</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        User user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">&quot;han&quot;</span>, <span class="hljs-number">20</span>);<br>        Integer age = Optional.ofNullable(user).orElse(<span class="hljs-keyword">new</span> User()).getAge();<br>        System.out.println(age);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-<ol start="3">
-<li>如果user实例不为空，则获取年龄，如果为空，返回年龄为0</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-keyword">import</span> java.util.Optional;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestMain</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        User user = <span class="hljs-keyword">null</span>;<br>        Optional&lt;Integer&gt; map = Optional.ofNullable(user).map(User::getAge);<br>        Integer age = map.orElse(<span class="hljs-number">0</span>);<br>        System.out.println(age);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<ol start="4">
-<li>判断对象是否有值</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.yl.test;<br><br><span class="hljs-keyword">import</span> java.util.Optional;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestMain</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        User user = <span class="hljs-keyword">null</span>;<br>        <span class="hljs-keyword">boolean</span> present = Optional.ofNullable(user).isPresent();<br>        System.out.println(present);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-<p><img src="https://img-blog.csdnimg.cn/20200716135125666.png"></p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -1761,6 +1761,54 @@
       </tags>
   </entry>
   <entry>
+    <title>SpringBoot消息国际化配置</title>
+    <url>/2020/12/07/SpringBoot%E6%B6%88%E6%81%AF%E5%9B%BD%E9%99%85%E5%8C%96%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h1 id="一、目的"><a href="#一、目的" class="headerlink" title="一、目的"></a>一、目的</h1><p>针对不同地区，设置不同的语言信息。</p>
+<p>SpringBoot国际化配置文件默认放在classpath:message.properties，如果自定义消息配置文件，需要application.properties或application.yml中设置spring.messages.basename的值。</p>
+<h1 id="二、步骤"><a href="#二、步骤" class="headerlink" title="二、步骤"></a>二、步骤</h1><p>在src/main/resources 下建i18n文件夹</p>
+<p>在i18n文件夹中建立messages.properties  找不到语言配置时，使用此文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">hello&#x3D;你好_默认<br></code></pre></td></tr></table></figure>
+
+<p>在i18n文件夹中建立messages_en_US.properties 英文语言配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">hello&#x3D;hello_English<br></code></pre></td></tr></table></figure>
+
+<p>在i18n文件夹中建立messages_zh_CN.properties 中文语言配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">hello&#x3D;你好_中文<br></code></pre></td></tr></table></figure>
+
+<p><strong>MessageConfig.java</strong> </p>
+<p>对消息的配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.config.spring;<br><br>import java.util.Locale;<br><br>import javax.servlet.http.HttpServletRequest;<br>import javax.servlet.http.HttpServletResponse;<br><br>import org.springframework.beans.factory.annotation.Value;<br>import org.springframework.context.annotation.Bean;<br>import org.springframework.context.annotation.Configuration;<br>import org.springframework.context.i18n.LocaleContext;<br>import org.springframework.context.support.ResourceBundleMessageSource;<br>import org.springframework.util.Assert;<br>import org.springframework.web.servlet.LocaleResolver;<br>import org.springframework.web.servlet.i18n.AbstractLocaleContextResolver;<br>import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;<br>import org.springframework.web.servlet.i18n.SessionLocaleResolver;<br><br>@Configuration<br>public class MessageConfig extends AbstractLocaleContextResolver&#123;<br>	<br>	@Value(&quot;$&#123;spring.messages.basename&#125;&quot;)<br>	public String[] basenames;<br>	<br>	@Bean(name &#x3D; &quot;messageSource&quot;)<br>	public ResourceBundleMessageSource resourceBundleMessageSource() &#123;<br>		ResourceBundleMessageSource source &#x3D; new ResourceBundleMessageSource();<br>		if (basenames !&#x3D; null) &#123;<br>			for (int i &#x3D; 0; i &lt; basenames.length; i++) &#123;<br>				String basename &#x3D; basenames[i];<br>				Assert.hasText(basename, &quot;Basename must not be empty&quot;);<br>				this.basenames[i] &#x3D; basename.trim();<br>			&#125;<br>			source.setBasenames(basenames);<br>		&#125; else &#123;<br>			this.basenames &#x3D; new String[0];<br>			source.setBasename(basenames[0]);<br>		&#125;<br>		source.setDefaultEncoding(&quot;UTF-8&quot;);<br>		source.setUseCodeAsDefaultMessage(true);<br>		return source;<br>	&#125;<br><br>    @Bean<br>    public LocaleResolver localeResolver() &#123;<br>        SessionLocaleResolver slr &#x3D; new SessionLocaleResolver();<br>        slr.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);<br>        return slr;<br>    &#125;<br><br>    &#x2F;**<br>     * 国际化，设置url识别参数<br>     *<br>     * @return<br>     *&#x2F;<br>    @Bean<br>    public LocaleChangeInterceptor localeChangeInterceptor() &#123;<br>        LocaleChangeInterceptor lci &#x3D; new LocaleChangeInterceptor();<br>        lci.setParamName(&quot;lang&quot;);<br>        return lci;<br>    &#125;<br><br>	@Override<br>	public LocaleContext resolveLocaleContext(HttpServletRequest request) &#123;<br>		return null;<br>	&#125;<br><br>	@Override<br>	public void setLocaleContext(HttpServletRequest request, HttpServletResponse response,<br>			LocaleContext localeContext) &#123;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>SpringUtils.java</strong></p>
+<p>Spring工具类，用于获取ApplicationContext</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.common.utils;<br><br>import org.springframework.beans.BeansException;<br>import org.springframework.context.ApplicationContext;<br>import org.springframework.context.ApplicationContextAware;<br>import org.springframework.stereotype.Service;<br><br>&#x2F;**<br> * Spring容器<br> *&#x2F;<br>@Service<br>public class SpringUtils implements ApplicationContextAware &#123;<br><br>    private static ApplicationContext context &#x3D; null;<br><br>    @Override<br>    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException &#123;<br>        if (context &#x3D;&#x3D; null) &#123;<br>            context &#x3D; applicationContext;<br>        &#125;<br>    &#125;<br><br>    &#x2F;**<br>     * 获取容器<br>     *<br>     * @return 容器<br>     *&#x2F;<br>    public static ApplicationContext getContext() &#123;<br>        return context;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>MessageUtils.java</strong></p>
+<p>封装获取message的工具类</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.common.utils;<br><br>import java.util.Locale;<br><br>import org.springframework.context.i18n.LocaleContextHolder;<br>import org.springframework.context.support.ReloadableResourceBundleMessageSource;<br><br>public class MessageUtils &#123;<br>	<br>	public static String getMessage(String code) &#123;<br>		 Locale locale &#x3D; LocaleContextHolder.getLocale();<br>		 ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource &#x3D; new ReloadableResourceBundleMessageSource();<br>	     String message &#x3D; reloadableResourceBundleMessageSource.getMessage(code, null, locale);<br>	     return message;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p> <strong>WebMvcConfig.java</strong></p>
+<p>mvc配置，解决跨域，接口中文乱码，添加语言拦截器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.config.spring;<br><br>import java.nio.charset.Charset;<br>import java.util.List;<br><br>import org.springframework.beans.factory.annotation.Autowired;<br>import org.springframework.context.annotation.Bean;<br>import org.springframework.context.annotation.Configuration;<br>import org.springframework.http.converter.HttpMessageConverter;<br>import org.springframework.http.converter.StringHttpMessageConverter;<br>import org.springframework.web.servlet.config.annotation.CorsRegistry;<br>import org.springframework.web.servlet.config.annotation.InterceptorRegistry;<br>import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;<br>import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;<br><br>@Configuration<br>public class WebMvcConfig extends WebMvcConfigurationSupport &#123;<br>	<br>	@Autowired<br>	private LocaleChangeInterceptor localeChangeInterceptor;<br><br>	&#x2F;**<br>	 * 解决跨域<br>	 *&#x2F;<br>	@Override<br>	protected void addCorsMappings(CorsRegistry registry) &#123;<br>		registry<br>		.addMapping(&quot;&#x2F;**&quot;)<br>		.allowedHeaders(&quot;*&quot;)<br>		.allowedMethods(&quot;*&quot;)<br>		.allowedOrigins(&quot;*&quot;)<br>		.allowCredentials(true);<br>	&#125;<br><br>	&#x2F;**<br>	 * 配置消息转换器<br>	 * 解决返回String乱码<br>	 *&#x2F;<br>	@Override<br>	protected void configureMessageConverters(List&lt;HttpMessageConverter&lt;?&gt;&gt; converters) &#123;<br>		super.configureMessageConverters(converters);<br>		converters.add(responseBodyConverter());<br>	&#125;<br>	<br>	@Bean<br>    public HttpMessageConverter&lt;String&gt; responseBodyConverter() &#123;<br>        return new StringHttpMessageConverter(Charset.forName(&quot;UTF-8&quot;));<br>    &#125;<br><br>	@Override<br>	protected void addInterceptors(InterceptorRegistry registry) &#123;<br>		super.addInterceptors(registry);<br>		registry.addInterceptor(localeChangeInterceptor);<br>	&#125;<br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="三、测试"><a href="#三、测试" class="headerlink" title="三、测试"></a>三、测试</h1><p>测试接口：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.controller;<br><br>import org.springframework.web.bind.annotation.GetMapping;<br>import org.springframework.web.bind.annotation.RestController;<br><br>import com.spring.security.common.utils.I18nUtils;<br><br>@RestController<br>public class TestController &#123;<br>	<br>	@GetMapping(&quot;&#x2F;test&quot;)<br>	public String doTest() &#123;<br>		return I18nUtils.getMessage(&quot;hello&quot;);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<img src="https://img-blog.csdnimg.cn/20200513174715983.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
+
+ <img src="https://img-blog.csdnimg.cn/20200513174759460.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
+
+<p>源码地址： <a href="https://github.com/hanguilin/boot-security">https://github.com/hanguilin/boot-security</a></p>
+]]></content>
+      <categories>
+        <category>SpringBoot</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot</tag>
+        <tag>消息国际化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Tomcat+Nginx+Redis实现session共享</title>
     <url>/2020/11/29/Tomcat-Nginx-Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB/</url>
     <content><![CDATA[<h1 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h1><p>中间件：Tomcat、Redis、Nginx</p>
@@ -1807,54 +1855,6 @@
         <tag>Tomcat</tag>
         <tag>Nginx</tag>
         <tag>Session</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot消息国际化配置</title>
-    <url>/2020/12/07/SpringBoot%E6%B6%88%E6%81%AF%E5%9B%BD%E9%99%85%E5%8C%96%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[<h1 id="一、目的"><a href="#一、目的" class="headerlink" title="一、目的"></a>一、目的</h1><p>针对不同地区，设置不同的语言信息。</p>
-<p>SpringBoot国际化配置文件默认放在classpath:message.properties，如果自定义消息配置文件，需要application.properties或application.yml中设置spring.messages.basename的值。</p>
-<h1 id="二、步骤"><a href="#二、步骤" class="headerlink" title="二、步骤"></a>二、步骤</h1><p>在src/main/resources 下建i18n文件夹</p>
-<p>在i18n文件夹中建立messages.properties  找不到语言配置时，使用此文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">hello&#x3D;你好_默认<br></code></pre></td></tr></table></figure>
-
-<p>在i18n文件夹中建立messages_en_US.properties 英文语言配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">hello&#x3D;hello_English<br></code></pre></td></tr></table></figure>
-
-<p>在i18n文件夹中建立messages_zh_CN.properties 中文语言配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">hello&#x3D;你好_中文<br></code></pre></td></tr></table></figure>
-
-<p><strong>MessageConfig.java</strong> </p>
-<p>对消息的配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.config.spring;<br><br>import java.util.Locale;<br><br>import javax.servlet.http.HttpServletRequest;<br>import javax.servlet.http.HttpServletResponse;<br><br>import org.springframework.beans.factory.annotation.Value;<br>import org.springframework.context.annotation.Bean;<br>import org.springframework.context.annotation.Configuration;<br>import org.springframework.context.i18n.LocaleContext;<br>import org.springframework.context.support.ResourceBundleMessageSource;<br>import org.springframework.util.Assert;<br>import org.springframework.web.servlet.LocaleResolver;<br>import org.springframework.web.servlet.i18n.AbstractLocaleContextResolver;<br>import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;<br>import org.springframework.web.servlet.i18n.SessionLocaleResolver;<br><br>@Configuration<br>public class MessageConfig extends AbstractLocaleContextResolver&#123;<br>	<br>	@Value(&quot;$&#123;spring.messages.basename&#125;&quot;)<br>	public String[] basenames;<br>	<br>	@Bean(name &#x3D; &quot;messageSource&quot;)<br>	public ResourceBundleMessageSource resourceBundleMessageSource() &#123;<br>		ResourceBundleMessageSource source &#x3D; new ResourceBundleMessageSource();<br>		if (basenames !&#x3D; null) &#123;<br>			for (int i &#x3D; 0; i &lt; basenames.length; i++) &#123;<br>				String basename &#x3D; basenames[i];<br>				Assert.hasText(basename, &quot;Basename must not be empty&quot;);<br>				this.basenames[i] &#x3D; basename.trim();<br>			&#125;<br>			source.setBasenames(basenames);<br>		&#125; else &#123;<br>			this.basenames &#x3D; new String[0];<br>			source.setBasename(basenames[0]);<br>		&#125;<br>		source.setDefaultEncoding(&quot;UTF-8&quot;);<br>		source.setUseCodeAsDefaultMessage(true);<br>		return source;<br>	&#125;<br><br>    @Bean<br>    public LocaleResolver localeResolver() &#123;<br>        SessionLocaleResolver slr &#x3D; new SessionLocaleResolver();<br>        slr.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);<br>        return slr;<br>    &#125;<br><br>    &#x2F;**<br>     * 国际化，设置url识别参数<br>     *<br>     * @return<br>     *&#x2F;<br>    @Bean<br>    public LocaleChangeInterceptor localeChangeInterceptor() &#123;<br>        LocaleChangeInterceptor lci &#x3D; new LocaleChangeInterceptor();<br>        lci.setParamName(&quot;lang&quot;);<br>        return lci;<br>    &#125;<br><br>	@Override<br>	public LocaleContext resolveLocaleContext(HttpServletRequest request) &#123;<br>		return null;<br>	&#125;<br><br>	@Override<br>	public void setLocaleContext(HttpServletRequest request, HttpServletResponse response,<br>			LocaleContext localeContext) &#123;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p><strong>SpringUtils.java</strong></p>
-<p>Spring工具类，用于获取ApplicationContext</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.common.utils;<br><br>import org.springframework.beans.BeansException;<br>import org.springframework.context.ApplicationContext;<br>import org.springframework.context.ApplicationContextAware;<br>import org.springframework.stereotype.Service;<br><br>&#x2F;**<br> * Spring容器<br> *&#x2F;<br>@Service<br>public class SpringUtils implements ApplicationContextAware &#123;<br><br>    private static ApplicationContext context &#x3D; null;<br><br>    @Override<br>    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException &#123;<br>        if (context &#x3D;&#x3D; null) &#123;<br>            context &#x3D; applicationContext;<br>        &#125;<br>    &#125;<br><br>    &#x2F;**<br>     * 获取容器<br>     *<br>     * @return 容器<br>     *&#x2F;<br>    public static ApplicationContext getContext() &#123;<br>        return context;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p><strong>MessageUtils.java</strong></p>
-<p>封装获取message的工具类</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.common.utils;<br><br>import java.util.Locale;<br><br>import org.springframework.context.i18n.LocaleContextHolder;<br>import org.springframework.context.support.ReloadableResourceBundleMessageSource;<br><br>public class MessageUtils &#123;<br>	<br>	public static String getMessage(String code) &#123;<br>		 Locale locale &#x3D; LocaleContextHolder.getLocale();<br>		 ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource &#x3D; new ReloadableResourceBundleMessageSource();<br>	     String message &#x3D; reloadableResourceBundleMessageSource.getMessage(code, null, locale);<br>	     return message;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p> <strong>WebMvcConfig.java</strong></p>
-<p>mvc配置，解决跨域，接口中文乱码，添加语言拦截器</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.config.spring;<br><br>import java.nio.charset.Charset;<br>import java.util.List;<br><br>import org.springframework.beans.factory.annotation.Autowired;<br>import org.springframework.context.annotation.Bean;<br>import org.springframework.context.annotation.Configuration;<br>import org.springframework.http.converter.HttpMessageConverter;<br>import org.springframework.http.converter.StringHttpMessageConverter;<br>import org.springframework.web.servlet.config.annotation.CorsRegistry;<br>import org.springframework.web.servlet.config.annotation.InterceptorRegistry;<br>import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;<br>import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;<br><br>@Configuration<br>public class WebMvcConfig extends WebMvcConfigurationSupport &#123;<br>	<br>	@Autowired<br>	private LocaleChangeInterceptor localeChangeInterceptor;<br><br>	&#x2F;**<br>	 * 解决跨域<br>	 *&#x2F;<br>	@Override<br>	protected void addCorsMappings(CorsRegistry registry) &#123;<br>		registry<br>		.addMapping(&quot;&#x2F;**&quot;)<br>		.allowedHeaders(&quot;*&quot;)<br>		.allowedMethods(&quot;*&quot;)<br>		.allowedOrigins(&quot;*&quot;)<br>		.allowCredentials(true);<br>	&#125;<br><br>	&#x2F;**<br>	 * 配置消息转换器<br>	 * 解决返回String乱码<br>	 *&#x2F;<br>	@Override<br>	protected void configureMessageConverters(List&lt;HttpMessageConverter&lt;?&gt;&gt; converters) &#123;<br>		super.configureMessageConverters(converters);<br>		converters.add(responseBodyConverter());<br>	&#125;<br>	<br>	@Bean<br>    public HttpMessageConverter&lt;String&gt; responseBodyConverter() &#123;<br>        return new StringHttpMessageConverter(Charset.forName(&quot;UTF-8&quot;));<br>    &#125;<br><br>	@Override<br>	protected void addInterceptors(InterceptorRegistry registry) &#123;<br>		super.addInterceptors(registry);<br>		registry.addInterceptor(localeChangeInterceptor);<br>	&#125;<br>	<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h1 id="三、测试"><a href="#三、测试" class="headerlink" title="三、测试"></a>三、测试</h1><p>测试接口：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package com.spring.security.controller;<br><br>import org.springframework.web.bind.annotation.GetMapping;<br>import org.springframework.web.bind.annotation.RestController;<br><br>import com.spring.security.common.utils.I18nUtils;<br><br>@RestController<br>public class TestController &#123;<br>	<br>	@GetMapping(&quot;&#x2F;test&quot;)<br>	public String doTest() &#123;<br>		return I18nUtils.getMessage(&quot;hello&quot;);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<img src="https://img-blog.csdnimg.cn/20200513174715983.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
-
- <img src="https://img-blog.csdnimg.cn/20200513174759460.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
-
-<p>源码地址： <a href="https://github.com/hanguilin/boot-security">https://github.com/hanguilin/boot-security</a></p>
-]]></content>
-      <categories>
-        <category>SpringBoot</category>
-      </categories>
-      <tags>
-        <tag>SpringBoot</tag>
-        <tag>消息国际化</tag>
       </tags>
   </entry>
   <entry>
