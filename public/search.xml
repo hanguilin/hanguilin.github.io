@@ -156,6 +156,50 @@
       </tags>
   </entry>
   <entry>
+    <title>Docker部署Tomcat项目</title>
+    <url>/2020/12/14/Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE/</url>
+    <content><![CDATA[<h2 id="1-设置yum源"><a href="#1-设置yum源" class="headerlink" title="1.设置yum源"></a>1.设置yum源</h2><p>下载yum工具</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ yum -y install yum-utils<br></code></pre></td></tr></table></figure>
+<p>设置aliyun为yum源</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">yum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo<br></code></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200707140146330.png"></p>
+<h2 id="2-搜索tomcat"><a href="#2-搜索tomcat" class="headerlink" title="2.搜索tomcat"></a>2.搜索tomcat</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker search tomcat<br></code></pre></td></tr></table></figure>
+<p>如果出现：</p>
+<p>Error response from daemon: Get <a href="https://index.docker.io/v1/search?q=tomcat&amp;n=25">https://index.docker.io/v1/search?q=tomcat&amp;n=25</a>: dial tcp: lookup index.docker.io on 61.128.128.68:53: no such host</p>
+<p><img src="https://img-blog.csdnimg.cn/20200707140950166.png"></p>
+<p>就需要修改DNS解析，首先查看你当前物理机的DNS地址：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200707142919329.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ vi &#x2F;etc&#x2F;resolv.conf<br></code></pre></td></tr></table></figure>
+<p>设置DNS地址：</p>
+<p><img src="https://img-blog.csdnimg.cn/2020070714303840.png"></p>
+<p>保存后重启network:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ systemctl restart network<br></code></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200707143225723.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<h2 id="3-拉取tomcat8-5"><a href="#3-拉取tomcat8-5" class="headerlink" title="3.拉取tomcat8.5"></a>3.拉取tomcat8.5</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker pull tomcat:8.5<br></code></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200707143552288.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<h2 id="4-查看本地镜像"><a href="#4-查看本地镜像" class="headerlink" title="4.查看本地镜像"></a>4.查看本地镜像</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker images|grep tomcat<br></code></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200707143820378.png"></p>
+<h2 id="5-启动一个tomcat实例"><a href="#5-启动一个tomcat实例" class="headerlink" title="5.启动一个tomcat实例"></a>5.启动一个tomcat实例</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker run -d -v &#x2F;root&#x2F;tomcat1:&#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;webapps -p 8080:8080 --name tomcat1 docker.io&#x2F;tomcat:8.5  <br></code></pre></td></tr></table></figure>
+<ul>
+<li>-d<br>  表示后台启动</li>
+<li>-v<br>  表示挂载，将容器中的/usr/local/tomcat/webapps挂载到宿主机的/root/tomcat1文件夹</li>
+<li>-p<br>  表示设置访问端口，第一个端口为外部访问的端口，第二个为容器内端口</li>
+<li>–name<br>  设置容器名称</li>
+<li>docker.io/tomcat:8.5<br>  docker.io/tomcat镜像名称，8.5为TAG，就是版本号，如果没有TAG，将会选取最新的镜像运行，如果本地仓库没有最新的镜像，将会pull最新的镜像到本地，并运行。<h2 id="6-部署自己的项目"><a href="#6-部署自己的项目" class="headerlink" title="6.部署自己的项目"></a>6.部署自己的项目</h2>将物理机上的Tomcat-&gt;webapps中的ROOT文件夹加放到宿主机的/root/tomcat1中，作为上传jar包的演示。</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200707224906540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"><br>在外部网站访问8080端口：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200707224557491.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p>如果连接拒绝，可能是由于虚拟机的端口未开放，需要关闭防火墙或者开放端口，可以参考文章《<a href="https://blog.csdn.net/qq_37171817/article/details/106731470">CentOS7 中开放端口</a>》解决。</p>
+]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+        <tag>Tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker常用命令小白篇</title>
     <url>/2020/12/15/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%B0%8F%E7%99%BD%E7%AF%87/</url>
     <content><![CDATA[<h1 id="一、Docker常用命令"><a href="#一、Docker常用命令" class="headerlink" title="一、Docker常用命令"></a>一、Docker常用命令</h1><ul>
@@ -217,78 +261,6 @@
       </categories>
       <tags>
         <tag>Docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Docker部署Tomcat项目</title>
-    <url>/2020/12/14/Docker%E9%83%A8%E7%BD%B2Tomcat%E9%A1%B9%E7%9B%AE/</url>
-    <content><![CDATA[<h2 id="1-设置yum源"><a href="#1-设置yum源" class="headerlink" title="1.设置yum源"></a>1.设置yum源</h2><p>下载yum工具</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ yum -y install yum-utils<br></code></pre></td></tr></table></figure>
-<p>设置aliyun为yum源</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">yum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo<br></code></pre></td></tr></table></figure>
-<p><img src="https://img-blog.csdnimg.cn/20200707140146330.png"></p>
-<h2 id="2-搜索tomcat"><a href="#2-搜索tomcat" class="headerlink" title="2.搜索tomcat"></a>2.搜索tomcat</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker search tomcat<br></code></pre></td></tr></table></figure>
-<p>如果出现：</p>
-<p>Error response from daemon: Get <a href="https://index.docker.io/v1/search?q=tomcat&amp;n=25">https://index.docker.io/v1/search?q=tomcat&amp;n=25</a>: dial tcp: lookup index.docker.io on 61.128.128.68:53: no such host</p>
-<p><img src="https://img-blog.csdnimg.cn/20200707140950166.png"></p>
-<p>就需要修改DNS解析，首先查看你当前物理机的DNS地址：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200707142919329.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ vi &#x2F;etc&#x2F;resolv.conf<br></code></pre></td></tr></table></figure>
-<p>设置DNS地址：</p>
-<p><img src="https://img-blog.csdnimg.cn/2020070714303840.png"></p>
-<p>保存后重启network:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ systemctl restart network<br></code></pre></td></tr></table></figure>
-<p><img src="https://img-blog.csdnimg.cn/20200707143225723.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<h2 id="3-拉取tomcat8-5"><a href="#3-拉取tomcat8-5" class="headerlink" title="3.拉取tomcat8.5"></a>3.拉取tomcat8.5</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker pull tomcat:8.5<br></code></pre></td></tr></table></figure>
-<p><img src="https://img-blog.csdnimg.cn/20200707143552288.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<h2 id="4-查看本地镜像"><a href="#4-查看本地镜像" class="headerlink" title="4.查看本地镜像"></a>4.查看本地镜像</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker images|grep tomcat<br></code></pre></td></tr></table></figure>
-<p><img src="https://img-blog.csdnimg.cn/20200707143820378.png"></p>
-<h2 id="5-启动一个tomcat实例"><a href="#5-启动一个tomcat实例" class="headerlink" title="5.启动一个tomcat实例"></a>5.启动一个tomcat实例</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker run -d -v &#x2F;root&#x2F;tomcat1:&#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;webapps -p 8080:8080 --name tomcat1 docker.io&#x2F;tomcat:8.5  <br></code></pre></td></tr></table></figure>
-<ul>
-<li>-d<br>  表示后台启动</li>
-<li>-v<br>  表示挂载，将容器中的/usr/local/tomcat/webapps挂载到宿主机的/root/tomcat1文件夹</li>
-<li>-p<br>  表示设置访问端口，第一个端口为外部访问的端口，第二个为容器内端口</li>
-<li>–name<br>  设置容器名称</li>
-<li>docker.io/tomcat:8.5<br>  docker.io/tomcat镜像名称，8.5为TAG，就是版本号，如果没有TAG，将会选取最新的镜像运行，如果本地仓库没有最新的镜像，将会pull最新的镜像到本地，并运行。<h2 id="6-部署自己的项目"><a href="#6-部署自己的项目" class="headerlink" title="6.部署自己的项目"></a>6.部署自己的项目</h2>将物理机上的Tomcat-&gt;webapps中的ROOT文件夹加放到宿主机的/root/tomcat1中，作为上传jar包的演示。</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20200707224906540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"><br>在外部网站访问8080端口：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200707224557491.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p>如果连接拒绝，可能是由于虚拟机的端口未开放，需要关闭防火墙或者开放端口，可以参考文章《<a href="https://blog.csdn.net/qq_37171817/article/details/106731470">CentOS7 中开放端口</a>》解决。</p>
-]]></content>
-      <categories>
-        <category>Docker</category>
-      </categories>
-      <tags>
-        <tag>Docker</tag>
-        <tag>Tomcat</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Eclipse安装Mat工具分析教程</title>
-    <url>/2020/12/05/Eclipse%E5%AE%89%E8%A3%85Mat%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<h1 id="一、关于Mat"><a href="#一、关于Mat" class="headerlink" title="一、关于Mat"></a>一、关于Mat</h1><p>MAT是Memory Analyzer的简称，它是一款功能强大的Java堆内存分析器。可以用于查找内存泄露以及查看内存消耗情况。MAT是基于Eclipse开发的，是一款免费的性能分析工具。可以再官网<a href="http://www.eclipse.org/mat/%E4%B8%8B%E8%BD%BD%EF%BC%8C%E6%88%96%E8%80%85%E7%9B%B4%E6%8E%A5%E5%9C%A8Eclipse%E9%87%8C%E4%B8%8B%E8%BD%BD%E3%80%82">http://www.eclipse.org/mat/下载，或者直接在Eclipse里下载。</a></p>
-<h1 id="二、Eclipse安装Mat"><a href="#二、Eclipse安装Mat" class="headerlink" title="二、Eclipse安装Mat"></a>二、Eclipse安装Mat</h1><p>Eclipse首页 点击help&gt;Eclipse Marketplace</p>
-<img src="https://img-blog.csdnimg.cn/20200103100321787.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
-
-<p>安装完成后重启Eclipse，如果在Window&gt;Perspective&gt;Open Perspective&gt;other能找到Memory Alalysis就表示安装成功。</p>
-<p>点击Memory Alalysis，弹出分析界面：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200103140754471.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p> 点击左上角File&gt;Open Heap Dump,并选则Dump下来的文件</p>
-<img src="https://img-blog.csdnimg.cn/20200103115535786.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
-
-<p><img src="https://img-blog.csdnimg.cn/20200103115557186.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p><img src="https://img-blog.csdnimg.cn/20200103115641925.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<img src="https://img-blog.csdnimg.cn/20200103115728989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
-
-<p>可以清楚的看到问题信息。 </p>
-]]></content>
-      <categories>
-        <category>Eclipse</category>
-      </categories>
-      <tags>
-        <tag>Eclipse</tag>
-        <tag>Mat</tag>
-        <tag>内存分析</tag>
       </tags>
   </entry>
   <entry>
@@ -394,6 +366,104 @@
       </tags>
   </entry>
   <entry>
+    <title>Eclipse安装Mat工具分析教程</title>
+    <url>/2020/12/05/Eclipse%E5%AE%89%E8%A3%85Mat%E5%B7%A5%E5%85%B7%E5%88%86%E6%9E%90%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="一、关于Mat"><a href="#一、关于Mat" class="headerlink" title="一、关于Mat"></a>一、关于Mat</h1><p>MAT是Memory Analyzer的简称，它是一款功能强大的Java堆内存分析器。可以用于查找内存泄露以及查看内存消耗情况。MAT是基于Eclipse开发的，是一款免费的性能分析工具。可以再官网<a href="http://www.eclipse.org/mat/%E4%B8%8B%E8%BD%BD%EF%BC%8C%E6%88%96%E8%80%85%E7%9B%B4%E6%8E%A5%E5%9C%A8Eclipse%E9%87%8C%E4%B8%8B%E8%BD%BD%E3%80%82">http://www.eclipse.org/mat/下载，或者直接在Eclipse里下载。</a></p>
+<h1 id="二、Eclipse安装Mat"><a href="#二、Eclipse安装Mat" class="headerlink" title="二、Eclipse安装Mat"></a>二、Eclipse安装Mat</h1><p>Eclipse首页 点击help&gt;Eclipse Marketplace</p>
+<img src="https://img-blog.csdnimg.cn/20200103100321787.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
+
+<p>安装完成后重启Eclipse，如果在Window&gt;Perspective&gt;Open Perspective&gt;other能找到Memory Alalysis就表示安装成功。</p>
+<p>点击Memory Alalysis，弹出分析界面：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200103140754471.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p> 点击左上角File&gt;Open Heap Dump,并选则Dump下来的文件</p>
+<img src="https://img-blog.csdnimg.cn/20200103115535786.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
+
+<p><img src="https://img-blog.csdnimg.cn/20200103115557186.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200103115641925.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<img src="https://img-blog.csdnimg.cn/20200103115728989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
+
+<p>可以清楚的看到问题信息。 </p>
+]]></content>
+      <categories>
+        <category>Eclipse</category>
+      </categories>
+      <tags>
+        <tag>Eclipse</tag>
+        <tag>Mat</tag>
+        <tag>内存分析</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java 8 Funciton、Consumer、Predicate的作用及用法</title>
+    <url>/2020/12/10/Java%208%20Funciton%E3%80%81Consumer%E3%80%81Predicate%E7%9A%84%E4%BD%9C%E7%94%A8%E5%8F%8A%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="一、简述"><a href="#一、简述" class="headerlink" title="一、简述"></a>一、简述</h1><p>Funciton、Consumer、Predicate是Java8中的新特性。他们都是函数式接口，位于java.util包中。</p>
+<p>关于函数式接口，其外部特征是类上使用@FunctionalInterface注解。它有以下特点：</p>
+<ul>
+<li>只能注解到有且仅有一个抽象方法的类上。</li>
+<li>接口显示声明或覆盖了java.lang.Object类中方法的方法也不算做抽象方法。</li>
+<li>Java8接口中static方法与default方法不算抽象方法。</li>
+</ul>
+<p>他们各自的使用场景如下：</p>
+<ul>
+<li>Function</li>
+</ul>
+<p>需要执行目标方法后得到返回值。</p>
+<p>接口修饰：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Function</span>&lt;<span class="hljs-title">T</span>, <span class="hljs-title">R</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>该类需要设置两个泛型，T为入参类型，R为返回值类型。</p>
+<p>主要方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Applies this function to the given argument.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t the function argument</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> the function result</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function">R <span class="hljs-title">apply</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Consumer</li>
+</ul>
+<p>仅需要执行目标方法，不需要得到返回值。</p>
+<p>接口修饰：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Consumer</span>&lt;<span class="hljs-title">T</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>该类需要设置一个泛型，T为参数类型。</p>
+<p>主要方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 对给定的参数执行此操作。</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t 入参</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Predicate</li>
+</ul>
+<p>经过比较，得到比较逻辑执行过后的结果，其返回类型为true、false。</p>
+<p>接口修饰：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Predicate</span>&lt;<span class="hljs-title">T</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p> 该类需要设置一个泛型，T为参数类型。</p>
+<p>主要方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据给定参数比较</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t 入参</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@code</span> true&#125; 满足条件返回true,</span><br><span class="hljs-comment"> * otherwise &#123;<span class="hljs-doctag">@code</span> false&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">test</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<h1 id="二、实例"><a href="#二、实例" class="headerlink" title="二、实例"></a>二、实例</h1><p>1、输入数字3，得到输入值加100的结果并转为字符创，并返回。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"># 定义函数执行方法<br>Function&lt;Integer, String&gt; func = o -&gt; &#123;<span class="hljs-keyword">return</span> String.valueOf((o + <span class="hljs-number">100</span>));&#125;;<br># 传入3，执行方法，获取返回结果<br>String result = func.apply(<span class="hljs-number">3</span>);<br>System.out.println(<span class="hljs-string">&quot;result : &quot;</span> + result);<br></code></pre></td></tr></table></figure>
+
+<p> 结果：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200618130909383.png"></p>
+<p>2、输入字符“hello”，拼接字符串“ word”并输出。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Consumer&lt;String&gt; consumer = o -&gt; &#123;System.out.println(o + <span class="hljs-string">&quot; world&quot;</span>);&#125;;<br>consumer.accept(<span class="hljs-string">&quot;hello&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200618131310966.png"></p>
+<p>3、输入字符串“hello”，判断长度是否等于5。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Predicate&lt;String&gt; predicate = o -&gt; &#123;<span class="hljs-keyword">return</span> o.length() == <span class="hljs-number">5</span>;&#125;;<br><span class="hljs-keyword">boolean</span> test = predicate.test(<span class="hljs-string">&quot;hello&quot;</span>);<br>System.out.println(<span class="hljs-string">&quot;result : &quot;</span> + test);<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200618131601419.png"></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java8</tag>
+        <tag>Function</tag>
+        <tag>Consumer</tag>
+        <tag>Predicate</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java 8 Stream API实例</title>
     <url>/2020/12/06/Java%208%20Stream%20API%E5%AE%9E%E4%BE%8B/</url>
     <content><![CDATA[<h1 id="一、开篇"><a href="#一、开篇" class="headerlink" title="一、开篇"></a>一、开篇</h1><ol>
@@ -494,76 +564,6 @@
       <tags>
         <tag>Java</tag>
         <tag>Stream</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java 8 Funciton、Consumer、Predicate的作用及用法</title>
-    <url>/2020/12/10/Java%208%20Funciton%E3%80%81Consumer%E3%80%81Predicate%E7%9A%84%E4%BD%9C%E7%94%A8%E5%8F%8A%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="一、简述"><a href="#一、简述" class="headerlink" title="一、简述"></a>一、简述</h1><p>Funciton、Consumer、Predicate是Java8中的新特性。他们都是函数式接口，位于java.util包中。</p>
-<p>关于函数式接口，其外部特征是类上使用@FunctionalInterface注解。它有以下特点：</p>
-<ul>
-<li>只能注解到有且仅有一个抽象方法的类上。</li>
-<li>接口显示声明或覆盖了java.lang.Object类中方法的方法也不算做抽象方法。</li>
-<li>Java8接口中static方法与default方法不算抽象方法。</li>
-</ul>
-<p>他们各自的使用场景如下：</p>
-<ul>
-<li>Function</li>
-</ul>
-<p>需要执行目标方法后得到返回值。</p>
-<p>接口修饰：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Function</span>&lt;<span class="hljs-title">T</span>, <span class="hljs-title">R</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
-
-<p>该类需要设置两个泛型，T为入参类型，R为返回值类型。</p>
-<p>主要方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Applies this function to the given argument.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t the function argument</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> the function result</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function">R <span class="hljs-title">apply</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
-
-<ul>
-<li>Consumer</li>
-</ul>
-<p>仅需要执行目标方法，不需要得到返回值。</p>
-<p>接口修饰：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Consumer</span>&lt;<span class="hljs-title">T</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
-
-<p>该类需要设置一个泛型，T为参数类型。</p>
-<p>主要方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 对给定的参数执行此操作。</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t 入参</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
-
-<ul>
-<li>Predicate</li>
-</ul>
-<p>经过比较，得到比较逻辑执行过后的结果，其返回类型为true、false。</p>
-<p>接口修饰：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Predicate</span>&lt;<span class="hljs-title">T</span>&gt;</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
-
-<p> 该类需要设置一个泛型，T为参数类型。</p>
-<p>主要方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据给定参数比较</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> t 入参</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> &#123;<span class="hljs-doctag">@code</span> true&#125; 满足条件返回true,</span><br><span class="hljs-comment"> * otherwise &#123;<span class="hljs-doctag">@code</span> false&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">test</span><span class="hljs-params">(T t)</span></span>;<br></code></pre></td></tr></table></figure>
-
-<h1 id="二、实例"><a href="#二、实例" class="headerlink" title="二、实例"></a>二、实例</h1><p>1、输入数字3，得到输入值加100的结果并转为字符创，并返回。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"># 定义函数执行方法<br>Function&lt;Integer, String&gt; func = o -&gt; &#123;<span class="hljs-keyword">return</span> String.valueOf((o + <span class="hljs-number">100</span>));&#125;;<br># 传入3，执行方法，获取返回结果<br>String result = func.apply(<span class="hljs-number">3</span>);<br>System.out.println(<span class="hljs-string">&quot;result : &quot;</span> + result);<br></code></pre></td></tr></table></figure>
-
-<p> 结果：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200618130909383.png"></p>
-<p>2、输入字符“hello”，拼接字符串“ word”并输出。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Consumer&lt;String&gt; consumer = o -&gt; &#123;System.out.println(o + <span class="hljs-string">&quot; world&quot;</span>);&#125;;<br>consumer.accept(<span class="hljs-string">&quot;hello&quot;</span>);<br></code></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200618131310966.png"></p>
-<p>3、输入字符串“hello”，判断长度是否等于5。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Predicate&lt;String&gt; predicate = o -&gt; &#123;<span class="hljs-keyword">return</span> o.length() == <span class="hljs-number">5</span>;&#125;;<br><span class="hljs-keyword">boolean</span> test = predicate.test(<span class="hljs-string">&quot;hello&quot;</span>);<br>System.out.println(<span class="hljs-string">&quot;result : &quot;</span> + test);<br></code></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200618131601419.png"></p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java8</tag>
-        <tag>Function</tag>
-        <tag>Consumer</tag>
-        <tag>Predicate</tag>
       </tags>
   </entry>
   <entry>

@@ -46,15 +46,15 @@
     },
     navbar: {
       mobile: function () {
-        $(".navbar").addClass("hide");
+        $(".han-navbar").addClass("out");
         $(window).on("scroll", ZHAOO.utils.throttle(function () {
           var before = $(this).scrollTop();
           $(window).on("scroll", function () {
             var after = $(this).scrollTop();
             if (before > after && after > 300) {
-              $(".navbar").removeClass("hide");
+              $(".han-navbar").removeClass("out");
             } else if (before < after || after < 300) {
-              $(".navbar").addClass("hide");
+              $(".han-navbar").addClass("out");
             }
             before = after;
           })
@@ -63,9 +63,9 @@
       desktop: function () {
         function center() {
           if ($(window).scrollTop() > 60) {
-            $(".navbar .center").addClass("hide");
+            $(".han-navbar .center").addClass("in");
           } else {
-            $(".navbar .center").removeClass("hide");
+            $(".han-navbar .center").removeClass("in");
           }
         }
         center();
@@ -75,9 +75,9 @@
           $(window).on("scroll", function () {
             var after = $(this).scrollTop();
             if (before > after) {
-              $(".navbar").removeClass("hide");
+              $(".han-navbar").removeClass("out");
             } else if (before < after) {
-              $(".navbar").addClass("hide");
+              $(".han-navbar").addClass("out");
             }
             before = after;
           })
@@ -271,11 +271,11 @@
     menu: function () {
       $(".menu-close").on("click", function () {
         fn.hideMenu();
-        $(".navbar").removeClass("hide");
+        $(".han-navbar").removeClass("out");
       });
 	  $(".menu-wrap").on("click", function () {
 		  fn.hideMenu();
-		  $(".navbar").removeClass("hide");
+		  $(".han-navbar").removeClass("out");
 	  })
     },
     scroolToTop: function () {
@@ -339,11 +339,11 @@
       }, 1000)).resize();
       $(".j-navbar-menu").on("click", function () {
         fn.showMenu();
-        $(".navbar").addClass("hide");
+        $(".han-navbar").addClass("out");
         $(".qrcode").fadeOut(300);
       });
       $(".j-navbar-qrcode").on("click", function () {
-        var $qrcode_navbar = $(this).parent().siblings('.qrcode-navbar')
+        var $qrcode_navbar = $(this).parents('.left').siblings('.qrcode-navbar')
         if ($qrcode_navbar.is(":hidden")) {
           $qrcode_navbar.fadeIn(300);
         } else {
