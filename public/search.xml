@@ -109,53 +109,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker安装mysql57</title>
-    <url>/2020/12/14/Docker%E5%AE%89%E8%A3%85mysql57/</url>
-    <content><![CDATA[<p>搜索docker中的mysql镜像：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker search mysql<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/20200708175314234.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p>拉取mysql57:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker pull docker.io/mysql:5.7<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/2020070817540399.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p>查看已下载的镜像：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker images<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/20200708180503607.png"></p>
-<p>创建容器：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker run -d -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD&#x3D;root --restart&#x3D;always  docker.io&#x2F;mysql:5.7<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/20200708180538988.png"></p>
-<p>查看已运行的容器，查看容器id：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker ps<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/20200708180603921.png"></p>
-<p>进入容器：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker <span class="hljs-built_in">exec</span> -it 146c196fef3a /bin/bash<br></code></pre></td></tr></table></figure>
-
-<p>进入mysql:</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">$ mysql -u root -p<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/20200708180914294.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p>修改root用户允许远程访问：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">identified</span> <span class="hljs-keyword">with</span> mysql_native_password <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;root&#x27;</span>;<br><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">ALL</span> <span class="hljs-keyword">PRIVILEGES</span> <span class="hljs-keyword">ON</span> *.* <span class="hljs-keyword">TO</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">IDENTIFIED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;123456&#x27;</span> <br></code></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/20200708180935756.png"></p>
-<p>通过navicat远程连接：</p>
-<img src="https://img-blog.csdnimg.cn/20200708181015415.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" alt="" style="zoom:67%;" />
-
-<p>安装成功。</p>
-]]></content>
-      <categories>
-        <category>Docker</category>
-      </categories>
-      <tags>
-        <tag>Docker</tag>
-        <tag>Mysql</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Docker常用命令小白篇</title>
     <url>/2020/12/15/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%B0%8F%E7%99%BD%E7%AF%87/</url>
     <content><![CDATA[<h1 id="一、Docker常用命令"><a href="#一、Docker常用命令" class="headerlink" title="一、Docker常用命令"></a>一、Docker常用命令</h1><ul>
@@ -217,6 +170,53 @@
       </categories>
       <tags>
         <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Docker安装mysql57</title>
+    <url>/2020/12/14/Docker%E5%AE%89%E8%A3%85mysql57/</url>
+    <content><![CDATA[<p>搜索docker中的mysql镜像：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker search mysql<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20200708175314234.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p>拉取mysql57:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker pull docker.io/mysql:5.7<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/2020070817540399.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p>查看已下载的镜像：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker images<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20200708180503607.png"></p>
+<p>创建容器：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">$ docker run -d -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD&#x3D;root --restart&#x3D;always  docker.io&#x2F;mysql:5.7<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20200708180538988.png"></p>
+<p>查看已运行的容器，查看容器id：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker ps<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20200708180603921.png"></p>
+<p>进入容器：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ docker <span class="hljs-built_in">exec</span> -it 146c196fef3a /bin/bash<br></code></pre></td></tr></table></figure>
+
+<p>进入mysql:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">$ mysql -u root -p<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20200708180914294.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p>修改root用户允许远程访问：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">identified</span> <span class="hljs-keyword">with</span> mysql_native_password <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;root&#x27;</span>;<br><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">ALL</span> <span class="hljs-keyword">PRIVILEGES</span> <span class="hljs-keyword">ON</span> *.* <span class="hljs-keyword">TO</span> <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> <span class="hljs-keyword">IDENTIFIED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;123456&#x27;</span> <br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20200708180935756.png"></p>
+<p>通过navicat远程连接：</p>
+<img src="https://img-blog.csdnimg.cn/20200708181015415.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" alt="" style="zoom:67%;" />
+
+<p>安装成功。</p>
+]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+        <tag>Mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -876,6 +876,75 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux系统桥接模式下配置静态ip地址</title>
+    <url>/2020/12/10/Linux%E7%B3%BB%E7%BB%9F%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E4%B8%8B%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip%E5%9C%B0%E5%9D%80/</url>
+    <content><![CDATA[<h1 id="一、桥接模式"><a href="#一、桥接模式" class="headerlink" title="一、桥接模式"></a>一、桥接模式</h1><p>VMware桥接模式，也就是将虚拟机的虚拟网络适配器与主机的物理网络适配器进行交接，此时虚拟机就可以访问到外部网络。桥接模式就相当于在局域网中添加了一台新的物理机一样，虚拟机同样占用一个ip地址，此时可以与局域网内其他终端互相访问。桥接模式支持有线与无线主机网络适配器。</p>
+<h1 id="二、VMware设置桥接模式"><a href="#二、VMware设置桥接模式" class="headerlink" title="二、VMware设置桥接模式"></a>二、VMware设置桥接模式</h1><p><img src="https://img-blog.csdnimg.cn/20200620121649176.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<h1 id="三、设置静态ip地址"><a href="#三、设置静态ip地址" class="headerlink" title="三、设置静态ip地址"></a>三、设置静态ip地址</h1><p>本例虚拟机为CentOS7。</p>
+<p>1、使用ip addr查看网卡等信息</p>
+<p><img src="https://img-blog.csdnimg.cn/20200620122058113.png"></p>
+<p> 此时网卡名称为ens33，所以需要修改ifcfg-eth33文件。</p>
+<p>2、编辑网卡文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">vi /etc/sysconfig/network-scripts/ifcfg-eth33<br></code></pre></td></tr></table></figure>
+
+<p>需要<strong>修改</strong>的内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">BOOTPROTI&#x3D;static<br>ONBOOT&#x3D;yes <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>BOOTPROTI</li>
+</ul>
+<p>dhcp: DHCP动态地址协议 。</p>
+<p>static：静态地址协议。</p>
+<ul>
+<li>ONBOOT</li>
+</ul>
+<p>系统启动时是否激活网卡接口，yes为激活，no为不激活。</p>
+<p>需要<strong>添加</strong>的内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">IPADDR&#x3D;172.20.10.6<br>NETMASK&#x3D;255.255.255.0  <br>GATEWAY&#x3D;172.20.10.1<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>IPADDR</li>
+</ul>
+<p>静态ip地址，需要确保在局域网中的唯一性，设置之前可以先ping一下，看能否ping通，能的话说明已经有主机在使用。和物理主机ip网段相同，前三位一样。</p>
+<ul>
+<li>NETMASK</li>
+</ul>
+<p>子网掩码。 </p>
+<ul>
+<li>GATEWAY</li>
+</ul>
+<p>网关地址。和物理主机网关相同。</p>
+<p>物理机IP配置，通过ipconfig查询：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200620131652727.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p>修改后虚拟机网卡的完整配置：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200620132030526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p>重启网络服务：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">systemctl restart network<br></code></pre></td></tr></table></figure>
+
+<p>遇到的问题：Failed to start LSB: Bring up/down networking.</p>
+<p><img src="https://img-blog.csdnimg.cn/20200620131358528.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p>解决办法：</p>
+<p>执行以下两段命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">systemctl stop NetworkManager<br>systemctl <span class="hljs-built_in">disable</span> NetworkManager<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/2020062013185023.png"></p>
+<p> 测试网络是否连通：</p>
+<p>在物理主机测试ping虚拟主机：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200620132308306.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p> 在虚拟机ping物理主机：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200620132414685.png"></p>
+<p> 成功连通虚拟机网络。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>静态ip</tag>
+        <tag>桥接模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java数据类型之Cache模式</title>
     <url>/2020/12/09/Java%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B9%8BCache%E6%A8%A1%E5%BC%8F/</url>
     <content><![CDATA[<h1 id="1、关于Java数据类型"><a href="#1、关于Java数据类型" class="headerlink" title="1、关于Java数据类型"></a>1、关于Java数据类型</h1><h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><p>基本数据类型有8种，每种基本数据类型都有对应的引用类型。</p>
@@ -1361,75 +1430,6 @@
       <tags>
         <tag>Solr</tag>
         <tag>全文检索</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux系统桥接模式下配置静态ip地址</title>
-    <url>/2020/12/10/Linux%E7%B3%BB%E7%BB%9F%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E4%B8%8B%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip%E5%9C%B0%E5%9D%80/</url>
-    <content><![CDATA[<h1 id="一、桥接模式"><a href="#一、桥接模式" class="headerlink" title="一、桥接模式"></a>一、桥接模式</h1><p>VMware桥接模式，也就是将虚拟机的虚拟网络适配器与主机的物理网络适配器进行交接，此时虚拟机就可以访问到外部网络。桥接模式就相当于在局域网中添加了一台新的物理机一样，虚拟机同样占用一个ip地址，此时可以与局域网内其他终端互相访问。桥接模式支持有线与无线主机网络适配器。</p>
-<h1 id="二、VMware设置桥接模式"><a href="#二、VMware设置桥接模式" class="headerlink" title="二、VMware设置桥接模式"></a>二、VMware设置桥接模式</h1><p><img src="https://img-blog.csdnimg.cn/20200620121649176.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<h1 id="三、设置静态ip地址"><a href="#三、设置静态ip地址" class="headerlink" title="三、设置静态ip地址"></a>三、设置静态ip地址</h1><p>本例虚拟机为CentOS7。</p>
-<p>1、使用ip addr查看网卡等信息</p>
-<p><img src="https://img-blog.csdnimg.cn/20200620122058113.png"></p>
-<p> 此时网卡名称为ens33，所以需要修改ifcfg-eth33文件。</p>
-<p>2、编辑网卡文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">vi /etc/sysconfig/network-scripts/ifcfg-eth33<br></code></pre></td></tr></table></figure>
-
-<p>需要<strong>修改</strong>的内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">BOOTPROTI&#x3D;static<br>ONBOOT&#x3D;yes <br></code></pre></td></tr></table></figure>
-
-<ul>
-<li>BOOTPROTI</li>
-</ul>
-<p>dhcp: DHCP动态地址协议 。</p>
-<p>static：静态地址协议。</p>
-<ul>
-<li>ONBOOT</li>
-</ul>
-<p>系统启动时是否激活网卡接口，yes为激活，no为不激活。</p>
-<p>需要<strong>添加</strong>的内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">IPADDR&#x3D;172.20.10.6<br>NETMASK&#x3D;255.255.255.0  <br>GATEWAY&#x3D;172.20.10.1<br></code></pre></td></tr></table></figure>
-
-<ul>
-<li>IPADDR</li>
-</ul>
-<p>静态ip地址，需要确保在局域网中的唯一性，设置之前可以先ping一下，看能否ping通，能的话说明已经有主机在使用。和物理主机ip网段相同，前三位一样。</p>
-<ul>
-<li>NETMASK</li>
-</ul>
-<p>子网掩码。 </p>
-<ul>
-<li>GATEWAY</li>
-</ul>
-<p>网关地址。和物理主机网关相同。</p>
-<p>物理机IP配置，通过ipconfig查询：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200620131652727.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p>修改后虚拟机网卡的完整配置：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200620132030526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p>重启网络服务：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">systemctl restart network<br></code></pre></td></tr></table></figure>
-
-<p>遇到的问题：Failed to start LSB: Bring up/down networking.</p>
-<p><img src="https://img-blog.csdnimg.cn/20200620131358528.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p>解决办法：</p>
-<p>执行以下两段命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">systemctl stop NetworkManager<br>systemctl <span class="hljs-built_in">disable</span> NetworkManager<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/2020062013185023.png"></p>
-<p> 测试网络是否连通：</p>
-<p>在物理主机测试ping虚拟主机：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200620132308306.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p> 在虚拟机ping物理主机：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200620132414685.png"></p>
-<p> 成功连通虚拟机网络。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>静态ip</tag>
-        <tag>桥接模式</tag>
       </tags>
   </entry>
   <entry>

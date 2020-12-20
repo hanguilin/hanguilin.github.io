@@ -190,7 +190,9 @@
 
 	  switchColorMode: function () {
 		$(".color-toggle").click(function(){
-			color_mode.modeBindFun($(this))
+      danmu.closeDanmu()
+      color_mode.modeBindFun($(this))
+      danmu.startDanmuIfOpen()
 		})
 	  },
 	  modeBindFun: function (e) {
@@ -205,6 +207,69 @@
 		  $(".preview-motto").empty()
 		  $(".typed-cursor").remove()
 	  }
+  }
+
+  var danmu = {
+    initDanmu: function () {
+      if (CONFIG.leancloud.enable && CONFIG.leancloud.bulletChatEnable) {
+        var current = localStorage.getItem('color-mode') || 'light'
+        var active = localStorage.getItem(`danmu_${current}_active`)
+        var $preview = $(`#${current}-preview`)
+        var $danmuToggle = $preview.find('.danmu-toggle')
+        $danmuToggle.removeClass('icondanmu')
+        $danmuToggle.removeClass('icondanmu-close')
+        $danmuToggle.addClass('icondanmu' + (active === 'true' ? '-close' : ''))
+        if (active === 'true') {
+          var $elem = $(`#${current}-bulletchat-screen`)
+          getBulletChatList($elem);
+        }  
+      }
+    },
+    toggleDanmu: function () {
+      $('.danmu-toggle').click(function () {
+        var theme = localStorage.getItem('color-mode') || 'light'
+        var $bulletchatScreen = $(`#${theme}-bulletchat-screen`)
+        if ($bulletchatScreen.hasClass('hide')) {
+          $bulletchatScreen.removeClass('hide')
+          localStorage.setItem(`danmu_${theme}_active`, 'true')
+          // 图标切换
+          $(this).removeClass('icondanmu')
+          $(this).addClass('icondanmu-close')
+          getBulletChatList($bulletchatScreen)
+        } else {
+          $bulletchatScreen.addClass('hide')
+          // 图标切换
+          $(this).addClass('icondanmu')
+          $(this).removeClass('icondanmu-close')
+          localStorage.setItem(`danmu_${theme}_active`, 'false')
+        }
+      })
+    },
+    // 切换之前的操作
+    closeDanmu: function ($color_toggle) {
+      var theme = localStorage.getItem('color-mode') || 'light'
+      var $bulletchatScreen = $(`#${theme}-bulletchat-screen`)
+      if ($bulletchatScreen.hasClass('hide')) {
+        localStorage.setItem(`danmu_${theme}_active`, 'false')
+      } else {
+        $bulletchatScreen.addClass('hide')
+        localStorage.setItem(`danmu_${theme}_active`, 'true')
+      }
+    },
+    // 切换之后的操作
+    startDanmuIfOpen: function () {
+      var toggleTo = localStorage.getItem('color-mode') || 'light'
+      var isActive = localStorage.getItem(`danmu_${toggleTo}_active`)
+      var $preview = $(`#${toggleTo}-preview`)
+      var $danmuToggle = $preview.find('.danmu-toggle')
+      $danmuToggle.removeClass('icondanmu')
+      $danmuToggle.removeClass('icondanmu-close')
+      $danmuToggle.addClass('icondanmu' + (isActive === 'true' ? '-close' : ''))
+      var $bulletchatScreen = $(`#${toggleTo}-bulletchat-screen`)
+      if (isActive === 'true') {
+        getBulletChatList($bulletchatScreen)
+      }
+    }
   }
 
   var action = {
@@ -462,8 +527,8 @@
 			default:
 				action.initLightPreview()
 		}
-	}
   }
+}
 
   $(function () {
 	  action.showConsoleInfo();
@@ -475,6 +540,9 @@
     action.scroolToTop();
     action.focusSearch();
     action.listenSearch();
+
+    danmu.initDanmu();
+    danmu.toggleDanmu();
 	
     color_mode.loadColorMode();
     color_mode.switchColorMode();

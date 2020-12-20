@@ -226,6 +226,12 @@ body span {
   transform: translate(-50%, 50px);
   opacity: 1;
 }
+.icondanmu {
+  color: #f90 !important;
+}
+.hide {
+  display: none;
+}
 .lazyload {
   background: url("/images/theme/puff.svg") no-repeat center;
   background-color: #2c3e50;
@@ -538,6 +544,40 @@ body span {
   border-radius: 50%;
   width: 40px;
 }
+#light-preview .motto-area {
+  height: 7vh;
+  position: absolute;
+  z-index: 43;
+  top: 41.5vh;
+  width: 100%;
+  text-align: center;
+}
+#light-preview .motto-area .preview-motto,
+#light-preview .motto-area .preview-cursor {
+  display: inline;
+  text-align: center;
+  font-size: 3.5em;
+  padding: 1em 0.2em;
+  font-family: 'Quicksand', 'Vollkorn', serif;
+  font-weight: 300;
+  color: #fff;
+  margin: 0;
+}
+@media (max-width: 768px) {
+  #light-preview .motto-area .preview-motto,
+  #light-preview .motto-area .preview-cursor {
+    font-size: 2em;
+  }
+}
+#light-preview .motto-area .preview-motto .typed-cursor,
+#light-preview .motto-area .preview-cursor .typed-cursor {
+  opacity: 1;
+  animation: typedjsBlink 0.7s infinite;
+  -webkit-animation: typedjsBlink 0.7s infinite;
+  animation: typedjsBlink 0.7s infinite;
+  font-size: 2.5em;
+  color: #fff;
+}
 #light-preview .preview-image {
   z-index: 40;
   height: 90vh;
@@ -551,22 +591,6 @@ body span {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-#light-preview .preview-image .preview-motto,
-#light-preview .preview-image .preview-cursor {
-  text-align: center;
-  font-size: 3.5em;
-  padding: 1em 0.2em;
-  font-family: 'Quicksand', 'Vollkorn', serif;
-  font-weight: 300;
-  color: #fff;
-  margin: 0;
-}
-@media (max-width: 768px) {
-  #light-preview .preview-image .preview-motto,
-  #light-preview .preview-image .preview-cursor {
-    font-size: 2em;
-  }
 }
 #light-preview .preview-image .preview-cursor {
   opacity: 1;
@@ -624,14 +648,6 @@ body span {
 }
 #light-preview .preview-scroll i {
   font-size: 32px;
-}
-#light-preview .typed-cursor {
-  opacity: 1;
-  animation: typedjsBlink 0.7s infinite;
-  -webkit-animation: typedjsBlink 0.7s infinite;
-  animation: typedjsBlink 0.7s infinite;
-  font-size: 2.5em;
-  color: #fff;
 }
 #light-preview .typed-fade-out {
   opacity: 0;
@@ -816,10 +832,11 @@ body span {
   display: inline;
 }
 #dark-preview-div .motto_area {
-  top: 42vh;
+  top: 41.5vh;
   position: absolute;
-  height: 6vh;
+  height: 7vh;
   width: 100%;
+  z-index: 43;
 }
 #dark-preview-div .preview-motto,
 #dark-preview-div .preview-cursor {

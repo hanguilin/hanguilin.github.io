@@ -33,7 +33,7 @@
   
   
     
-<link rel="stylesheet" href="//at.alicdn.com/t/font_2277830_t0b1kfh5ebl.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_2277830_6v2krg83grc.css">
 
   
 
@@ -69,6 +69,10 @@
 <link rel="stylesheet" href="/lib/pace/pace-theme-flash.min.css">
 
   
+
+  
+<link rel="stylesheet" href="/lib/bulletchat/bulletchat.css">
+
 
   <script>
     var CONFIG = window.CONFIG || {};
@@ -128,6 +132,15 @@
         list: '',
         page_white_list: '',
         page_black_list: ''
+      },
+      leancloud: {
+        enable: true,
+        appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+        appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+        baseURL: 'https://fyt1fady.lc-cn-n1-shared.com',
+        bulletChatEnable: true,
+        bulletChatRepo: 'Comment',
+        bulletChatRepoURL: '/about/'
       }
     }
   </script>
@@ -174,12 +187,15 @@
 	<nav class="han-navbar row">
 		<div class="left col-lg-8 col-md-8 col-sm-8 col-10">
       <div class="row">
-        <div class="col-lg-1 col-md-2 col-sm-3 col-3">
+        <div class="col-lg-2 col-md-2 col-sm-3 col-3">
           
             <i class="iconfont iconqrcode j-navbar-qrcode"></i>
             
             
             <i class="iconfont iconmoono color-toggle" id="light-color-toggle" color-toggle="light"></i>
+            
+            
+              <i class="iconfont icondanmu danmu-toggle" id="light-danmu-toggle" data-theme="light"></i>
             
         </div>
         <div class="col-lg-4 col-md-6 col-sm-9 col-9">
@@ -196,7 +212,6 @@
 		
 	</nav>
   <div class="preview-image">
-    <h2 class="preview-motto" id="light-motto"></h2>
     
       <div class="preview-overlay">
         <svg class="preview-waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -214,37 +229,56 @@
       </div>
     
   </div>
+  <div class="motto-area">
+    <h2 class="preview-motto" id="light-motto"></h2>
+  </div>
   <div class="preview-scroll">
     <a href="#container" class="smooth-scroll"><i class="iconfont iconMouse"></i></a>
   </div>
+
+  <!-- 弹幕 -->
+  <div class="bulletchat-screen hide" id="light-bulletchat-screen">
+
+    <canvas id="bulletchat_canvas"></canvas>
+    <div class="bulletchat_area">
+        <div class="magictime twisterInUp default">console.log(6666666)</div>
+        <div class="magictime twisterInUp default">扶我起来，这串代码还没封装</div>
+        <div class="magictime twisterInUp default">怎样才能把个人网站做的更好看啊！嘤嘤嘤</div>
+        <div class="magictime twisterInUp default">欢迎留言....</div>
+    </div>
+</div>
+
 </div>
   
   
-    <div id="dark-preview" style="display:none">
+    <div id="dark-preview" class="preview" style="display:none">
 	<iframe src="https://www.jq22.com/js/a8.html" id="dark-preview-frame"></iframe>
 	<div id="dark-preview-div">
 		<nav class="han-navbar row">
 			<div class="left col-lg-8 col-md-8 col-sm-8 col-10">
-		  <div class="row">
-			<div class="col-lg-1 col-md-2 col-sm-3 col-3">
-			  
-				<i class="iconfont iconqrcode j-navbar-qrcode"></i>
-				
-				
-				<i class="iconfont iconmoono color-toggle" id="light-color-toggle" color-toggle="light"></i>
-				
-			</div>
-			<div class="col-lg-4 col-md-6 col-sm-9 col-9">
-			  <i class="iconfont icon-sousuo"></i>
-			  <input type="text" class="preview-search" placeholder="搜索功能敬请期待..."></input>
-			</div>
-		  </div>
+				<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-3 col-3">
+						
+							<i class="iconfont iconqrcode j-navbar-qrcode"></i>
+						
+						
+							<i class="iconfont iconmoono color-toggle" id="light-color-toggle" color-toggle="light"></i>
+						
+						
+							<i class="iconfont icondanmu danmu-toggle" id="light-danmu-toggle" data-theme="dark"></i>
+						
+					</div>
+					<div class="col-lg-4 col-md-6 col-sm-9 col-9">
+						<i class="iconfont icon-sousuo"></i>
+						<input type="text" class="preview-search" placeholder="搜索功能敬请期待..."></input>
+					</div>
+				</div>
 			</div>
 			<div class="right col-lg-4 col-md-4 col-sm-4 col-2">
-			  <i class="iconfont iconmenu j-navbar-menu "></i>
+				<i class="iconfont iconmenu j-navbar-menu "></i>
 			</div>
 			
-			  <div class="qrcode-navbar"></div>
+			<div class="qrcode-navbar"></div>
 			
 		</nav>
 		<div class="motto_area">
@@ -252,6 +286,17 @@
 		</div>
 		<div class="preview-scroll">
 			<a href="#container" class="smooth-scroll"><i class="iconfont iconMouse"></i></a>
+		</div>
+		<!-- 弹幕 -->
+		<div class="bulletchat-screen hide" id="dark-bulletchat-screen">
+
+			<canvas id="bulletchat_canvas"></canvas>
+			<div class="bulletchat_area">
+				<div class="magictime twisterInUp default">console.log(6666666)</div>
+				<div class="magictime twisterInUp default">扶我起来，这串代码还没封装</div>
+				<div class="magictime twisterInUp default">怎样才能把个人网站做的更好看啊！嘤嘤嘤</div>
+				<div class="magictime twisterInUp default">欢迎留言....</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -717,6 +762,10 @@ AOP能够将那些与业务无关，却为业务模块所...</p>
 
 
 
+
+
+
+<script src="/lib/bulletchat/bulletchat.js"></script>
 
 
 </html>
