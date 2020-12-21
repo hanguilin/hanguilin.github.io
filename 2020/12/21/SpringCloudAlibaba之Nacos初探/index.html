@@ -6,12 +6,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>搞定Spring的BeanFactory和FactoryBean - 与李的个人博客</title>
+  <title>SpringCloudAlibaba之Nacos初探 - 与李的个人博客</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   <meta name="keywords" content="Java、Mysql、Redis、Spring、SpringBoot、SpringCloud">
-  <meta name="description" content="Spring的核心是IOC和AOP，面试Java的基本...">
+  <meta name="description" content="什么是 Nacos概览欢迎来到 Nacos 的世界！
+...">
   <meta name="author" content="韩桂林 (与李)">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
@@ -209,68 +210,75 @@
       <div class="col-lg-8 col-md-8 col-xl-8 col-sm-8"><article class="article">
   <div class="wrap">
     <section class="head">
-  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/183537-15150621374dbe.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/233150-159301271012b5.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">搞定Spring的BeanFactory和FactoryBean</h1>
+    <h1 class="head-title">SpringCloudAlibaba之Nacos初探</h1>
     <div class="head-info">
-      <span class="post-info-item"><i class="iconfont iconcalendar"></i>2020/12/15</span>
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>2020/12/21</span>
       
         <span class="post-info-item">
-          <i class="iconfont iconeye"></i><span id="/2020/12/15/%E6%90%9E%E5%AE%9ASpring%E7%9A%84BeanFactory%E5%92%8CFactoryBean/" class="leancloud" data-flag-title="搞定Spring的BeanFactory和FactoryBean"></span>
+          <i class="iconfont iconeye"></i><span id="/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E5%88%9D%E6%8E%A2/" class="leancloud" data-flag-title="SpringCloudAlibaba之Nacos初探"></span>
         </span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>3367</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1783</span>
     </div>
   </div>
 </section>
     <section class="main">
       <section class="content">
-        <p>Spring的核心是IOC和AOP，面试Java的基本上都会被问到它们是干什么的，可能你就简单的说了是控制反转与面向切面编程，那么具体细节就很可能被问懵。今天我们来讲一下IOC中围绕Bean的一个知识点，BeanFactory与FactoryBean。每天搞懂一个知识点，长期下来会让你受益匪浅。</p>
-<h1 id="一、区别"><a href="#一、区别" class="headerlink" title="一、区别"></a>一、区别</h1><ul>
-<li><p>相同点：</p>
-<p>BeanFactory是接口，提供了IOC容器最基本的形式，也就是SpringIOC所遵循的最底层和最基本的编程规范。</p>
-<p>FactoryBean是接口，实现这个接口的类，在注册到BeanFactory中时，并不像其他类暴露的是自己，而是FactoryBean中的getObject()方法的返回对象。</p>
-</li>
-<li><p>不同点：</p>
-<p>BeanFactory是个factory，也就是IOC容器或者对相关工厂，在Spring中，所有的Bean都是由BeanFactory，也就是IOC容器来进行管理的。</p>
-<p>FactoryBean是个Bean，但是这个Bean不是一个简单的Bean，而是一个能生产或者修饰对象的工厂Bean，它的实现类似于设计模式中的工厂模式或者装饰者模式。</p>
-</li>
-</ul>
-<h1 id="二、BeanFactory"><a href="#二、BeanFactory" class="headerlink" title="二、BeanFactory"></a>二、BeanFactory</h1><p>比较熟悉的DefaultListableBeanFactory、XmlBeanFactory、ApplicationContext类都是BeanFactory的子类。</p>
-<p>BeanFacotry是spring中比较原始的Factory。如XMLBeanFactory就是一种典型的BeanFactory。</p>
-<p>原始的BeanFactory无法支持spring的许多插件，如AOP功能、Web应用等。ApplicationContext接口，它由BeanFactory接口派生而来，ApplicationContext包含BeanFactory的所有功能，通常建议比BeanFactory优先 。</p>
-<p>ApplicationContext以一种更向面向框架的方式工作以及对上下文进行分层和实现继承，ApplicationContext包还提供了以下的功能： </p>
+        <h1 id="什么是-Nacos"><a href="#什么是-Nacos" class="headerlink" title="什么是 Nacos"></a>什么是 Nacos</h1><h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p>欢迎来到 Nacos 的世界！</p>
+<p>Nacos 致力于帮助您发现、配置和管理微服务。Nacos 提供了一组简单易用的特性集，帮助您快速实现动态服务发现、服务配置、服务元数据及流量管理。</p>
+<p>Nacos 帮助您更敏捷和容易地构建、交付和管理微服务平台。 Nacos 是构建以“服务”为中心的现代应用架构 (例如微服务范式、云原生范式) 的服务基础设施。</p>
+<h2 id="什么是-Nacos？"><a href="#什么是-Nacos？" class="headerlink" title="什么是 Nacos？"></a>什么是 Nacos？</h2><p>服务（Service）是 Nacos 世界的一等公民。Nacos 支持几乎所有主流类型的“服务”的发现、配置和管理：</p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/services-networking/service/">Kubernetes Service</a></p>
+<p><a target="_blank" rel="noopener" href="https://grpc.io/docs/guides/concepts.html#service-definition">gRPC</a> &amp; <a target="_blank" rel="noopener" href="https://dubbo.incubator.apache.org/">Dubbo RPC Service</a></p>
+<p><a target="_blank" rel="noopener" href="https://spring.io/understanding/REST">Spring Cloud RESTful Service</a></p>
+<p>Nacos 的关键特性包括:</p>
 <ul>
-<li>MessageSource, 提供国际化的消息访问； </li>
-<li>资源访问，如URL和文件；</li>
-<li>事件传播；</li>
-<li>载入多个（有继承关系）上下文 ，使得每一个上下文都专注于一个特定的层次，比如应用的web层；</li>
+<li><p><strong>服务发现和服务健康监测</strong></p>
+<p>Nacos 支持基于 DNS 和基于 RPC 的服务发现。服务提供者使用 <a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/sdk.html">原生SDK</a>、<a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/open-api.html">OpenAPI</a>、或一个<a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/other-language.html">独立的Agent TODO</a>注册 Service 后，服务消费者可以使用<a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/xx">DNS TODO</a> 或<a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/open-api.html">HTTP&amp;API</a>查找和发现服务。</p>
+<p>Nacos 提供对服务的实时的健康检查，阻止向不健康的主机或服务实例发送请求。Nacos 支持传输层 (PING 或 TCP)和应用层 (如 HTTP、MySQL、用户自定义）的健康检查。 对于复杂的云环境和网络拓扑环境中（如 VPC、边缘网络等）服务的健康检查，Nacos 提供了 agent 上报模式和服务端主动检测2种健康检查模式。Nacos 还提供了统一的健康检查仪表盘，帮助您根据健康状态管理服务的可用性及流量。</p>
+</li>
+<li><p><strong>动态配置服务</strong></p>
+<p>动态配置服务可以让您以中心化、外部化和动态化的方式管理所有环境的应用配置和服务配置。</p>
+<p>动态配置消除了配置变更时重新部署应用和服务的需要，让配置管理变得更加高效和敏捷。</p>
+<p>配置中心化管理让实现无状态服务变得更简单，让服务按需弹性扩展变得更容易。</p>
+<p>Nacos 提供了一个简洁易用的UI (<a target="_blank" rel="noopener" href="http://console.nacos.io/nacos/index.html">控制台样例 Demo</a>) 帮助您管理所有的服务和应用的配置。Nacos 还提供包括配置版本跟踪、金丝雀发布、一键回滚配置以及客户端配置更新状态跟踪在内的一系列开箱即用的配置管理特性，帮助您更安全地在生产环境中管理配置变更和降低配置变更带来的风险。</p>
+</li>
+<li><p><strong>动态 DNS 服务</strong></p>
+<p>动态 DNS 服务支持权重路由，让您更容易地实现中间层负载均衡、更灵活的路由策略、流量控制以及数据中心内网的简单DNS解析服务。动态DNS服务还能让您更容易地实现以 DNS 协议为基础的服务发现，以帮助您消除耦合到厂商私有服务发现 API 上的风险。</p>
+<p>Nacos 提供了一些简单的 <a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/xx">DNS APIs TODO</a> 帮助您管理服务的关联域名和可用的 IP:PORT 列表.</p>
+</li>
+<li><p><strong>服务及其元数据管理</strong></p>
+<p>Nacos 能让您从微服务平台建设的视角管理数据中心的所有服务及元数据，包括管理服务的描述、生命周期、服务的静态依赖分析、服务的健康状态、服务的流量管理、路由及安全策略、服务的 SLA 以及最首要的 metrics 统计数据。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/roadmap.html">更多的特性列表 …</a></p>
+</li>
 </ul>
-<p>BeanFactory源码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">BeanFactory</span> </span>&#123;<br><br>	String FACTORY_BEAN_PREFIX = <span class="hljs-string">&quot;&amp;&quot;</span>;<br><br>	<span class="hljs-function">Object <span class="hljs-title">getBean</span><span class="hljs-params">(String name)</span> <span class="hljs-keyword">throws</span> BeansException</span>;<br><br>	<span class="hljs-comment">// 根据名称和类型获取，如果名称对应的bean不是requiredType类型的，就抛出错误</span><br>	&lt;T&gt; <span class="hljs-function">T <span class="hljs-title">getBean</span><span class="hljs-params">(String name, Class&lt;T&gt; requiredType)</span> <span class="hljs-keyword">throws</span> BeansException</span>;<br><br>	<span class="hljs-function">Object <span class="hljs-title">getBean</span><span class="hljs-params">(String name, Object... args)</span> <span class="hljs-keyword">throws</span> BeansException</span>;<br><br>	&lt;T&gt; <span class="hljs-function">T <span class="hljs-title">getBean</span><span class="hljs-params">(Class&lt;T&gt; requiredType)</span> <span class="hljs-keyword">throws</span> BeansException</span>;<br><br>	&lt;T&gt; <span class="hljs-function">T <span class="hljs-title">getBean</span><span class="hljs-params">(Class&lt;T&gt; requiredType, Object... args)</span> <span class="hljs-keyword">throws</span> BeansException</span>;<br><br>	&lt;T&gt; <span class="hljs-function">ObjectProvider&lt;T&gt; <span class="hljs-title">getBeanProvider</span><span class="hljs-params">(Class&lt;T&gt; requiredType)</span></span>;<br><br>	&lt;T&gt; <span class="hljs-function">ObjectProvider&lt;T&gt; <span class="hljs-title">getBeanProvider</span><span class="hljs-params">(ResolvableType requiredType)</span></span>;<br><br>	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">containsBean</span><span class="hljs-params">(String name)</span></span>;<br><br>	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isSingleton</span><span class="hljs-params">(String name)</span> <span class="hljs-keyword">throws</span> NoSuchBeanDefinitionException</span>;<br><br>	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isPrototype</span><span class="hljs-params">(String name)</span> <span class="hljs-keyword">throws</span> NoSuchBeanDefinitionException</span>;<br><br>	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isTypeMatch</span><span class="hljs-params">(String name, ResolvableType typeToMatch)</span> <span class="hljs-keyword">throws</span> NoSuchBeanDefinitionException</span>;<br><br>	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isTypeMatch</span><span class="hljs-params">(String name, Class&lt;?&gt; typeToMatch)</span> <span class="hljs-keyword">throws</span> NoSuchBeanDefinitionException</span>;<br><br>	<span class="hljs-meta">@Nullable</span><br>	Class&lt;?&gt; getType(String name) <span class="hljs-keyword">throws</span> NoSuchBeanDefinitionException;<br><br>	<span class="hljs-meta">@Nullable</span><br>	Class&lt;?&gt; getType(String name, <span class="hljs-keyword">boolean</span> allowFactoryBeanInit) <span class="hljs-keyword">throws</span> NoSuchBeanDefinitionException;<br><br>	String[] getAliases(String name);<br><br>&#125;<br></code></pre></td></tr></table></figure>
-<p>方法简介：</p>
+<h2 id="Nacos-地图"><a href="#Nacos-地图" class="headerlink" title="Nacos 地图"></a>Nacos 地图</h2><p>一图看懂 Nacos，下面架构部分会详细介绍。 </p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/nacosMap.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
 <ul>
-<li><p><strong>boolean containsBean(String beanName)</strong> </p>
-<p>判断工厂中是否包含给定名称的bean定义，若有则返回true</p>
-</li>
-<li><p><strong>Object getBean(String)</strong> </p>
-<p>返回给定名称注册的bean实例。根据bean的配置情况，如果是singleton模式将返回一个共享实例，否则将返回一个新建的实例，如果没有找到指定bean,该方法可能会抛出异常</p>
-</li>
-<li><p><strong>Object getBean(String, Class)</strong> </p>
-<p>返回以给定名称给定类型注册的bean实例，如果bean不是给定Class的类型就抛出错误</p>
-</li>
-<li><p><strong>Class getType(String name)</strong> </p>
-<p>返回给定名称的bean的Class,如果没有找到指定的bean实例，则排除NoSuchBeanDefinitionException异常</p>
-</li>
-<li><p><strong>boolean isSingleton(String)</strong> </p>
-<p>判断给定名称的bean定义是否为单例模式</p>
-</li>
-<li><p><strong>String[] getAliases(String name)</strong> </p>
-<p>返回给定bean名称的所有别名 </p>
-<h1 id="三、FactoryBean"><a href="#三、FactoryBean" class="headerlink" title="三、FactoryBean"></a>三、FactoryBean</h1><p>一般情况下，Spring通过反射机制利用&lt;bean&gt;的class属性指定实现类实例化Bean，在某些情况下，实例化Bean过程比较复杂，如果按照传统的方式，则需要在&lt;bean&gt;中提供大量的配置信息。配置方式的灵活性是受限的，这时采用编码的方式可能会得到一个简单的方案。Spring为此提供了一个org.springframework.bean.factory.FactoryBean的工厂类接口，用户可以通过实现该接口定制实例化Bean的逻辑。FactoryBean接口对于Spring框架来说占用重要的地位，Spring自身就提供了70多个FactoryBean的实现。它们隐藏了实例化一些复杂Bean的细节，给上层应用带来了便利。从Spring3.0开始，FactoryBean开始支持泛型，即接口声明改为FactoryBean&lt;T&gt;的形式</p>
-</li>
+<li>特性大图：要从功能特性，非功能特性，全面介绍我们要解的问题域的特性诉求</li>
+<li>架构大图：通过清晰架构，让您快速进入 Nacos 世界</li>
+<li>业务大图：利用当前特性可以支持的业务场景，及其最佳实践</li>
+<li>生态大图：系统梳理 Nacos 和主流技术生态的关系</li>
+<li>优势大图：展示 Nacos 核心竞争力</li>
+<li>战略大图：要从战略到战术层面讲 Nacos 的宏观优势</li>
 </ul>
-<p>以Bean结尾，表示它是一个Bean，不同于普通Bean的是：它是实现了FactoryBean<T>接口的Bean，根据该Bean的ID从BeanFactory中获取的实际上是FactoryBean的getObject()返回的对象，而不是FactoryBean本身，如果要获取FactoryBean对象，请在id前面加一个&amp;符号来获取。</p>
+<h2 id="Nacos-生态图"><a href="#Nacos-生态图" class="headerlink" title="Nacos 生态图"></a>Nacos 生态图</h2><p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/1533045871534-e64b8031-008c-4dfc-b6e8-12a597a003fb.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>如 Nacos 全景图所示，Nacos 无缝支持一些主流的开源生态，例如</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://nacos.io/en-us/docs/quick-start-spring-cloud.html">Spring Cloud</a></li>
+<li><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/use-nacos-with-dubbo.html">Apache Dubbo and Dubbo Mesh</a></li>
+<li><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/use-nacos-with-kubernetes.html">Kubernetes and CNCF</a>。</li>
+</ul>
+<p>使用 Nacos 简化服务发现、配置管理、服务治理及管理的解决方案，让微服务的发现、管理、共享、组合更加容易。</p>
+<p>关于如何在这些生态中使用 Nacos，请参考以下文档：</p>
+<p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/use-nacos-with-springcloud.html">Nacos与Spring Cloud一起使用</a></p>
+<p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/use-nacos-with-kubernetes.html">Nacos与Kubernetes一起使用</a></p>
+<p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/use-nacos-with-dubbo.html">Nacos与Dubbo一起使用</a></p>
+<p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/roadmap.html">Nacos与gRPC一起使用</a></p>
+<p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/use-nacos-with-istio.html">Nacos与Istio一起使用</a></p>
 
       </section>
       <section class="extra">
@@ -278,7 +286,7 @@
           <ul class="copyright">
   
     <li><strong>本文作者：</strong>韩桂林 (与李)</li>
-    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/15/%E6%90%9E%E5%AE%9ASpring%E7%9A%84BeanFactory%E5%92%8CFactoryBean/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;15&#x2F;%E6%90%9E%E5%AE%9ASpring%E7%9A%84BeanFactory%E5%92%8CFactoryBean&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;15&#x2F;%E6%90%9E%E5%AE%9ASpring%E7%9A%84BeanFactory%E5%92%8CFactoryBean&#x2F;index.html</a></li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E5%88%9D%E6%8E%A2/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;21&#x2F;SpringCloudAlibaba%E4%B9%8BNacos%E5%88%9D%E6%8E%A2&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;21&#x2F;SpringCloudAlibaba%E4%B9%8BNacos%E5%88%9D%E6%8E%A2&#x2F;index.html</a></li>
     <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
   
 </ul>
@@ -295,12 +303,12 @@
 </section>
         
         
-  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BeanFactory/" rel="tag">BeanFactory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FactoryBean/" rel="tag">FactoryBean</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li></ul> 
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nacos/" rel="tag">Nacos</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringCloudAlibaba/" rel="tag">SpringCloudAlibaba</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" rel="tag">注册中心</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/" rel="tag">配置中心</a></li></ul> 
 
         
   <nav class="nav">
-    <a href="/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E5%88%9D%E6%8E%A2/"><i class="iconfont iconleft"></i>SpringCloudAlibaba之Nacos初探</a>
-    <a href="/2020/12/15/Docker%E9%83%A8%E7%BD%B2%E4%B9%8B%E7%A7%81%E6%9C%8D%E7%AE%A1%E7%90%86/">Docker部署之私服管理<i class="iconfont iconright"></i></a>
+    <a href="/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacosServer/"><i class="iconfont iconleft"></i>SpringCloudAlibaba之NacosServer</a>
+    <a href="/2020/12/15/%E6%90%9E%E5%AE%9ASpring%E7%9A%84BeanFactory%E5%92%8CFactoryBean/">搞定Spring的BeanFactory和FactoryBean<i class="iconfont iconright"></i></a>
   </nav>
 
       </section>
@@ -346,7 +354,7 @@
           
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8C%BA%E5%88%AB"><span class="toc-text">一、区别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81BeanFactory"><span class="toc-text">二、BeanFactory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81FactoryBean"><span class="toc-text">三、FactoryBean</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Nacos"><span class="toc-text">什么是 Nacos</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%A7%88"><span class="toc-text">概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Nacos%EF%BC%9F"><span class="toc-text">什么是 Nacos？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos-%E5%9C%B0%E5%9B%BE"><span class="toc-text">Nacos 地图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos-%E7%94%9F%E6%80%81%E5%9B%BE"><span class="toc-text">Nacos 生态图</span></a></li></ol></li></ol>
   </aside>
 
         

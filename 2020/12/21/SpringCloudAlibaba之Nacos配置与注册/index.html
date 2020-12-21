@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SpringCloudAlibaba之Nacos配置与注册 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="Java、Mysql、Redis、Spring、SpringBoot、SpringCloud">
+  <meta name="description" content="初始化项目编辑器：IDEA
+创建父项目File-&gt...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_2277830_6v2krg83grc.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap-grid.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/pace/pace-theme-flash.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/lib/bulletchat/bulletchat.css">
+
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/puff.svg'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个互联网工具人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      leancloud: {
+        enable: true,
+        appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+        appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+        baseURL: 'https://fyt1fady.lc-cn-n1-shared.com',
+        bulletChatEnable: true,
+        bulletChatRepo: 'Comment',
+        bulletChatRepoURL: '/about/'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+	<nav class="han-navbar row">
+		<div class="left col-lg-8 col-md-8 col-sm-8 col-10">
+      <div class="row">
+        <div class="col-lg-1 col-md-2 col-sm-3 col-3">
+          
+            <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+            
+            
+            <i class="iconfont iconmoono color-toggle" id="light-color-toggle" color-toggle="light"></i>
+            
+        </div>
+      </div>
+		</div>
+		<div class="right col-lg-4 col-md-4 col-sm-4 col-2">
+		  <i class="iconfont iconmenu j-navbar-menu "></i>
+		</div>
+		
+		  <div class="qrcode-navbar"></div>
+		
+	</nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container-fluid">
+      <div class="col-lg-2 col-md-2 col-xl-2 col-sm-2"></div>
+      <div class="col-lg-8 col-md-8 col-xl-8 col-sm-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/110955-1572577795113b.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">SpringCloudAlibaba之Nacos配置与注册</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>2020/12/21</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%B3%A8%E5%86%8C/" class="leancloud" data-flag-title="SpringCloudAlibaba之Nacos配置与注册"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>11152</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h1><p>编辑器：IDEA</p>
+<h2 id="创建父项目"><a href="#创建父项目" class="headerlink" title="创建父项目"></a>创建父项目</h2><p>File-&gt;New-&gt;Project</p>
+<img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221171651514.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom: 67%;" />
+
+
+
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221172848985.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221173008882.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="父项目引入依赖"><a href="#父项目引入依赖" class="headerlink" title="父项目引入依赖"></a>父项目引入依赖</h2><p>注意添加<packaging>pom</packaging></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;<br>&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;<br>         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;<br>         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;<br>    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;<br><br>    &lt;groupId&gt;cn.javayuli&lt;&#x2F;groupId&gt;<br>    &lt;artifactId&gt;nacos&lt;&#x2F;artifactId&gt;<br>    &lt;packaging&gt;pom&lt;&#x2F;packaging&gt;<br>    &lt;version&gt;1.0.0&lt;&#x2F;version&gt;<br><br>    &lt;parent&gt;<br>        &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>        &lt;artifactId&gt;spring-boot-starter-parent&lt;&#x2F;artifactId&gt;<br>        &lt;version&gt;2.3.6.RELEASE&lt;&#x2F;version&gt;<br>    &lt;&#x2F;parent&gt;<br><br>    &lt;properties&gt;<br>        &lt;spring-boot.version&gt;2.3.6.RELEASE&lt;&#x2F;spring-boot.version&gt;<br>        &lt;spring-cloud.version&gt;Hoxton.SR9&lt;&#x2F;spring-cloud.version&gt;<br>        &lt;spring-cloud-alibaba.version&gt;2.2.3.RELEASE&lt;&#x2F;spring-cloud-alibaba.version&gt;<br>        &lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;<br>        &lt;maven.compiler.source&gt;1.8&lt;&#x2F;maven.compiler.source&gt;<br>        &lt;maven.compiler.target&gt;1.8&lt;&#x2F;maven.compiler.target&gt;<br>    &lt;&#x2F;properties&gt;<br><br>    &lt;dependencyManagement&gt;<br>        &lt;dependencies&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-dependencies&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-boot.version&#125;&lt;&#x2F;version&gt;<br>                &lt;type&gt;pom&lt;&#x2F;type&gt;<br>                &lt;scope&gt;import&lt;&#x2F;scope&gt;<br>            &lt;&#x2F;dependency&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-cloud-dependencies&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-cloud.version&#125;&lt;&#x2F;version&gt;<br>                &lt;type&gt;pom&lt;&#x2F;type&gt;<br>                &lt;scope&gt;import&lt;&#x2F;scope&gt;<br>            &lt;&#x2F;dependency&gt;<br>            &lt;!--spring cloud alibaba--&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-cloud-alibaba-dependencies&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-cloud-alibaba.version&#125;&lt;&#x2F;version&gt;<br>                &lt;type&gt;pom&lt;&#x2F;type&gt;<br>                &lt;scope&gt;import&lt;&#x2F;scope&gt;<br>            &lt;&#x2F;dependency&gt;<br>            &lt;!--web 模块--&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-boot.version&#125;&lt;&#x2F;version&gt;<br>            &lt;&#x2F;dependency&gt;<br>        &lt;&#x2F;dependencies&gt;<br>    &lt;&#x2F;dependencyManagement&gt;<br><br>    &lt;build&gt;<br>        &lt;finalName&gt;$&#123;project.name&#125;&lt;&#x2F;finalName&gt;<br>        &lt;resources&gt;<br>            &lt;resource&gt;<br>                &lt;directory&gt;src&#x2F;main&#x2F;resources&lt;&#x2F;directory&gt;<br>                &lt;filtering&gt;true&lt;&#x2F;filtering&gt;<br>            &lt;&#x2F;resource&gt;<br>        &lt;&#x2F;resources&gt;<br>        &lt;pluginManagement&gt;<br>            &lt;plugins&gt;<br>                &lt;plugin&gt;<br>                    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                    &lt;artifactId&gt;spring-boot-maven-plugin&lt;&#x2F;artifactId&gt;<br>                    &lt;version&gt;$&#123;spring-boot.version&#125;&lt;&#x2F;version&gt;<br>                    &lt;configuration&gt;<br>                        &lt;finalName&gt;$&#123;project.build.finalName&#125;&lt;&#x2F;finalName&gt;<br>                    &lt;&#x2F;configuration&gt;<br>                    &lt;executions&gt;<br>                        &lt;execution&gt;<br>                            &lt;goals&gt;<br>                                &lt;goal&gt;repackage&lt;&#x2F;goal&gt;<br>                            &lt;&#x2F;goals&gt;<br>                        &lt;&#x2F;execution&gt;<br>                    &lt;&#x2F;executions&gt;<br>                &lt;&#x2F;plugin&gt;<br><br>            &lt;&#x2F;plugins&gt;<br>        &lt;&#x2F;pluginManagement&gt;<br>    &lt;&#x2F;build&gt;<br><br>    &lt;repositories&gt;<br>        &lt;!--阿里云主仓库，代理了maven central和jcenter仓库--&gt;<br>        &lt;repository&gt;<br>            &lt;id&gt;aliyun&lt;&#x2F;id&gt;<br>            &lt;name&gt;aliyun&lt;&#x2F;name&gt;<br>            &lt;url&gt;https:&#x2F;&#x2F;maven.aliyun.com&#x2F;repository&#x2F;public&lt;&#x2F;url&gt;<br>            &lt;releases&gt;<br>                &lt;enabled&gt;true&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;releases&gt;<br>            &lt;snapshots&gt;<br>                &lt;enabled&gt;false&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;snapshots&gt;<br>        &lt;&#x2F;repository&gt;<br>    &lt;&#x2F;repositories&gt;<br><br>    &lt;pluginRepositories&gt;<br>        &lt;pluginRepository&gt;<br>            &lt;id&gt;aliyun-plugin&lt;&#x2F;id&gt;<br>            &lt;url&gt;https:&#x2F;&#x2F;maven.aliyun.com&#x2F;repository&#x2F;public&lt;&#x2F;url&gt;<br>            &lt;releases&gt;<br>                &lt;enabled&gt;true&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;releases&gt;<br>            &lt;snapshots&gt;<br>                &lt;enabled&gt;false&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;snapshots&gt;<br>        &lt;&#x2F;pluginRepository&gt;<br>    &lt;&#x2F;pluginRepositories&gt;<br><br>    &lt;profiles&gt;<br>        &lt;profile&gt;<br>            &lt;id&gt;dev&lt;&#x2F;id&gt;<br>            &lt;properties&gt;<br>                &lt;!-- 环境标识，需要与配置文件的名称相对应 --&gt;<br>                &lt;profiles.active&gt;dev&lt;&#x2F;profiles.active&gt;<br>            &lt;&#x2F;properties&gt;<br>            &lt;activation&gt;<br>                &lt;!-- 默认环境 --&gt;<br>                &lt;activeByDefault&gt;true&lt;&#x2F;activeByDefault&gt;<br>            &lt;&#x2F;activation&gt;<br>        &lt;&#x2F;profile&gt;<br>    &lt;&#x2F;profiles&gt;<br><br>&lt;&#x2F;project&gt;<br></code></pre></td></tr></table></figure>
+
+<p>删除其src文件夹</p>
+<h2 id="创建子项目"><a href="#创建子项目" class="headerlink" title="创建子项目"></a>创建子项目</h2><p>右键nacos项目，new-&gt;module</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221173722014.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221173849254.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>需要使用nacos配置功能需要引入spring-cloud-starter-alibaba-nacos-config依赖，</p>
+<p>需要使用nacos注册功能需要引入spring-cloud-starter-alibaba-nacos-discovery依赖</p>
+<h2 id="子项目引入依赖"><a href="#子项目引入依赖" class="headerlink" title="子项目引入依赖"></a>子项目引入依赖</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;<br>&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;<br>         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;<br>         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;<br><br>    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;<br>    &lt;artifactId&gt;api-provider&lt;&#x2F;artifactId&gt;<br><br>    &lt;parent&gt;<br>        &lt;artifactId&gt;nacos&lt;&#x2F;artifactId&gt;<br>        &lt;groupId&gt;cn.javayuli&lt;&#x2F;groupId&gt;<br>        &lt;version&gt;1.0.0&lt;&#x2F;version&gt;<br>    &lt;&#x2F;parent&gt;<br><br>    &lt;properties&gt;<br>        &lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;<br>    &lt;&#x2F;properties&gt;<br><br>    &lt;dependencies&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>        &lt;!-- nacos配置依赖 --&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>		&lt;!-- nacos注册依赖 --&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>    &lt;&#x2F;dependencies&gt;<br><br>    &lt;!--maven的插件--&gt;<br>    &lt;build&gt;<br>        &lt;plugins&gt;<br>            &lt;plugin&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-maven-plugin&lt;&#x2F;artifactId&gt;<br>            &lt;&#x2F;plugin&gt;<br><br>        &lt;&#x2F;plugins&gt;<br>    &lt;&#x2F;build&gt;<br>&lt;&#x2F;project&gt;<br></code></pre></td></tr></table></figure>
+
+<p>子项目新增启动类<code>ProviderApplication.java</code></p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221180819858.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli;<br><br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;<br><span class="hljs-keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 生产者</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-meta">@EnableDiscoveryClient</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProviderApplication</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        SpringApplication.run(ProviderApplication.class, args);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>增加测试类TestController.java</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181128070.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.controller;<br><br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.cloud.context.config.annotation.RefreshScope;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 测试获取nacos中的配置</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/config&quot;)</span><br><span class="hljs-meta">@RefreshScope</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestController</span> </span>&#123;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;useLocalCache:false&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> useLocalCache;<br><br>    <span class="hljs-meta">@RequestMapping(&quot;/get&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> useLocalCache;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>api-provider项目增加bootstrap.yml配置</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221174658787.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">@artifactId@</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><span class="hljs-string">:8848</span><br>      <span class="hljs-attr">config:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">$&#123;spring.cloud.nacos.discovery.server-addr&#125;</span><br>        <span class="hljs-attr">file-extension:</span> <span class="hljs-string">yml</span><br>  <span class="hljs-attr">profiles:</span><br>    <span class="hljs-attr">active:</span> <span class="hljs-string">@profiles.active@</span><br></code></pre></td></tr></table></figure>
+
+<p>spring.application.name表示应用的名称</p>
+<p>spring.cloud.nacos.discovery.server-addr表示注册中心的地址</p>
+<p>spring.cloud.nacos.config.server-addr表示配置中心的地址</p>
+<p>spring.cloud.nacos.config.file-extension表示配置内容的数据格式，目前只支持 <code>properties</code> 和 <code>yaml</code> 类型。</p>
+<p>spring.profiles.active表示当前项目激活的配置文件，如果值为dev，那么在普通SpringBoot项目中激活的配置文件就是application-dev.properties或者application-dev.yml。这里<code>@profiles.active@</code>表示从pom.xml中获取到的变量值（这个值在父pom中已配置）。</p>
+<h1 id="Nacos添加配置"><a href="#Nacos添加配置" class="headerlink" title="Nacos添加配置"></a>Nacos添加配置</h1><p>启动Nacos后，在浏览器打开localhost:8848/nacos，并输入用户名nacos和密码nacos进入管理中心。</p>
+<p>点击右侧加号添加配置</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221175617205.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>Data ID为spring.application.name+spring.profiles.active+spring.cloud.nacos.config.file-extension，配置内容为正常的SpringBoot配置，配置好后点击发布</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181405454.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>启动项目，可看到tomcat启动端口为8000</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181227009.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>打开IDEA自带的接口测试工具</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181613282.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>填入接口信息后点击测试，发现可以获取到Nacos配置的值，即Nacos成功作为配置中心</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181704768.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>编辑<code>api-provider-dev.yml</code>中的值，将<code>useLocalCache</code>更改为<code>false</code></p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221182037747.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>再次请求接口，值已经改为false，说明成功动态读取配置</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221182148697.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>在Nacos中可以看到注册的服务实例，说明Nacos成功作为服务注册中心</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181832754.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%B3%A8%E5%86%8C/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;21&#x2F;SpringCloudAlibaba%E4%B9%8BNacos%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%B3%A8%E5%86%8C&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;21&#x2F;SpringCloudAlibaba%E4%B9%8BNacos%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%B3%A8%E5%86%8C&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nacos/" rel="tag">Nacos</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringCloudAlibaba/" rel="tag">SpringCloudAlibaba</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" rel="tag">注册中心</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/" rel="tag">配置中心</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacosServer/">SpringCloudAlibaba之NacosServer<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="/js/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "来都来了，总得留下点什么吧(｡◕ฺˇε ˇ◕ฺ｡)",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-lg-2 col-md-2 col-xl-2 col-sm-2 toc-warp-col">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%B9%E7%9B%AE"><span class="toc-text">初始化项目</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%88%B6%E9%A1%B9%E7%9B%AE"><span class="toc-text">创建父项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%88%B6%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="toc-text">父项目引入依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%90%E9%A1%B9%E7%9B%AE"><span class="toc-text">创建子项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%90%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="toc-text">子项目引入依赖</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Nacos%E6%B7%BB%E5%8A%A0%E9%85%8D%E7%BD%AE"><span class="toc-text">Nacos添加配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-text">测试</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+
+
+
+
+  
+<script src="/lib/pace/pace.min.js"></script>
+
+
+
+
+
+
+<script src="/lib/bulletchat/bulletchat.js"></script>
+
+
+</html>

@@ -1,13 +1,3 @@
-* {
-    padding: 0;
-    margin: 0;
-}
-
-html,
-body {
-    height: 100%;
-    user-select: none;
-}
 
 .bulletchat-screen {
     overflow: hidden;

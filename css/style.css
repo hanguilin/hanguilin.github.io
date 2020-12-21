@@ -1109,6 +1109,7 @@ body span {
   width: 100%;
   background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.75));
   padding: 30px;
+  color: #fff;
 }
 .article .wrap .head .head-mask .head-mark-text {
   width: 60%;

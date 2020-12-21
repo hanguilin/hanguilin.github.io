@@ -92,6 +92,189 @@
       </tags>
   </entry>
   <entry>
+    <title>SpringCloudAlibaba之Nacos配置与注册</title>
+    <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%B3%A8%E5%86%8C/</url>
+    <content><![CDATA[<h1 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h1><p>编辑器：IDEA</p>
+<h2 id="创建父项目"><a href="#创建父项目" class="headerlink" title="创建父项目"></a>创建父项目</h2><p>File-&gt;New-&gt;Project</p>
+<img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221171651514.png" style="zoom: 67%;" />
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221172848985.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221173008882.png"></p>
+<h2 id="父项目引入依赖"><a href="#父项目引入依赖" class="headerlink" title="父项目引入依赖"></a>父项目引入依赖</h2><p>注意添加<packaging>pom</packaging></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;<br>&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;<br>         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;<br>         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;<br>    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;<br><br>    &lt;groupId&gt;cn.javayuli&lt;&#x2F;groupId&gt;<br>    &lt;artifactId&gt;nacos&lt;&#x2F;artifactId&gt;<br>    &lt;packaging&gt;pom&lt;&#x2F;packaging&gt;<br>    &lt;version&gt;1.0.0&lt;&#x2F;version&gt;<br><br>    &lt;parent&gt;<br>        &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>        &lt;artifactId&gt;spring-boot-starter-parent&lt;&#x2F;artifactId&gt;<br>        &lt;version&gt;2.3.6.RELEASE&lt;&#x2F;version&gt;<br>    &lt;&#x2F;parent&gt;<br><br>    &lt;properties&gt;<br>        &lt;spring-boot.version&gt;2.3.6.RELEASE&lt;&#x2F;spring-boot.version&gt;<br>        &lt;spring-cloud.version&gt;Hoxton.SR9&lt;&#x2F;spring-cloud.version&gt;<br>        &lt;spring-cloud-alibaba.version&gt;2.2.3.RELEASE&lt;&#x2F;spring-cloud-alibaba.version&gt;<br>        &lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;<br>        &lt;maven.compiler.source&gt;1.8&lt;&#x2F;maven.compiler.source&gt;<br>        &lt;maven.compiler.target&gt;1.8&lt;&#x2F;maven.compiler.target&gt;<br>    &lt;&#x2F;properties&gt;<br><br>    &lt;dependencyManagement&gt;<br>        &lt;dependencies&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-dependencies&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-boot.version&#125;&lt;&#x2F;version&gt;<br>                &lt;type&gt;pom&lt;&#x2F;type&gt;<br>                &lt;scope&gt;import&lt;&#x2F;scope&gt;<br>            &lt;&#x2F;dependency&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-cloud-dependencies&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-cloud.version&#125;&lt;&#x2F;version&gt;<br>                &lt;type&gt;pom&lt;&#x2F;type&gt;<br>                &lt;scope&gt;import&lt;&#x2F;scope&gt;<br>            &lt;&#x2F;dependency&gt;<br>            &lt;!--spring cloud alibaba--&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-cloud-alibaba-dependencies&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-cloud-alibaba.version&#125;&lt;&#x2F;version&gt;<br>                &lt;type&gt;pom&lt;&#x2F;type&gt;<br>                &lt;scope&gt;import&lt;&#x2F;scope&gt;<br>            &lt;&#x2F;dependency&gt;<br>            &lt;!--web 模块--&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-boot.version&#125;&lt;&#x2F;version&gt;<br>            &lt;&#x2F;dependency&gt;<br>        &lt;&#x2F;dependencies&gt;<br>    &lt;&#x2F;dependencyManagement&gt;<br><br>    &lt;build&gt;<br>        &lt;finalName&gt;$&#123;project.name&#125;&lt;&#x2F;finalName&gt;<br>        &lt;resources&gt;<br>            &lt;resource&gt;<br>                &lt;directory&gt;src&#x2F;main&#x2F;resources&lt;&#x2F;directory&gt;<br>                &lt;filtering&gt;true&lt;&#x2F;filtering&gt;<br>            &lt;&#x2F;resource&gt;<br>        &lt;&#x2F;resources&gt;<br>        &lt;pluginManagement&gt;<br>            &lt;plugins&gt;<br>                &lt;plugin&gt;<br>                    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                    &lt;artifactId&gt;spring-boot-maven-plugin&lt;&#x2F;artifactId&gt;<br>                    &lt;version&gt;$&#123;spring-boot.version&#125;&lt;&#x2F;version&gt;<br>                    &lt;configuration&gt;<br>                        &lt;finalName&gt;$&#123;project.build.finalName&#125;&lt;&#x2F;finalName&gt;<br>                    &lt;&#x2F;configuration&gt;<br>                    &lt;executions&gt;<br>                        &lt;execution&gt;<br>                            &lt;goals&gt;<br>                                &lt;goal&gt;repackage&lt;&#x2F;goal&gt;<br>                            &lt;&#x2F;goals&gt;<br>                        &lt;&#x2F;execution&gt;<br>                    &lt;&#x2F;executions&gt;<br>                &lt;&#x2F;plugin&gt;<br><br>            &lt;&#x2F;plugins&gt;<br>        &lt;&#x2F;pluginManagement&gt;<br>    &lt;&#x2F;build&gt;<br><br>    &lt;repositories&gt;<br>        &lt;!--阿里云主仓库，代理了maven central和jcenter仓库--&gt;<br>        &lt;repository&gt;<br>            &lt;id&gt;aliyun&lt;&#x2F;id&gt;<br>            &lt;name&gt;aliyun&lt;&#x2F;name&gt;<br>            &lt;url&gt;https:&#x2F;&#x2F;maven.aliyun.com&#x2F;repository&#x2F;public&lt;&#x2F;url&gt;<br>            &lt;releases&gt;<br>                &lt;enabled&gt;true&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;releases&gt;<br>            &lt;snapshots&gt;<br>                &lt;enabled&gt;false&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;snapshots&gt;<br>        &lt;&#x2F;repository&gt;<br>    &lt;&#x2F;repositories&gt;<br><br>    &lt;pluginRepositories&gt;<br>        &lt;pluginRepository&gt;<br>            &lt;id&gt;aliyun-plugin&lt;&#x2F;id&gt;<br>            &lt;url&gt;https:&#x2F;&#x2F;maven.aliyun.com&#x2F;repository&#x2F;public&lt;&#x2F;url&gt;<br>            &lt;releases&gt;<br>                &lt;enabled&gt;true&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;releases&gt;<br>            &lt;snapshots&gt;<br>                &lt;enabled&gt;false&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;snapshots&gt;<br>        &lt;&#x2F;pluginRepository&gt;<br>    &lt;&#x2F;pluginRepositories&gt;<br><br>    &lt;profiles&gt;<br>        &lt;profile&gt;<br>            &lt;id&gt;dev&lt;&#x2F;id&gt;<br>            &lt;properties&gt;<br>                &lt;!-- 环境标识，需要与配置文件的名称相对应 --&gt;<br>                &lt;profiles.active&gt;dev&lt;&#x2F;profiles.active&gt;<br>            &lt;&#x2F;properties&gt;<br>            &lt;activation&gt;<br>                &lt;!-- 默认环境 --&gt;<br>                &lt;activeByDefault&gt;true&lt;&#x2F;activeByDefault&gt;<br>            &lt;&#x2F;activation&gt;<br>        &lt;&#x2F;profile&gt;<br>    &lt;&#x2F;profiles&gt;<br><br>&lt;&#x2F;project&gt;<br></code></pre></td></tr></table></figure>
+
+<p>删除其src文件夹</p>
+<h2 id="创建子项目"><a href="#创建子项目" class="headerlink" title="创建子项目"></a>创建子项目</h2><p>右键nacos项目，new-&gt;module</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221173722014.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221173849254.png"></p>
+<p>需要使用nacos配置功能需要引入spring-cloud-starter-alibaba-nacos-config依赖，</p>
+<p>需要使用nacos注册功能需要引入spring-cloud-starter-alibaba-nacos-discovery依赖</p>
+<h2 id="子项目引入依赖"><a href="#子项目引入依赖" class="headerlink" title="子项目引入依赖"></a>子项目引入依赖</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;<br>&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;<br>         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;<br>         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;<br><br>    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;<br>    &lt;artifactId&gt;api-provider&lt;&#x2F;artifactId&gt;<br><br>    &lt;parent&gt;<br>        &lt;artifactId&gt;nacos&lt;&#x2F;artifactId&gt;<br>        &lt;groupId&gt;cn.javayuli&lt;&#x2F;groupId&gt;<br>        &lt;version&gt;1.0.0&lt;&#x2F;version&gt;<br>    &lt;&#x2F;parent&gt;<br><br>    &lt;properties&gt;<br>        &lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;<br>    &lt;&#x2F;properties&gt;<br><br>    &lt;dependencies&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>        &lt;!-- nacos配置依赖 --&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>		&lt;!-- nacos注册依赖 --&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>    &lt;&#x2F;dependencies&gt;<br><br>    &lt;!--maven的插件--&gt;<br>    &lt;build&gt;<br>        &lt;plugins&gt;<br>            &lt;plugin&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-maven-plugin&lt;&#x2F;artifactId&gt;<br>            &lt;&#x2F;plugin&gt;<br><br>        &lt;&#x2F;plugins&gt;<br>    &lt;&#x2F;build&gt;<br>&lt;&#x2F;project&gt;<br></code></pre></td></tr></table></figure>
+
+<p>子项目新增启动类<code>ProviderApplication.java</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221180819858.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli;<br><br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;<br><span class="hljs-keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 生产者</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-meta">@EnableDiscoveryClient</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProviderApplication</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        SpringApplication.run(ProviderApplication.class, args);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>增加测试类TestController.java</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181128070.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.controller;<br><br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.cloud.context.config.annotation.RefreshScope;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 测试获取nacos中的配置</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/config&quot;)</span><br><span class="hljs-meta">@RefreshScope</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestController</span> </span>&#123;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;useLocalCache:false&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> useLocalCache;<br><br>    <span class="hljs-meta">@RequestMapping(&quot;/get&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> useLocalCache;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>api-provider项目增加bootstrap.yml配置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221174658787.png"></p>
+<figure class="highlight yml"><table><tr><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">@artifactId@</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><span class="hljs-string">:8848</span><br>      <span class="hljs-attr">config:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">$&#123;spring.cloud.nacos.discovery.server-addr&#125;</span><br>        <span class="hljs-attr">file-extension:</span> <span class="hljs-string">yml</span><br>  <span class="hljs-attr">profiles:</span><br>    <span class="hljs-attr">active:</span> <span class="hljs-string">@profiles.active@</span><br></code></pre></td></tr></table></figure>
+
+<p>spring.application.name表示应用的名称</p>
+<p>spring.cloud.nacos.discovery.server-addr表示注册中心的地址</p>
+<p>spring.cloud.nacos.config.server-addr表示配置中心的地址</p>
+<p>spring.cloud.nacos.config.file-extension表示配置内容的数据格式，目前只支持 <code>properties</code> 和 <code>yaml</code> 类型。</p>
+<p>spring.profiles.active表示当前项目激活的配置文件，如果值为dev，那么在普通SpringBoot项目中激活的配置文件就是application-dev.properties或者application-dev.yml。这里<code>@profiles.active@</code>表示从pom.xml中获取到的变量值（这个值在父pom中已配置）。</p>
+<h1 id="Nacos添加配置"><a href="#Nacos添加配置" class="headerlink" title="Nacos添加配置"></a>Nacos添加配置</h1><p>启动Nacos后，在浏览器打开localhost:8848/nacos，并输入用户名nacos和密码nacos进入管理中心。</p>
+<p>点击右侧加号添加配置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221175617205.png"></p>
+<p>Data ID为spring.application.name+spring.profiles.active+spring.cloud.nacos.config.file-extension，配置内容为正常的SpringBoot配置，配置好后点击发布</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181405454.png"></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>启动项目，可看到tomcat启动端口为8000</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181227009.png"></p>
+<p>打开IDEA自带的接口测试工具</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181613282.png"></p>
+<p>填入接口信息后点击测试，发现可以获取到Nacos配置的值，即Nacos成功作为配置中心</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181704768.png"></p>
+<p>编辑<code>api-provider-dev.yml</code>中的值，将<code>useLocalCache</code>更改为<code>false</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221182037747.png"></p>
+<p>再次请求接口，值已经改为false，说明成功动态读取配置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221182148697.png"></p>
+<p>在Nacos中可以看到注册的服务实例，说明Nacos成功作为服务注册中心</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181832754.png"></p>
+]]></content>
+      <categories>
+        <category>SpringCloudAlibaba</category>
+      </categories>
+      <tags>
+        <tag>SpringCloudAlibaba</tag>
+        <tag>Nacos</tag>
+        <tag>注册中心</tag>
+        <tag>配置中心</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringCloudAlibaba之NacosServer</title>
+    <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacosServer/</url>
+    <content><![CDATA[<h1 id="Nacos-Server"><a href="#Nacos-Server" class="headerlink" title="Nacos Server"></a>Nacos Server</h1><h2 id="1-版本选择"><a href="#1-版本选择" class="headerlink" title="1.版本选择"></a>1.版本选择</h2><p>可以在Nacos的<a href="https://github.com/alibaba/nacos/releases">Nacos release</a>中找到每个版本发行的日志，当前推荐的稳定版本1.3.1。</p>
+<h2 id="2-环境配置"><a href="#2-环境配置" class="headerlink" title="2.环境配置"></a>2.环境配置</h2><p>Nacos 依赖 <a href="https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/">Java</a> 环境来运行。如果您是从代码开始构建并运行Nacos，还需要为此配置 <a href="https://maven.apache.org/index.html">Maven</a>环境，请确保是在以下版本环境中安装使用:</p>
+<ol>
+<li>64 bit OS，支持 Linux/Unix/Mac/Windows，推荐选用 Linux/Unix/Mac。</li>
+<li>64 bit JDK 1.8+；<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">下载</a> &amp; <a href="https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/">配置</a>。</li>
+<li>Maven 3.2.x+；<a href="https://maven.apache.org/download.cgi">下载</a> &amp; <a href="https://maven.apache.org/settings.html">配置</a>。</li>
+</ol>
+<p>你可以通过源码和发行包两种方式来获取 Nacos。</p>
+<h2 id="3-下载源码或者安装包"><a href="#3-下载源码或者安装包" class="headerlink" title="3.下载源码或者安装包"></a>3.下载源码或者安装包</h2><h3 id="从-Github-上下载源码方式"><a href="#从-Github-上下载源码方式" class="headerlink" title="从 Github 上下载源码方式"></a>从 Github 上下载源码方式</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/alibaba/nacos.git<br><span class="hljs-built_in">cd</span> nacos/<br>mvn -Prelease-nacos -Dmaven.test.skip=<span class="hljs-literal">true</span> clean install -U  <br>ls -al distribution/target/<br><br>// change the <span class="hljs-variable">$version</span> to your actual path<br><span class="hljs-built_in">cd</span> distribution/target/nacos-server-<span class="hljs-variable">$version</span>/nacos/bin<br></code></pre></td></tr></table></figure>
+
+<h3 id="下载编译后压缩包方式"><a href="#下载编译后压缩包方式" class="headerlink" title="下载编译后压缩包方式"></a>下载编译后压缩包方式</h3><p>您可以从 <a href="https://github.com/alibaba/nacos/releases">最新稳定版本</a> 下载 <code>nacos-server-$version.zip</code> 包。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">unzip nacos-server-<span class="hljs-variable">$version</span>.zip 或者 tar -xvf nacos-server-<span class="hljs-variable">$version</span>.tar.gz<br><span class="hljs-built_in">cd</span> nacos/bin<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-启动服务器"><a href="#4-启动服务器" class="headerlink" title="4.启动服务器"></a>4.启动服务器</h2><h3 id="Linux-Unix-Mac"><a href="#Linux-Unix-Mac" class="headerlink" title="Linux/Unix/Mac"></a>Linux/Unix/Mac</h3><p>启动命令(standalone代表着单机模式运行，非集群模式):</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sh startup.sh -m standalone<br></code></pre></td></tr></table></figure>
+
+<p>如果您使用的是ubuntu系统，或者运行脚本报错提示[[符号找不到，可尝试如下运行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">bash startup.sh -m standalone<br></code></pre></td></tr></table></figure>
+
+<h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><p>启动命令(standalone代表着单机模式运行，非集群模式):</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">cmd startup.cmd -m standalone<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-服务注册-amp-发现和配置管理"><a href="#5-服务注册-amp-发现和配置管理" class="headerlink" title="5.服务注册&amp;发现和配置管理"></a>5.服务注册&amp;发现和配置管理</h2><h3 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">curl -X POST <span class="hljs-string">&#x27;http://127.0.0.1:8848/nacos/v1/ns/instance?serviceName=nacos.naming.serviceName&amp;ip=20.18.7.10&amp;port=8080&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">curl -X GET <span class="hljs-string">&#x27;http://127.0.0.1:8848/nacos/v1/ns/instance/list?serviceName=nacos.naming.serviceName&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="发布配置"><a href="#发布配置" class="headerlink" title="发布配置"></a>发布配置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">curl -X POST <span class="hljs-string">&quot;http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=nacos.cfg.dataId&amp;group=test&amp;content=HelloWorld&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="获取配置"><a href="#获取配置" class="headerlink" title="获取配置"></a>获取配置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">curl -X GET <span class="hljs-string">&quot;http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=nacos.cfg.dataId&amp;group=test&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="6-关闭服务器"><a href="#6-关闭服务器" class="headerlink" title="6.关闭服务器"></a>6.关闭服务器</h2><h3 id="Linux-Unix-Mac-1"><a href="#Linux-Unix-Mac-1" class="headerlink" title="Linux/Unix/Mac"></a>Linux/Unix/Mac</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sh shutdown.sh<br></code></pre></td></tr></table></figure>
+
+<h3 id="Windows-1"><a href="#Windows-1" class="headerlink" title="Windows"></a>Windows</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">cmd shutdown.cmd<br></code></pre></td></tr></table></figure>
+
+<p>或者双击shutdown.cmd运行文件。</p>
+]]></content>
+      <categories>
+        <category>SpringCloudAlibaba</category>
+      </categories>
+      <tags>
+        <tag>SpringCloudAlibaba</tag>
+        <tag>Nacos</tag>
+        <tag>NacosServer</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringCloudAlibaba之Nacos初探</title>
+    <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E5%88%9D%E6%8E%A2/</url>
+    <content><![CDATA[<h1 id="什么是-Nacos"><a href="#什么是-Nacos" class="headerlink" title="什么是 Nacos"></a>什么是 Nacos</h1><h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p>欢迎来到 Nacos 的世界！</p>
+<p>Nacos 致力于帮助您发现、配置和管理微服务。Nacos 提供了一组简单易用的特性集，帮助您快速实现动态服务发现、服务配置、服务元数据及流量管理。</p>
+<p>Nacos 帮助您更敏捷和容易地构建、交付和管理微服务平台。 Nacos 是构建以“服务”为中心的现代应用架构 (例如微服务范式、云原生范式) 的服务基础设施。</p>
+<h2 id="什么是-Nacos？"><a href="#什么是-Nacos？" class="headerlink" title="什么是 Nacos？"></a>什么是 Nacos？</h2><p>服务（Service）是 Nacos 世界的一等公民。Nacos 支持几乎所有主流类型的“服务”的发现、配置和管理：</p>
+<p><a href="https://kubernetes.io/docs/concepts/services-networking/service/">Kubernetes Service</a></p>
+<p><a href="https://grpc.io/docs/guides/concepts.html#service-definition">gRPC</a> &amp; <a href="https://dubbo.incubator.apache.org/">Dubbo RPC Service</a></p>
+<p><a href="https://spring.io/understanding/REST">Spring Cloud RESTful Service</a></p>
+<p>Nacos 的关键特性包括:</p>
+<ul>
+<li><p><strong>服务发现和服务健康监测</strong></p>
+<p>Nacos 支持基于 DNS 和基于 RPC 的服务发现。服务提供者使用 <a href="https://nacos.io/zh-cn/docs/sdk.html">原生SDK</a>、<a href="https://nacos.io/zh-cn/docs/open-api.html">OpenAPI</a>、或一个<a href="https://nacos.io/zh-cn/docs/other-language.html">独立的Agent TODO</a>注册 Service 后，服务消费者可以使用<a href="https://nacos.io/zh-cn/docs/xx">DNS TODO</a> 或<a href="https://nacos.io/zh-cn/docs/open-api.html">HTTP&amp;API</a>查找和发现服务。</p>
+<p>Nacos 提供对服务的实时的健康检查，阻止向不健康的主机或服务实例发送请求。Nacos 支持传输层 (PING 或 TCP)和应用层 (如 HTTP、MySQL、用户自定义）的健康检查。 对于复杂的云环境和网络拓扑环境中（如 VPC、边缘网络等）服务的健康检查，Nacos 提供了 agent 上报模式和服务端主动检测2种健康检查模式。Nacos 还提供了统一的健康检查仪表盘，帮助您根据健康状态管理服务的可用性及流量。</p>
+</li>
+<li><p><strong>动态配置服务</strong></p>
+<p>动态配置服务可以让您以中心化、外部化和动态化的方式管理所有环境的应用配置和服务配置。</p>
+<p>动态配置消除了配置变更时重新部署应用和服务的需要，让配置管理变得更加高效和敏捷。</p>
+<p>配置中心化管理让实现无状态服务变得更简单，让服务按需弹性扩展变得更容易。</p>
+<p>Nacos 提供了一个简洁易用的UI (<a href="http://console.nacos.io/nacos/index.html">控制台样例 Demo</a>) 帮助您管理所有的服务和应用的配置。Nacos 还提供包括配置版本跟踪、金丝雀发布、一键回滚配置以及客户端配置更新状态跟踪在内的一系列开箱即用的配置管理特性，帮助您更安全地在生产环境中管理配置变更和降低配置变更带来的风险。</p>
+</li>
+<li><p><strong>动态 DNS 服务</strong></p>
+<p>动态 DNS 服务支持权重路由，让您更容易地实现中间层负载均衡、更灵活的路由策略、流量控制以及数据中心内网的简单DNS解析服务。动态DNS服务还能让您更容易地实现以 DNS 协议为基础的服务发现，以帮助您消除耦合到厂商私有服务发现 API 上的风险。</p>
+<p>Nacos 提供了一些简单的 <a href="https://nacos.io/zh-cn/docs/xx">DNS APIs TODO</a> 帮助您管理服务的关联域名和可用的 IP:PORT 列表.</p>
+</li>
+<li><p><strong>服务及其元数据管理</strong></p>
+<p>Nacos 能让您从微服务平台建设的视角管理数据中心的所有服务及元数据，包括管理服务的描述、生命周期、服务的静态依赖分析、服务的健康状态、服务的流量管理、路由及安全策略、服务的 SLA 以及最首要的 metrics 统计数据。</p>
+</li>
+<li><p><a href="https://nacos.io/zh-cn/docs/roadmap.html">更多的特性列表 …</a></p>
+</li>
+</ul>
+<h2 id="Nacos-地图"><a href="#Nacos-地图" class="headerlink" title="Nacos 地图"></a>Nacos 地图</h2><p>一图看懂 Nacos，下面架构部分会详细介绍。 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/nacosMap.jpg"></p>
+<ul>
+<li>特性大图：要从功能特性，非功能特性，全面介绍我们要解的问题域的特性诉求</li>
+<li>架构大图：通过清晰架构，让您快速进入 Nacos 世界</li>
+<li>业务大图：利用当前特性可以支持的业务场景，及其最佳实践</li>
+<li>生态大图：系统梳理 Nacos 和主流技术生态的关系</li>
+<li>优势大图：展示 Nacos 核心竞争力</li>
+<li>战略大图：要从战略到战术层面讲 Nacos 的宏观优势</li>
+</ul>
+<h2 id="Nacos-生态图"><a href="#Nacos-生态图" class="headerlink" title="Nacos 生态图"></a>Nacos 生态图</h2><p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/1533045871534-e64b8031-008c-4dfc-b6e8-12a597a003fb.png"></p>
+<p>如 Nacos 全景图所示，Nacos 无缝支持一些主流的开源生态，例如</p>
+<ul>
+<li><a href="https://nacos.io/en-us/docs/quick-start-spring-cloud.html">Spring Cloud</a></li>
+<li><a href="https://nacos.io/zh-cn/docs/use-nacos-with-dubbo.html">Apache Dubbo and Dubbo Mesh</a></li>
+<li><a href="https://nacos.io/zh-cn/docs/use-nacos-with-kubernetes.html">Kubernetes and CNCF</a>。</li>
+</ul>
+<p>使用 Nacos 简化服务发现、配置管理、服务治理及管理的解决方案，让微服务的发现、管理、共享、组合更加容易。</p>
+<p>关于如何在这些生态中使用 Nacos，请参考以下文档：</p>
+<p><a href="https://nacos.io/zh-cn/docs/use-nacos-with-springcloud.html">Nacos与Spring Cloud一起使用</a></p>
+<p><a href="https://nacos.io/zh-cn/docs/use-nacos-with-kubernetes.html">Nacos与Kubernetes一起使用</a></p>
+<p><a href="https://nacos.io/zh-cn/docs/use-nacos-with-dubbo.html">Nacos与Dubbo一起使用</a></p>
+<p><a href="https://nacos.io/zh-cn/docs/roadmap.html">Nacos与gRPC一起使用</a></p>
+<p><a href="https://nacos.io/zh-cn/docs/use-nacos-with-istio.html">Nacos与Istio一起使用</a></p>
+]]></content>
+      <categories>
+        <category>SpringCloudAlibaba</category>
+      </categories>
+      <tags>
+        <tag>SpringCloudAlibaba</tag>
+        <tag>Nacos</tag>
+        <tag>分布式</tag>
+        <tag>注册中心</tag>
+        <tag>配置中心</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>搞定Spring的BeanFactory和FactoryBean</title>
     <url>/2020/12/15/%E6%90%9E%E5%AE%9ASpring%E7%9A%84BeanFactory%E5%92%8CFactoryBean/</url>
     <content><![CDATA[<p>Spring的核心是IOC和AOP，面试Java的基本上都会被问到它们是干什么的，可能你就简单的说了是控制反转与面向切面编程，那么具体细节就很可能被问懵。今天我们来讲一下IOC中围绕Bean的一个知识点，BeanFactory与FactoryBean。每天搞懂一个知识点，长期下来会让你受益匪浅。</p>
@@ -1290,8 +1473,8 @@
         <category>大数据</category>
       </categories>
       <tags>
-        <tag>大数据</tag>
         <tag>分布式</tag>
+        <tag>大数据</tag>
         <tag>HBase</tag>
       </tags>
   </entry>
@@ -1872,9 +2055,9 @@
         <category>大数据</category>
       </categories>
       <tags>
+        <tag>分布式</tag>
         <tag>Hadoop</tag>
         <tag>大数据</tag>
-        <tag>分布式</tag>
       </tags>
   </entry>
   <entry>
