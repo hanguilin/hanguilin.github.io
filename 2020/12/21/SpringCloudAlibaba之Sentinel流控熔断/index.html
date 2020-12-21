@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SpringCloudAlibaba之Sentinel流控熔断 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="Java、Mysql、Redis、Spring、SpringBoot、SpringCloud">
+  <meta name="description" content="Sentinel 的使用可以分为两个部分:
+
+核心库（...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_2277830_6v2krg83grc.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap-grid.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/pace/pace-theme-flash.min.css">
+
+  
+
+  
+<link rel="stylesheet" href="/lib/bulletchat/bulletchat.css">
+
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/puff.svg'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个互联网工具人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      leancloud: {
+        enable: true,
+        appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+        appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+        baseURL: 'https://fyt1fady.lc-cn-n1-shared.com',
+        bulletChatEnable: true,
+        bulletChatRepo: 'Comment',
+        bulletChatRepoURL: '/about/'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+	<nav class="han-navbar row">
+		<div class="left col-lg-8 col-md-8 col-sm-8 col-10">
+      <div class="row">
+        <div class="col-lg-1 col-md-2 col-sm-3 col-3">
+          
+            <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+            
+            
+            <i class="iconfont iconmoono color-toggle" id="light-color-toggle" color-toggle="light"></i>
+            
+        </div>
+      </div>
+		</div>
+		<div class="right col-lg-4 col-md-4 col-sm-4 col-2">
+		  <i class="iconfont iconmenu j-navbar-menu "></i>
+		</div>
+		
+		  <div class="qrcode-navbar"></div>
+		
+	</nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container-fluid">
+      <div class="col-lg-2 col-md-2 col-xl-2 col-sm-2"></div>
+      <div class="col-lg-8 col-md-8 col-xl-8 col-sm-8"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/212253-1515590573a565.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">SpringCloudAlibaba之Sentinel流控熔断</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>2020/12/21</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/21/SpringCloudAlibaba%E4%B9%8BSentinel%E6%B5%81%E6%8E%A7%E7%86%94%E6%96%AD/" class="leancloud" data-flag-title="SpringCloudAlibaba之Sentinel流控熔断"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>5964</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <p>Sentinel 的使用可以分为两个部分:</p>
+<ul>
+<li>核心库（Java 客户端）：不依赖任何框架/库，能够运行于 Java 7 及以上的版本的运行时环境，同时对 Dubbo / Spring Cloud 等框架也有较好的支持（见 <a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/%E4%B8%BB%E6%B5%81%E6%A1%86%E6%9E%B6%E7%9A%84%E9%80%82%E9%85%8D">主流框架适配</a>）。</li>
+<li>控制台（Dashboard）：控制台主要负责管理推送规则、监控、集群限流分配管理、机器发现等。</li>
+</ul>
+<h1 id="1-引入-Sentinel-依赖"><a href="#1-引入-Sentinel-依赖" class="headerlink" title="1. 引入 Sentinel 依赖"></a>1. 引入 Sentinel 依赖</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;dependency&gt;<br>	&lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>	&lt;artifactId&gt;spring-cloud-starter-alibaba-sentinel&lt;&#x2F;artifactId&gt;<br>&lt;&#x2F;dependency&gt;<br></code></pre></td></tr></table></figure>
+
+<h1 id="2-入门案例"><a href="#2-入门案例" class="headerlink" title="2. 入门案例"></a>2. 入门案例</h1><p><strong>资源</strong> 是 Sentinel 中的核心概念之一。最常用的资源是我们代码中的 Java 方法。 当然，您也可以更灵活的定义你的资源，例如，把需要控制流量的代码用 Sentinel API <code>SphU.entry(&quot;HelloWorld&quot;)</code> 和 <code>entry.exit()</code> 包围起来即可。在下面的例子中，我们将 <code>System.out.println(&quot;hello world&quot;);</code> 作为资源（被保护的逻辑），用 API 包装起来。参考代码如下:</p>
+<p><code>SentinelService.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.service;<br><br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.Entry;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.SphU;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.BlockException;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.RuleConstant;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.flow.FlowRule;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 限流测试</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SentinelService</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 处理请求</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleRquest</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-comment">// 配置规则.</span><br>        initFlowRules();<br><br>        <span class="hljs-comment">// 1.5.0 版本开始可以直接利用 try-with-resources 特性，自动 exit entry</span><br>        <span class="hljs-keyword">try</span> (Entry entry = SphU.entry(<span class="hljs-string">&quot;HelloWorld&quot;</span>)) &#123;<br>            <span class="hljs-comment">// 被保护的逻辑</span><br>            System.out.println(<span class="hljs-string">&quot;hello world&quot;</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (BlockException ex) &#123;<br>            <span class="hljs-comment">// 处理被流控的逻辑</span><br>            System.out.println(<span class="hljs-string">&quot;blocked!&quot;</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 配置流控规则， QPS最大20</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initFlowRules</span><span class="hljs-params">()</span> </span>&#123;<br>        List&lt;FlowRule&gt; rules = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        FlowRule rule = <span class="hljs-keyword">new</span> FlowRule();<br>        rule.setResource(<span class="hljs-string">&quot;HelloWorld&quot;</span>);<br>        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);<br>        <span class="hljs-comment">// Set limit QPS to 20.</span><br>        rule.setCount(<span class="hljs-number">20</span>);<br>        rules.add(rule);<br>        FlowRuleManager.loadRules(rules);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>SentinelController.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.controller;<br><br><span class="hljs-keyword">import</span> cn.javayuli.service.SentinelService;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 限流测试</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SentinelController</span> </span>&#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> SentinelService sentinelService;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 请求资源</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@GetMapping(&quot;getSource&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doGetSource</span> <span class="hljs-params">()</span> </span>&#123;<br>        sentinelService.handleRquest();<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="3-检查结果"><a href="#3-检查结果" class="headerlink" title="3.检查结果"></a>3.检查结果</h1><p>启动项目，并使用Jmeter进行压测</p>
+<p>配置1秒发送18个请求</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221210010658.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>配置访问接口</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221205645682.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>控制台正常打印<code>hello world</code></p>
+<p>现在把18调成30，发现已经被锁住了</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221210231967.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>Demo 运行之后，我们可以在日志 <code>$&#123;currentUser&#125;/logs/csp/$&#123;appName&#125;-metrics.log.xxx</code> 里看到下面的输出:</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221210608596.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">|--timestamp-|------date time----|--resource-|p |block|s |e|rt<br>1608555871000|2020-12-21 21:04:31|&#x2F;getSource|10|0|10|0|42|0|0|1<br>1608555871000|2020-12-21 21:04:31|HelloWorld|10|0|10|0|0|0|0|0<br>1608555871000|2020-12-21 21:04:31|__total_inbound_traffic__|10|0|10|0|42|0|0|0<br>1608555872000|2020-12-21 21:04:32|&#x2F;getSource|20|0|20|0|1|0|0|1<br>1608555872000|2020-12-21 21:04:32|HelloWorld|15|5|15|0|0|0|0|0<br>1608555872000|2020-12-21 21:04:32|__total_inbound_traffic__|20|0|20|0|1|0|0|0<br></code></pre></td></tr></table></figure>
+
+<p>其中 <code>p</code> 代表通过的请求, <code>block</code> 代表被阻止的请求, <code>s</code> 代表成功执行完成的请求个数, <code>e</code> 代表用户自定义的异常, <code>rt</code> 代表平均响应时长。</p>
+<h1 id="4-支持注解"><a href="#4-支持注解" class="headerlink" title="4.支持注解"></a>4.支持注解</h1><p>Sentinel 提供了 <code>@SentinelResource</code> 注解用于定义资源，并提供了 AspectJ 的扩展用于自动定义资源、处理 <code>BlockException</code> 等</p>
+<p><code>@SentinelResource</code> 用于定义资源，并提供可选的异常处理和 fallback 配置项。 <code>@SentinelResource</code> 注解包含以下属性：</p>
+<ul>
+<li><p><code>value</code>：资源名称，必需项（不能为空）</p>
+</li>
+<li><p><code>entryType</code>：entry 类型，可选项（默认为 <code>EntryType.OUT</code>）</p>
+</li>
+<li><p><code>blockHandler</code> / <code>blockHandlerClass</code>: <code>blockHandler</code> 对应处理 <code>BlockException</code> 的函数名称，可选项。blockHandler 函数访问范围需要是 <code>public</code>，返回类型需要与原方法相匹配，参数类型需要和原方法相匹配并且最后加一个额外的参数，类型为 <code>BlockException</code>。blockHandler 函数默认需要和原方法在同一个类中。若希望使用其他类的函数，则可以指定 <code>blockHandlerClass</code> 为对应的类的 <code>Class</code> 对象，注意对应的函数必需为 static 函数，否则无法解析。</p>
+</li>
+<li><p><code>fallback</code>/<code>fallbackClass</code></p>
+<p>：fallback 函数名称，可选项，用于在抛出异常的时候提供 fallback 处理逻辑。fallback 函数可以针对所有类型的异常（除了<code>exceptionsToIgnore</code>里面排除掉的异常类型）进行处理。fallback 函数签名和位置要求：</p>
+<ul>
+<li>返回值类型必须与原函数返回值类型一致；</li>
+<li>方法参数列表需要和原函数一致，或者可以额外多一个 <code>Throwable</code> 类型的参数用于接收对应的异常。</li>
+<li>fallback 函数默认需要和原方法在同一个类中。若希望使用其他类的函数，则可以指定 <code>fallbackClass</code> 为对应的类的 <code>Class</code> 对象，注意对应的函数必需为 static 函数，否则无法解析。</li>
+</ul>
+</li>
+<li><p><code>defaultFallback</code>（since 1.6.0）：默认的 fallback 函数名称，可选项，通常用于通用的 fallback 逻辑（即可以用于很多服务或方法）。默认 fallback 函数可以针对所有类型的异常（除了<code>exceptionsToIgnore</code>里面排除掉的异常类型）进行处理。若同时配置了 fallback 和 defaultFallback，则只有 fallback 会生效。defaultFallback 函数签名要求：</p>
+<ul>
+<li>返回值类型必须与原函数返回值类型一致；</li>
+<li>方法参数列表需要为空，或者可以额外多一个 <code>Throwable</code> 类型的参数用于接收对应的异常。</li>
+<li>defaultFallback 函数默认需要和原方法在同一个类中。若希望使用其他类的函数，则可以指定 <code>fallbackClass</code> 为对应的类的 <code>Class</code> 对象，注意对应的函数必需为 static 函数，否则无法解析。</li>
+</ul>
+</li>
+<li><p><code>exceptionsToIgnore</code>（since 1.6.0）：用于指定哪些异常被排除掉，不会计入异常统计中，也不会进入 fallback 逻辑中，而是会原样抛出。</p>
+</li>
+</ul>
+<p>1.8.0 版本开始，<code>defaultFallback</code> 支持在类级别进行配置。</p>
+<blockquote>
+<p>注：1.6.0 之前的版本 fallback 函数只针对降级异常（<code>DegradeException</code>）进行处理，<strong>不能针对业务异常进行处理</strong>。</p>
+</blockquote>
+<p>特别地，若 blockHandler 和 fallback 都进行了配置，则被限流降级而抛出 <code>BlockException</code> 时只会进入 <code>blockHandler</code> 处理逻辑。若未配置 <code>blockHandler</code>、<code>fallback</code> 和 <code>defaultFallback</code>，则被限流降级时会将 <code>BlockException</code> <strong>直接抛出</strong>（若方法本身未定义 throws BlockException 则会被 JVM 包装一层 <code>UndeclaredThrowableException</code>）。</p>
+<p>从 1.4.0 版本开始，注解方式定义资源支持自动统计业务异常，无需手动调用 <code>Tracer.trace(ex)</code> 来记录业务异常。Sentinel 1.4.0 以前的版本需要自行调用 <code>Tracer.trace(ex)</code> 来记录业务异常。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="Spring-Cloud-Alibaba"><a href="#Spring-Cloud-Alibaba" class="headerlink" title="Spring Cloud Alibaba"></a>Spring Cloud Alibaba</h3><p>若您是通过 <a target="_blank" rel="noopener" href="https://github.com/alibaba/spring-cloud-alibaba/wiki/Sentinel">Spring Cloud Alibaba</a> 接入的 Sentinel，则无需额外进行配置即可使用 <code>@SentinelResource</code> 注解。</p>
+<h3 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h3><p>若您的应用使用了 Spring AOP（无论是 Spring Boot 还是传统 Spring 应用），您需要通过配置的方式将 <code>SentinelResourceAspect</code> 注册为一个 Spring Bean：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs plain">@Configuration<br>public class SentinelAspectConfiguration &#123;<br><br>    @Bean<br>    public SentinelResourceAspect sentinelResourceAspect() &#123;<br>        return new SentinelResourceAspect();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们提供了 Spring AOP 的示例，可以参见 <a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/tree/master/sentinel-demo/sentinel-demo-annotation-spring-aop">sentinel-demo-annotation-spring-aop</a>。</p>
+<h3 id="AspectJ"><a href="#AspectJ" class="headerlink" title="AspectJ"></a>AspectJ</h3><p>若您的应用直接使用了 AspectJ，那么您需要在 <code>aop.xml</code> 文件中引入对应的 Aspect：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;aspects&gt;<br>    &lt;aspect name&#x3D;&quot;com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect&quot;&#x2F;&gt;<br>&lt;&#x2F;aspects&gt;<br></code></pre></td></tr></table></figure>
+
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/21/SpringCloudAlibaba%E4%B9%8BSentinel%E6%B5%81%E6%8E%A7%E7%86%94%E6%96%AD/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;21&#x2F;SpringCloudAlibaba%E4%B9%8BSentinel%E6%B5%81%E6%8E%A7%E7%86%94%E6%96%AD&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;21&#x2F;SpringCloudAlibaba%E4%B9%8BSentinel%E6%B5%81%E6%8E%A7%E7%86%94%E6%96%AD&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sentinel/" rel="tag">Sentinel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringCloudAlibaba/" rel="tag">SpringCloudAlibaba</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%81%E6%8E%A7/" rel="tag">流控</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%86%94%E6%96%AD/" rel="tag">熔断</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2020/12/21/SpringCloudAlibaba%E4%B9%8BSentinel%E4%BB%8B%E7%BB%8D/"><i class="iconfont iconleft"></i>SpringCloudAlibaba之Sentinel介绍</a>
+    <a href="/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E9%85%8D%E7%BD%AEMysql%E6%95%B0%E6%8D%AE%E5%BA%93/">SpringCloudAlibaba之Nacos配置Mysql数据库<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="/js/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "来都来了，总得留下点什么吧(｡◕ฺˇε ˇ◕ฺ｡)",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-lg-2 col-md-2 col-xl-2 col-sm-2 toc-warp-col">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%BC%95%E5%85%A5-Sentinel-%E4%BE%9D%E8%B5%96"><span class="toc-text">1. 引入 Sentinel 依赖</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%85%A5%E9%97%A8%E6%A1%88%E4%BE%8B"><span class="toc-text">2. 入门案例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%A3%80%E6%9F%A5%E7%BB%93%E6%9E%9C"><span class="toc-text">3.检查结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%94%AF%E6%8C%81%E6%B3%A8%E8%A7%A3"><span class="toc-text">4.支持注解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-Cloud-Alibaba"><span class="toc-text">Spring Cloud Alibaba</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-AOP"><span class="toc-text">Spring AOP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AspectJ"><span class="toc-text">AspectJ</span></a></li></ol></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+
+
+
+
+  
+<script src="/lib/pace/pace.min.js"></script>
+
+
+
+
+
+
+<script src="/lib/bulletchat/bulletchat.js"></script>
+
+
+</html>

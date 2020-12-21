@@ -92,44 +92,295 @@
       </tags>
   </entry>
   <entry>
+    <title>SpringCloudAlibaba之Sentinel介绍</title>
+    <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BSentinel%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<h2 id="Sentinel-是什么"><a href="#Sentinel-是什么" class="headerlink" title="Sentinel 是什么"></a>Sentinel 是什么</h2><p>随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 是面向分布式服务架构的流量控制组件，主要以流量为切入点，从限流、流量整形、熔断降级、系统负载保护、热点防护等多个维度来帮助开发者保障微服务的稳定性。</p>
+<h3 id="Sentinel-的历史"><a href="#Sentinel-的历史" class="headerlink" title="Sentinel 的历史"></a>Sentinel 的历史</h3><ul>
+<li>2012 年，Sentinel 诞生，主要功能为入口流量控制。</li>
+<li>2013-2017 年，Sentinel 在阿里巴巴集团内部迅速发展，成为基础技术模块，覆盖了所有的核心场景。Sentinel 也因此积累了大量的流量归整场景以及生产实践。</li>
+<li>2018 年，Sentinel 开源，并持续演进。</li>
+<li>2019 年，Sentinel 朝着多语言扩展的方向不断探索，推出 <a href="https://github.com/alibaba/sentinel-cpp">C++ 原生版本</a>，同时针对 Service Mesh 场景也推出了 <a href="https://github.com/alibaba/Sentinel/tree/master/sentinel-cluster/sentinel-cluster-server-envoy-rls">Envoy 集群流量控制支持</a>，以解决 Service Mesh 架构下多语言限流的问题。</li>
+<li>2020 年，推出 <a href="https://github.com/alibaba/sentinel-golang">Sentinel Go 版本</a>，继续朝着云原生方向演进。</li>
+</ul>
+<h2 id="Sentinel-基本概念"><a href="#Sentinel-基本概念" class="headerlink" title="Sentinel 基本概念"></a>Sentinel 基本概念</h2><h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><p>资源是 Sentinel 的关键概念。它可以是 Java 应用程序中的任何内容，例如，由应用程序提供的服务，或由应用程序调用的其它应用提供的服务，甚至可以是一段代码。在接下来的文档中，我们都会用资源来描述代码块。</p>
+<p>只要通过 Sentinel API 定义的代码，就是资源，能够被 Sentinel 保护起来。大部分情况下，可以使用方法签名，URL，甚至服务名称作为资源名来标示资源。</p>
+<h3 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h3><p>围绕资源的实时状态设定的规则，可以包括流量控制规则、熔断降级规则以及系统保护规则。所有规则可以动态实时调整。</p>
+<h2 id="Sentinel-功能和设计理念"><a href="#Sentinel-功能和设计理念" class="headerlink" title="Sentinel 功能和设计理念"></a>Sentinel 功能和设计理念</h2><h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><h4 id="什么是流量控制"><a href="#什么是流量控制" class="headerlink" title="什么是流量控制"></a>什么是流量控制</h4><p>流量控制在网络传输中是一个常用的概念，它用于调整网络包的发送数据。然而，从系统稳定性角度考虑，在处理请求的速度上，也有非常多的讲究。任意时间到来的请求往往是随机不可控的，而系统的处理能力是有限的。我们需要根据系统的处理能力对流量进行控制。Sentinel 作为一个调配器，可以根据需要把随机的请求调整成合适的形状。</p>
+<h4 id="流量控制设计理念"><a href="#流量控制设计理念" class="headerlink" title="流量控制设计理念"></a>流量控制设计理念</h4><p>流量控制有以下几个角度:</p>
+<ul>
+<li>资源的调用关系，例如资源的调用链路，资源和资源之间的关系；</li>
+<li>运行指标，例如 QPS、线程池、系统负载等；</li>
+<li>控制的效果，例如直接限流、冷启动、排队等。</li>
+</ul>
+<p>Sentinel 的设计理念是让您自由选择控制的角度，并进行灵活组合，从而达到想要的效果。</p>
+<h3 id="熔断降级"><a href="#熔断降级" class="headerlink" title="熔断降级"></a>熔断降级</h3><h4 id="什么是熔断降级"><a href="#什么是熔断降级" class="headerlink" title="什么是熔断降级"></a>什么是熔断降级</h4><p>除了流量控制以外，及时对调用链路中的不稳定因素进行熔断也是 Sentinel 的使命之一。由于调用关系的复杂性，如果调用链路中的某个资源出现了不稳定，可能会导致请求发生堆积，进而导致级联错误。</p>
+<p>Sentinel 和 Hystrix 的原则是一致的: 当检测到调用链路中某个资源出现不稳定的表现，例如请求响应时间长或异常比例升高的时候，则对这个资源的调用进行限制，让请求快速失败，避免影响到其它的资源而导致级联故障。</p>
+<h4 id="熔断降级设计理念"><a href="#熔断降级设计理念" class="headerlink" title="熔断降级设计理念"></a>熔断降级设计理念</h4><p>在限制的手段上，Sentinel 和 Hystrix 采取了完全不一样的方法。</p>
+<p>Hystrix 通过 <a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#benefits-of-thread-pools">线程池隔离</a> 的方式，来对依赖（在 Sentinel 的概念中对应 <em>资源</em>）进行了隔离。这样做的好处是资源和资源之间做到了最彻底的隔离。缺点是除了增加了线程切换的成本（过多的线程池导致线程数目过多），还需要预先给各个资源做线程池大小的分配。</p>
+<p>Sentinel 对这个问题采取了两种手段:</p>
+<ul>
+<li>通过并发线程数进行限制</li>
+</ul>
+<p>和资源池隔离的方法不同，Sentinel 通过限制资源并发线程的数量，来减少不稳定资源对其它资源的影响。这样不但没有线程切换的损耗，也不需要您预先分配线程池的大小。当某个资源出现不稳定的情况下，例如响应时间变长，对资源的直接影响就是会造成线程数的逐步堆积。当线程数在特定资源上堆积到一定的数量之后，对该资源的新请求就会被拒绝。堆积的线程完成任务后才开始继续接收请求。</p>
+<ul>
+<li>通过响应时间对资源进行降级</li>
+</ul>
+<p>除了对并发线程数进行控制以外，Sentinel 还可以通过响应时间来快速降级不稳定的资源。当依赖的资源出现响应时间过长后，所有对该资源的访问都会被直接拒绝，直到过了指定的时间窗口之后才重新恢复。</p>
+<h3 id="系统自适应保护"><a href="#系统自适应保护" class="headerlink" title="系统自适应保护"></a>系统自适应保护</h3><p>Sentinel 同时提供系统维度的自适应保护能力。防止雪崩，是系统防护中重要的一环。当系统负载较高的时候，如果还持续让请求进入，可能会导致系统崩溃，无法响应。在集群环境下，网络负载均衡会把本应这台机器承载的流量转发到其它的机器上去。如果这个时候其它的机器也处在一个边缘状态的时候，这个增加的流量就会导致这台机器也崩溃，最后导致整个集群不可用。</p>
+<p>针对这个情况，Sentinel 提供了对应的保护机制，让系统的入口流量和系统的负载达到一个平衡，保证系统在能力范围之内处理最多的请求。</p>
+<h2 id="Sentinel-是如何工作的"><a href="#Sentinel-是如何工作的" class="headerlink" title="Sentinel 是如何工作的"></a>Sentinel 是如何工作的</h2><p>Sentinel 的主要工作机制如下：</p>
+<ul>
+<li>对主流框架提供适配或者显示的 API，来定义需要保护的资源，并提供设施对资源进行实时统计和调用链路分析。</li>
+<li>根据预设的规则，结合对资源的实时统计信息，对流量进行控制。同时，Sentinel 提供开放的接口，方便您定义及改变规则。</li>
+<li>Sentinel 提供实时的监控系统，方便您快速了解目前系统的状态。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>SpringCloudAlibaba</category>
+      </categories>
+      <tags>
+        <tag>SpringCloudAlibaba</tag>
+        <tag>Sentiel</tag>
+        <tag>熔断</tag>
+        <tag>流控</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringCloudAlibaba之Sentinel流控熔断</title>
+    <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BSentinel%E6%B5%81%E6%8E%A7%E7%86%94%E6%96%AD/</url>
+    <content><![CDATA[<p>Sentinel 的使用可以分为两个部分:</p>
+<ul>
+<li>核心库（Java 客户端）：不依赖任何框架/库，能够运行于 Java 7 及以上的版本的运行时环境，同时对 Dubbo / Spring Cloud 等框架也有较好的支持（见 <a href="https://github.com/alibaba/Sentinel/wiki/%E4%B8%BB%E6%B5%81%E6%A1%86%E6%9E%B6%E7%9A%84%E9%80%82%E9%85%8D">主流框架适配</a>）。</li>
+<li>控制台（Dashboard）：控制台主要负责管理推送规则、监控、集群限流分配管理、机器发现等。</li>
+</ul>
+<h1 id="1-引入-Sentinel-依赖"><a href="#1-引入-Sentinel-依赖" class="headerlink" title="1. 引入 Sentinel 依赖"></a>1. 引入 Sentinel 依赖</h1><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&lt;dependency&gt;<br>	&lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>	&lt;artifactId&gt;spring-cloud-starter-alibaba-sentinel&lt;&#x2F;artifactId&gt;<br>&lt;&#x2F;dependency&gt;<br></code></pre></td></tr></table></figure>
+
+<h1 id="2-入门案例"><a href="#2-入门案例" class="headerlink" title="2. 入门案例"></a>2. 入门案例</h1><p><strong>资源</strong> 是 Sentinel 中的核心概念之一。最常用的资源是我们代码中的 Java 方法。 当然，您也可以更灵活的定义你的资源，例如，把需要控制流量的代码用 Sentinel API <code>SphU.entry(&quot;HelloWorld&quot;)</code> 和 <code>entry.exit()</code> 包围起来即可。在下面的例子中，我们将 <code>System.out.println(&quot;hello world&quot;);</code> 作为资源（被保护的逻辑），用 API 包装起来。参考代码如下:</p>
+<p><code>SentinelService.java</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.service;<br><br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.Entry;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.SphU;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.BlockException;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.RuleConstant;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.flow.FlowRule;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 限流测试</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SentinelService</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 处理请求</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleRquest</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-comment">// 配置规则.</span><br>        initFlowRules();<br><br>        <span class="hljs-comment">// 1.5.0 版本开始可以直接利用 try-with-resources 特性，自动 exit entry</span><br>        <span class="hljs-keyword">try</span> (Entry entry = SphU.entry(<span class="hljs-string">&quot;HelloWorld&quot;</span>)) &#123;<br>            <span class="hljs-comment">// 被保护的逻辑</span><br>            System.out.println(<span class="hljs-string">&quot;hello world&quot;</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (BlockException ex) &#123;<br>            <span class="hljs-comment">// 处理被流控的逻辑</span><br>            System.out.println(<span class="hljs-string">&quot;blocked!&quot;</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 配置流控规则， QPS最大20</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initFlowRules</span><span class="hljs-params">()</span> </span>&#123;<br>        List&lt;FlowRule&gt; rules = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        FlowRule rule = <span class="hljs-keyword">new</span> FlowRule();<br>        rule.setResource(<span class="hljs-string">&quot;HelloWorld&quot;</span>);<br>        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);<br>        <span class="hljs-comment">// Set limit QPS to 20.</span><br>        rule.setCount(<span class="hljs-number">20</span>);<br>        rules.add(rule);<br>        FlowRuleManager.loadRules(rules);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>SentinelController.java</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.controller;<br><br><span class="hljs-keyword">import</span> cn.javayuli.service.SentinelService;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 限流测试</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SentinelController</span> </span>&#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> SentinelService sentinelService;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 请求资源</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@GetMapping(&quot;getSource&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doGetSource</span> <span class="hljs-params">()</span> </span>&#123;<br>        sentinelService.handleRquest();<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="3-检查结果"><a href="#3-检查结果" class="headerlink" title="3.检查结果"></a>3.检查结果</h1><p>启动项目，并使用Jmeter进行压测</p>
+<p>配置1秒发送18个请求</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221210010658.png"></p>
+<p>配置访问接口</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221205645682.png"></p>
+<p>控制台正常打印<code>hello world</code></p>
+<p>现在把18调成30，发现已经被锁住了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221210231967.png"></p>
+<p>Demo 运行之后，我们可以在日志 <code>$&#123;currentUser&#125;/logs/csp/$&#123;appName&#125;-metrics.log.xxx</code> 里看到下面的输出:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221210608596.png"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">|--timestamp-|------date time----|--resource-|p |block|s |e|rt<br>1608555871000|2020-12-21 21:04:31|&#x2F;getSource|10|0|10|0|42|0|0|1<br>1608555871000|2020-12-21 21:04:31|HelloWorld|10|0|10|0|0|0|0|0<br>1608555871000|2020-12-21 21:04:31|__total_inbound_traffic__|10|0|10|0|42|0|0|0<br>1608555872000|2020-12-21 21:04:32|&#x2F;getSource|20|0|20|0|1|0|0|1<br>1608555872000|2020-12-21 21:04:32|HelloWorld|15|5|15|0|0|0|0|0<br>1608555872000|2020-12-21 21:04:32|__total_inbound_traffic__|20|0|20|0|1|0|0|0<br></code></pre></td></tr></table></figure>
+
+<p>其中 <code>p</code> 代表通过的请求, <code>block</code> 代表被阻止的请求, <code>s</code> 代表成功执行完成的请求个数, <code>e</code> 代表用户自定义的异常, <code>rt</code> 代表平均响应时长。</p>
+<h1 id="4-支持注解"><a href="#4-支持注解" class="headerlink" title="4.支持注解"></a>4.支持注解</h1><p>Sentinel 提供了 <code>@SentinelResource</code> 注解用于定义资源，并提供了 AspectJ 的扩展用于自动定义资源、处理 <code>BlockException</code> 等</p>
+<p><code>@SentinelResource</code> 用于定义资源，并提供可选的异常处理和 fallback 配置项。 <code>@SentinelResource</code> 注解包含以下属性：</p>
+<ul>
+<li><p><code>value</code>：资源名称，必需项（不能为空）</p>
+</li>
+<li><p><code>entryType</code>：entry 类型，可选项（默认为 <code>EntryType.OUT</code>）</p>
+</li>
+<li><p><code>blockHandler</code> / <code>blockHandlerClass</code>: <code>blockHandler</code> 对应处理 <code>BlockException</code> 的函数名称，可选项。blockHandler 函数访问范围需要是 <code>public</code>，返回类型需要与原方法相匹配，参数类型需要和原方法相匹配并且最后加一个额外的参数，类型为 <code>BlockException</code>。blockHandler 函数默认需要和原方法在同一个类中。若希望使用其他类的函数，则可以指定 <code>blockHandlerClass</code> 为对应的类的 <code>Class</code> 对象，注意对应的函数必需为 static 函数，否则无法解析。</p>
+</li>
+<li><p><code>fallback</code>/<code>fallbackClass</code></p>
+<p>：fallback 函数名称，可选项，用于在抛出异常的时候提供 fallback 处理逻辑。fallback 函数可以针对所有类型的异常（除了<code>exceptionsToIgnore</code>里面排除掉的异常类型）进行处理。fallback 函数签名和位置要求：</p>
+<ul>
+<li>返回值类型必须与原函数返回值类型一致；</li>
+<li>方法参数列表需要和原函数一致，或者可以额外多一个 <code>Throwable</code> 类型的参数用于接收对应的异常。</li>
+<li>fallback 函数默认需要和原方法在同一个类中。若希望使用其他类的函数，则可以指定 <code>fallbackClass</code> 为对应的类的 <code>Class</code> 对象，注意对应的函数必需为 static 函数，否则无法解析。</li>
+</ul>
+</li>
+<li><p><code>defaultFallback</code>（since 1.6.0）：默认的 fallback 函数名称，可选项，通常用于通用的 fallback 逻辑（即可以用于很多服务或方法）。默认 fallback 函数可以针对所有类型的异常（除了<code>exceptionsToIgnore</code>里面排除掉的异常类型）进行处理。若同时配置了 fallback 和 defaultFallback，则只有 fallback 会生效。defaultFallback 函数签名要求：</p>
+<ul>
+<li>返回值类型必须与原函数返回值类型一致；</li>
+<li>方法参数列表需要为空，或者可以额外多一个 <code>Throwable</code> 类型的参数用于接收对应的异常。</li>
+<li>defaultFallback 函数默认需要和原方法在同一个类中。若希望使用其他类的函数，则可以指定 <code>fallbackClass</code> 为对应的类的 <code>Class</code> 对象，注意对应的函数必需为 static 函数，否则无法解析。</li>
+</ul>
+</li>
+<li><p><code>exceptionsToIgnore</code>（since 1.6.0）：用于指定哪些异常被排除掉，不会计入异常统计中，也不会进入 fallback 逻辑中，而是会原样抛出。</p>
+</li>
+</ul>
+<p>1.8.0 版本开始，<code>defaultFallback</code> 支持在类级别进行配置。</p>
+<blockquote>
+<p>注：1.6.0 之前的版本 fallback 函数只针对降级异常（<code>DegradeException</code>）进行处理，<strong>不能针对业务异常进行处理</strong>。</p>
+</blockquote>
+<p>特别地，若 blockHandler 和 fallback 都进行了配置，则被限流降级而抛出 <code>BlockException</code> 时只会进入 <code>blockHandler</code> 处理逻辑。若未配置 <code>blockHandler</code>、<code>fallback</code> 和 <code>defaultFallback</code>，则被限流降级时会将 <code>BlockException</code> <strong>直接抛出</strong>（若方法本身未定义 throws BlockException 则会被 JVM 包装一层 <code>UndeclaredThrowableException</code>）。</p>
+<p>从 1.4.0 版本开始，注解方式定义资源支持自动统计业务异常，无需手动调用 <code>Tracer.trace(ex)</code> 来记录业务异常。Sentinel 1.4.0 以前的版本需要自行调用 <code>Tracer.trace(ex)</code> 来记录业务异常。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="Spring-Cloud-Alibaba"><a href="#Spring-Cloud-Alibaba" class="headerlink" title="Spring Cloud Alibaba"></a>Spring Cloud Alibaba</h3><p>若您是通过 <a href="https://github.com/alibaba/spring-cloud-alibaba/wiki/Sentinel">Spring Cloud Alibaba</a> 接入的 Sentinel，则无需额外进行配置即可使用 <code>@SentinelResource</code> 注解。</p>
+<h3 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h3><p>若您的应用使用了 Spring AOP（无论是 Spring Boot 还是传统 Spring 应用），您需要通过配置的方式将 <code>SentinelResourceAspect</code> 注册为一个 Spring Bean：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">@Configuration<br>public class SentinelAspectConfiguration &#123;<br><br>    @Bean<br>    public SentinelResourceAspect sentinelResourceAspect() &#123;<br>        return new SentinelResourceAspect();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们提供了 Spring AOP 的示例，可以参见 <a href="https://github.com/alibaba/Sentinel/tree/master/sentinel-demo/sentinel-demo-annotation-spring-aop">sentinel-demo-annotation-spring-aop</a>。</p>
+<h3 id="AspectJ"><a href="#AspectJ" class="headerlink" title="AspectJ"></a>AspectJ</h3><p>若您的应用直接使用了 AspectJ，那么您需要在 <code>aop.xml</code> 文件中引入对应的 Aspect：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&lt;aspects&gt;<br>    &lt;aspect name&#x3D;&quot;com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect&quot;&#x2F;&gt;<br>&lt;&#x2F;aspects&gt;<br></code></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>SpringCloudAlibaba</tag>
+        <tag>熔断</tag>
+        <tag>流控</tag>
+        <tag>Sentinel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringCloudAlibaba之Nacos配置Mysql数据库</title>
+    <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E9%85%8D%E7%BD%AEMysql%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[<h1 id="Surport-Mysql"><a href="#Surport-Mysql" class="headerlink" title="Surport Mysql"></a>Surport Mysql</h1><p>在0.7版本之前Nacos是不支持Mysql数据库的，是使用的本地的derby数据库。这样虽然方便，不用进行额外的配置，但是不能很好的观察到数据的基本情况，也就是不好可视化。在0.7及之后，Nacos支持外部Mysql数据库存储数据，这可以在<a href="https://github.com/alibaba/nacos/releases">nacos release</a>中找到公示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221201249189.png"></p>
+<h1 id="Config-Mysql"><a href="#Config-Mysql" class="headerlink" title="Config Mysql"></a>Config Mysql</h1><p>本文以Nacos1.3.2为例，首先在<a href="https://github.com/alibaba/nacos/releases">nacos release</a>下载1.3.2的压缩包，下载解压后找到<code>/conf/nacos-mysql.sql</code></p>
+<p>在数据库新建一个数据库，并导入sql文件，此时会生成下列表</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221201755871.png"></p>
+<p>此时需要配置<code>/conf/application.properties</code>，告诉nacos使用外部mysql</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221201940234.png"></p>
+<p>此时再启动nacos就会基于外部mysql数据库进行工作</p>
+]]></content>
+      <categories>
+        <category>SpringCloudAlibaba</category>
+      </categories>
+      <tags>
+        <tag>SpringCloudAlibaba</tag>
+        <tag>Nacos</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SpringCloudAlibaba之Nacos配置与注册</title>
     <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%B3%A8%E5%86%8C/</url>
     <content><![CDATA[<h1 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h1><p>编辑器：IDEA</p>
 <h2 id="创建父项目"><a href="#创建父项目" class="headerlink" title="创建父项目"></a>创建父项目</h2><p>File-&gt;New-&gt;Project</p>
-<img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221171651514.png" style="zoom: 67%;" />
-
-
+<img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221171651514.png"  />
 
 <p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221172848985.png"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221173008882.png"></p>
-<h2 id="父项目引入依赖"><a href="#父项目引入依赖" class="headerlink" title="父项目引入依赖"></a>父项目引入依赖</h2><p>注意添加<packaging>pom</packaging></p>
+<h2 id="父项目引入依赖"><a href="#父项目引入依赖" class="headerlink" title="父项目引入依赖"></a>父项目引入依赖</h2><p>注意添加<code>&lt;packaging&gt;pom&lt;/packaging&gt;</code></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;<br>&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;<br>         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;<br>         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;<br>    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;<br><br>    &lt;groupId&gt;cn.javayuli&lt;&#x2F;groupId&gt;<br>    &lt;artifactId&gt;nacos&lt;&#x2F;artifactId&gt;<br>    &lt;packaging&gt;pom&lt;&#x2F;packaging&gt;<br>    &lt;version&gt;1.0.0&lt;&#x2F;version&gt;<br><br>    &lt;parent&gt;<br>        &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>        &lt;artifactId&gt;spring-boot-starter-parent&lt;&#x2F;artifactId&gt;<br>        &lt;version&gt;2.3.6.RELEASE&lt;&#x2F;version&gt;<br>    &lt;&#x2F;parent&gt;<br><br>    &lt;properties&gt;<br>        &lt;spring-boot.version&gt;2.3.6.RELEASE&lt;&#x2F;spring-boot.version&gt;<br>        &lt;spring-cloud.version&gt;Hoxton.SR9&lt;&#x2F;spring-cloud.version&gt;<br>        &lt;spring-cloud-alibaba.version&gt;2.2.3.RELEASE&lt;&#x2F;spring-cloud-alibaba.version&gt;<br>        &lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;<br>        &lt;maven.compiler.source&gt;1.8&lt;&#x2F;maven.compiler.source&gt;<br>        &lt;maven.compiler.target&gt;1.8&lt;&#x2F;maven.compiler.target&gt;<br>    &lt;&#x2F;properties&gt;<br><br>    &lt;dependencyManagement&gt;<br>        &lt;dependencies&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-dependencies&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-boot.version&#125;&lt;&#x2F;version&gt;<br>                &lt;type&gt;pom&lt;&#x2F;type&gt;<br>                &lt;scope&gt;import&lt;&#x2F;scope&gt;<br>            &lt;&#x2F;dependency&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-cloud-dependencies&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-cloud.version&#125;&lt;&#x2F;version&gt;<br>                &lt;type&gt;pom&lt;&#x2F;type&gt;<br>                &lt;scope&gt;import&lt;&#x2F;scope&gt;<br>            &lt;&#x2F;dependency&gt;<br>            &lt;!--spring cloud alibaba--&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-cloud-alibaba-dependencies&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-cloud-alibaba.version&#125;&lt;&#x2F;version&gt;<br>                &lt;type&gt;pom&lt;&#x2F;type&gt;<br>                &lt;scope&gt;import&lt;&#x2F;scope&gt;<br>            &lt;&#x2F;dependency&gt;<br>            &lt;!--web 模块--&gt;<br>            &lt;dependency&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifactId&gt;<br>                &lt;version&gt;$&#123;spring-boot.version&#125;&lt;&#x2F;version&gt;<br>            &lt;&#x2F;dependency&gt;<br>        &lt;&#x2F;dependencies&gt;<br>    &lt;&#x2F;dependencyManagement&gt;<br><br>    &lt;build&gt;<br>        &lt;finalName&gt;$&#123;project.name&#125;&lt;&#x2F;finalName&gt;<br>        &lt;resources&gt;<br>            &lt;resource&gt;<br>                &lt;directory&gt;src&#x2F;main&#x2F;resources&lt;&#x2F;directory&gt;<br>                &lt;filtering&gt;true&lt;&#x2F;filtering&gt;<br>            &lt;&#x2F;resource&gt;<br>        &lt;&#x2F;resources&gt;<br>        &lt;pluginManagement&gt;<br>            &lt;plugins&gt;<br>                &lt;plugin&gt;<br>                    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                    &lt;artifactId&gt;spring-boot-maven-plugin&lt;&#x2F;artifactId&gt;<br>                    &lt;version&gt;$&#123;spring-boot.version&#125;&lt;&#x2F;version&gt;<br>                    &lt;configuration&gt;<br>                        &lt;finalName&gt;$&#123;project.build.finalName&#125;&lt;&#x2F;finalName&gt;<br>                    &lt;&#x2F;configuration&gt;<br>                    &lt;executions&gt;<br>                        &lt;execution&gt;<br>                            &lt;goals&gt;<br>                                &lt;goal&gt;repackage&lt;&#x2F;goal&gt;<br>                            &lt;&#x2F;goals&gt;<br>                        &lt;&#x2F;execution&gt;<br>                    &lt;&#x2F;executions&gt;<br>                &lt;&#x2F;plugin&gt;<br><br>            &lt;&#x2F;plugins&gt;<br>        &lt;&#x2F;pluginManagement&gt;<br>    &lt;&#x2F;build&gt;<br><br>    &lt;repositories&gt;<br>        &lt;!--阿里云主仓库，代理了maven central和jcenter仓库--&gt;<br>        &lt;repository&gt;<br>            &lt;id&gt;aliyun&lt;&#x2F;id&gt;<br>            &lt;name&gt;aliyun&lt;&#x2F;name&gt;<br>            &lt;url&gt;https:&#x2F;&#x2F;maven.aliyun.com&#x2F;repository&#x2F;public&lt;&#x2F;url&gt;<br>            &lt;releases&gt;<br>                &lt;enabled&gt;true&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;releases&gt;<br>            &lt;snapshots&gt;<br>                &lt;enabled&gt;false&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;snapshots&gt;<br>        &lt;&#x2F;repository&gt;<br>    &lt;&#x2F;repositories&gt;<br><br>    &lt;pluginRepositories&gt;<br>        &lt;pluginRepository&gt;<br>            &lt;id&gt;aliyun-plugin&lt;&#x2F;id&gt;<br>            &lt;url&gt;https:&#x2F;&#x2F;maven.aliyun.com&#x2F;repository&#x2F;public&lt;&#x2F;url&gt;<br>            &lt;releases&gt;<br>                &lt;enabled&gt;true&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;releases&gt;<br>            &lt;snapshots&gt;<br>                &lt;enabled&gt;false&lt;&#x2F;enabled&gt;<br>            &lt;&#x2F;snapshots&gt;<br>        &lt;&#x2F;pluginRepository&gt;<br>    &lt;&#x2F;pluginRepositories&gt;<br><br>    &lt;profiles&gt;<br>        &lt;profile&gt;<br>            &lt;id&gt;dev&lt;&#x2F;id&gt;<br>            &lt;properties&gt;<br>                &lt;!-- 环境标识，需要与配置文件的名称相对应 --&gt;<br>                &lt;profiles.active&gt;dev&lt;&#x2F;profiles.active&gt;<br>            &lt;&#x2F;properties&gt;<br>            &lt;activation&gt;<br>                &lt;!-- 默认环境 --&gt;<br>                &lt;activeByDefault&gt;true&lt;&#x2F;activeByDefault&gt;<br>            &lt;&#x2F;activation&gt;<br>        &lt;&#x2F;profile&gt;<br>    &lt;&#x2F;profiles&gt;<br><br>&lt;&#x2F;project&gt;<br></code></pre></td></tr></table></figure>
 
 <p>删除其src文件夹</p>
+<p>注意版本SpringBoot、springCloud、SpringCloudAlibaba的版本搭配</p>
+<h2 id="组件版本关系"><a href="#组件版本关系" class="headerlink" title="组件版本关系"></a>组件版本关系</h2><table>
+<thead>
+<tr>
+<th>Spring Cloud Alibaba Version</th>
+<th>Sentinel Version</th>
+<th>Nacos Version</th>
+<th>RocketMQ Version</th>
+<th>Dubbo Version</th>
+<th align="center">Seata Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2.2.3.RELEASE or 2.1.3.RELEASE or 2.0.3.RELEASE</td>
+<td>1.8.0</td>
+<td>1.3.3</td>
+<td>4.4.0</td>
+<td>2.7.8</td>
+<td align="center">1.3.0</td>
+</tr>
+<tr>
+<td>2.2.1.RELEASE or 2.1.2.RELEASE or 2.0.2.RELEASE</td>
+<td>1.7.1</td>
+<td>1.2.1</td>
+<td>4.4.0</td>
+<td>2.7.6</td>
+<td align="center">1.2.0</td>
+</tr>
+<tr>
+<td>2.2.0.RELEASE</td>
+<td>1.7.1</td>
+<td>1.1.4</td>
+<td>4.4.0</td>
+<td>2.7.4.1</td>
+<td align="center">1.0.0</td>
+</tr>
+<tr>
+<td>2.1.1.RELEASE or 2.0.1.RELEASE or 1.5.1.RELEASE</td>
+<td>1.7.0</td>
+<td>1.1.4</td>
+<td>4.4.0</td>
+<td>2.7.3</td>
+<td align="center">0.9.0</td>
+</tr>
+<tr>
+<td>2.1.0.RELEASE or 2.0.0.RELEASE or 1.5.0.RELEASE</td>
+<td>1.6.3</td>
+<td>1.1.1</td>
+<td>4.4.0</td>
+<td>2.7.3</td>
+<td align="center">0.7.1</td>
+</tr>
+</tbody></table>
+<h2 id="毕业版本依赖关系-推荐使用"><a href="#毕业版本依赖关系-推荐使用" class="headerlink" title="毕业版本依赖关系(推荐使用)"></a>毕业版本依赖关系(推荐使用)</h2><table>
+<thead>
+<tr>
+<th>Spring Cloud Version</th>
+<th>Spring Cloud Alibaba Version</th>
+<th>Spring Boot Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Spring Cloud Hoxton.SR8</td>
+<td>2.2.3.RELEASE</td>
+<td>2.3.2.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Greenwich.SR6</td>
+<td>2.1.3.RELEASE</td>
+<td>2.1.13.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Hoxton.SR3</td>
+<td>2.2.1.RELEASE</td>
+<td>2.2.5.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Hoxton.RELEASE</td>
+<td>2.2.0.RELEASE</td>
+<td>2.2.X.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Greenwich</td>
+<td>2.1.2.RELEASE</td>
+<td>2.1.X.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Finchley</td>
+<td>2.0.3.RELEASE</td>
+<td>2.0.X.RELEASE</td>
+</tr>
+<tr>
+<td>Spring Cloud Edgware</td>
+<td>1.5.1.RELEASE(停止维护，建议升级)</td>
+<td>1.5.X.RELEASE</td>
+</tr>
+</tbody></table>
+<p>顺带提一个需要注意的点，<font color=red>低版本的spring-cloud-alibaba-dependencies和高版本的group-id是不同的</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221195213323.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221195253428.png"></p>
 <h2 id="创建子项目"><a href="#创建子项目" class="headerlink" title="创建子项目"></a>创建子项目</h2><p>右键nacos项目，new-&gt;module</p>
 <p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221173722014.png"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221173849254.png"></p>
-<p>需要使用nacos配置功能需要引入spring-cloud-starter-alibaba-nacos-config依赖，</p>
-<p>需要使用nacos注册功能需要引入spring-cloud-starter-alibaba-nacos-discovery依赖</p>
+<p>需要使用nacos配置功能需要引入<code>spring-cloud-starter-alibaba-nacos-config</code>依赖，</p>
+<p>需要使用nacos注册功能需要引入<code>spring-cloud-starter-alibaba-nacos-discovery</code>依赖</p>
 <h2 id="子项目引入依赖"><a href="#子项目引入依赖" class="headerlink" title="子项目引入依赖"></a>子项目引入依赖</h2><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;<br>&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;<br>         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;<br>         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;<br><br>    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;<br>    &lt;artifactId&gt;api-provider&lt;&#x2F;artifactId&gt;<br><br>    &lt;parent&gt;<br>        &lt;artifactId&gt;nacos&lt;&#x2F;artifactId&gt;<br>        &lt;groupId&gt;cn.javayuli&lt;&#x2F;groupId&gt;<br>        &lt;version&gt;1.0.0&lt;&#x2F;version&gt;<br>    &lt;&#x2F;parent&gt;<br><br>    &lt;properties&gt;<br>        &lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;<br>    &lt;&#x2F;properties&gt;<br><br>    &lt;dependencies&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>        &lt;!-- nacos配置依赖 --&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>		&lt;!-- nacos注册依赖 --&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>    &lt;&#x2F;dependencies&gt;<br><br>    &lt;!--maven的插件--&gt;<br>    &lt;build&gt;<br>        &lt;plugins&gt;<br>            &lt;plugin&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-maven-plugin&lt;&#x2F;artifactId&gt;<br>            &lt;&#x2F;plugin&gt;<br><br>        &lt;&#x2F;plugins&gt;<br>    &lt;&#x2F;build&gt;<br>&lt;&#x2F;project&gt;<br></code></pre></td></tr></table></figure>
 
 <p>子项目新增启动类<code>ProviderApplication.java</code></p>
 <p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221180819858.png"></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli;<br><br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;<br><span class="hljs-keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 生产者</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-meta">@EnableDiscoveryClient</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProviderApplication</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        SpringApplication.run(ProviderApplication.class, args);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 
-<p>增加测试类TestController.java</p>
+<p>增加测试类<code>TestController.java</code></p>
 <p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221181128070.png"></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.controller;<br><br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.cloud.context.config.annotation.RefreshScope;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 测试获取nacos中的配置</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/config&quot;)</span><br><span class="hljs-meta">@RefreshScope</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestController</span> </span>&#123;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;useLocalCache:false&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> useLocalCache;<br><br>    <span class="hljs-meta">@RequestMapping(&quot;/get&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> useLocalCache;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>api-provider项目增加bootstrap.yml配置</p>
+<p><code>api-provider</code>项目增加<code>bootstrap.yml</code>配置</p>
 <p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221174658787.png"></p>
 <figure class="highlight yml"><table><tr><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">@artifactId@</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><span class="hljs-string">:8848</span><br>      <span class="hljs-attr">config:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">$&#123;spring.cloud.nacos.discovery.server-addr&#125;</span><br>        <span class="hljs-attr">file-extension:</span> <span class="hljs-string">yml</span><br>  <span class="hljs-attr">profiles:</span><br>    <span class="hljs-attr">active:</span> <span class="hljs-string">@profiles.active@</span><br></code></pre></td></tr></table></figure>
 
-<p>spring.application.name表示应用的名称</p>
-<p>spring.cloud.nacos.discovery.server-addr表示注册中心的地址</p>
-<p>spring.cloud.nacos.config.server-addr表示配置中心的地址</p>
-<p>spring.cloud.nacos.config.file-extension表示配置内容的数据格式，目前只支持 <code>properties</code> 和 <code>yaml</code> 类型。</p>
-<p>spring.profiles.active表示当前项目激活的配置文件，如果值为dev，那么在普通SpringBoot项目中激活的配置文件就是application-dev.properties或者application-dev.yml。这里<code>@profiles.active@</code>表示从pom.xml中获取到的变量值（这个值在父pom中已配置）。</p>
+<p><code>spring.application.name</code>表示应用的名称</p>
+<p><code>spring.cloud.nacos.discovery.server-addr</code>表示注册中心的地址</p>
+<p><code>spring.cloud.nacos.config.server-addr</code>表示配置中心的地址</p>
+<p><code>spring.cloud.nacos.config.file-extension</code>表示配置内容的数据格式，目前只支持 <code>properties</code> 和 <code>yaml</code> 类型。</p>
+<p><code>spring.profiles.active</code>表示当前项目激活的配置文件，如果值为dev，那么在普通SpringBoot项目中激活的配置文件就是<code>application-dev.properties</code>或者<code>application-dev.yml</code>。这里<code>@profiles.active@</code>表示从pom.xml中获取到的变量值（这个值在父pom中已配置）。</p>
 <h1 id="Nacos添加配置"><a href="#Nacos添加配置" class="headerlink" title="Nacos添加配置"></a>Nacos添加配置</h1><p>启动Nacos后，在浏览器打开localhost:8848/nacos，并输入用户名nacos和密码nacos进入管理中心。</p>
 <p>点击右侧加号添加配置</p>
 <p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221175617205.png"></p>
@@ -1474,8 +1725,8 @@
       </categories>
       <tags>
         <tag>分布式</tag>
-        <tag>大数据</tag>
         <tag>HBase</tag>
+        <tag>大数据</tag>
       </tags>
   </entry>
   <entry>
@@ -2056,8 +2307,8 @@
       </categories>
       <tags>
         <tag>分布式</tag>
-        <tag>Hadoop</tag>
         <tag>大数据</tag>
+        <tag>Hadoop</tag>
       </tags>
   </entry>
   <entry>
