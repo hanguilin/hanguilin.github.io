@@ -1725,8 +1725,8 @@
       </categories>
       <tags>
         <tag>分布式</tag>
-        <tag>HBase</tag>
         <tag>大数据</tag>
+        <tag>HBase</tag>
       </tags>
   </entry>
   <entry>
@@ -2307,8 +2307,8 @@
       </categories>
       <tags>
         <tag>分布式</tag>
-        <tag>大数据</tag>
         <tag>Hadoop</tag>
+        <tag>大数据</tag>
       </tags>
   </entry>
   <entry>

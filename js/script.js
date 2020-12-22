@@ -527,6 +527,87 @@
 			default:
 				action.initLightPreview()
 		}
+  },
+  hintSequence: function () {
+    // 检查用户是否被引导过
+    var beGuide = localStorage.getItem('be-guide')
+    if (beGuide === 'true') {
+      // 是则跳过新手引导
+      return
+    }
+    var enjoyhint_instance = new EnjoyHint({});
+    // 获取当前主题
+    var mode = localStorage.getItem('color-mode') || 'light'
+
+    // 引导步骤
+    var enjoyhint_script_steps = []
+    // 引导元素数组
+    var guideElemArr = []
+
+    var j_navbar_qrcode_elem = `#${mode}-j-navbar-qrcode`
+    var color_toggle_elem = `#${mode}-color-toggle`
+    var danmu_toggle_elem = `#${mode}-danmu-toggle`
+    var j_navbar_menu_elem = `#${mode}-j-navbar-menu`
+    var scroll_elem = `#${mode}-iconMouse`
+
+    // 将所有引导元素装入数组
+    guideElemArr.push(j_navbar_qrcode_elem, color_toggle_elem, danmu_toggle_elem, j_navbar_menu_elem, scroll_elem)
+    console.log(guideElemArr)
+    guideElemArr.forEach(e => {
+      // 被引导元素点击时，关闭新手引导
+      $(e).click(function() {
+        action.removeSequence()
+      })
+    })
+    
+    var j_navbar_qrcode_step = {}
+    var j_navbar_qrcode = `next ${j_navbar_qrcode_elem}`
+    j_navbar_qrcode_step[j_navbar_qrcode] = '欢迎来到我博客，这里是我的交友方式~'
+    j_navbar_qrcode_step['skipButton'] = {className: "mySkip", text: "狠心跳过"}
+    j_navbar_qrcode_step['nextButton'] = {className: "myNext", text: "好的~"}
+    enjoyhint_script_steps.push(j_navbar_qrcode_step)
+
+    var color_toggle_step = {}
+    var color_toggle = `next ${color_toggle_elem}`
+    color_toggle_step[color_toggle] = '这里可以切换主题~'
+    color_toggle_step['skipButton'] = {className: "mySkip", text: "狠心跳过"}
+    color_toggle_step['nextButton'] = {className: "myNext", text: "好的~"}
+    enjoyhint_script_steps.push(color_toggle_step)
+
+
+    var danmu_toggle_step = {}
+    var danmu_toggle = `next ${danmu_toggle_elem}`
+    danmu_toggle_step[danmu_toggle] = '这里可以切换显示弹幕~'
+    danmu_toggle_step['skipButton'] = {className: "mySkip", text: "狠心跳过"}
+    danmu_toggle_step['nextButton'] = {className: "myNext", text: "好的~"}
+    enjoyhint_script_steps.push(danmu_toggle_step)
+
+
+    var j_navbar_menu_step = {}
+    var j_navbar_menu = `next ${j_navbar_menu_elem}`
+    j_navbar_menu_step[j_navbar_menu] = '这里是主菜单~'
+    j_navbar_menu_step['skipButton'] = {className: "mySkip", text: "狠心跳过"}
+    j_navbar_menu_step['nextButton'] = {className: "myNext", text: "好的~"}
+    enjoyhint_script_steps.push(j_navbar_menu_step)
+
+
+    var scroll_step = {}
+    var scroll = `next ${scroll_elem}`
+    scroll_step[scroll] = '下滑开始你的旅行吧~'
+    scroll_step['shape'] = 'circle'
+    scroll_step['radius'] = 70
+    scroll_step['showSkip'] = false
+    scroll_step['nextButton'] = {className: "myNext", text: "comeon!"}
+    enjoyhint_script_steps.push(scroll_step)
+
+    enjoyhint_instance.set(enjoyhint_script_steps);
+    enjoyhint_instance.run();
+    localStorage.setItem('be-guide', 'true')
+  },
+  removeSequence: function() {
+    if ($('.enjoyhint').is(':visible')) {
+      $('.enjoyhint').remove()
+    }
   }
 }
 
@@ -540,6 +621,7 @@
     action.scroolToTop();
     action.focusSearch();
     action.listenSearch();
+    action.hintSequence();
 
     danmu.initDanmu();
     danmu.toggleDanmu();
