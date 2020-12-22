@@ -3307,6 +3307,51 @@
       </tags>
   </entry>
   <entry>
+    <title>理解JAVA内存模型</title>
+    <url>/2020/12/04/%E7%90%86%E8%A7%A3JAVA%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</url>
+    <content><![CDATA[<h1 id="一、关于JAVA内存模型"><a href="#一、关于JAVA内存模型" class="headerlink" title="一、关于JAVA内存模型"></a>一、关于JAVA内存模型</h1><p>JAVA内存模型是java基础，每个开发人员都需要有一定的了解，只有更好更多的了解底层的东西，才能促进自己更好的进步。</p>
+<p>本文记录的是JDK1.8之前的内存模型。在java中，主要将内存分为以下几块：</p>
+<p>（1）<strong>堆（Heap）</strong></p>
+<p>是内存区域中最大的一块，被所有线程共享，用来存放new出来的实例对象。</p>
+<p>（2）<strong>栈 (Stack)</strong></p>
+<p>分为Java虚拟机栈和本地方法栈。</p>
+<p><strong>Java虚拟机栈 (JVM Stack)：</strong></p>
+<p>每个JVM线程都有一个私有栈，用来执行Java方法。</p>
+<p><strong>本地方法栈 (Native Method Stacks)：</strong></p>
+<p>与虚拟机栈所发挥的作用是非常相似的，其<strong>区别</strong>不过是<strong>虚拟机栈为虚拟机执行Java方法（也就是字节码）服务</strong>，而<strong>本地方法栈则是为虚拟机使用到的Native方法服务</strong>。</p>
+<p>（3）<strong>方法区</strong></p>
+<p>用来存放虚拟机加载的类的信息，静态变量、常量。</p>
+<p>（4）<strong>程序计数器</strong></p>
+<p>程序计数器就是记录当前线程执行程序的位置，改变计数器的值来确定执行的下一条指令，比如循环、分支、方法跳转、异常处理，线程恢复都是依赖程序计数器来完成。</p>
+<p><img src="https://img-blog.csdnimg.cn/20191227135912460.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<h1 id="二、JVM常用参数"><a href="#二、JVM常用参数" class="headerlink" title="二、JVM常用参数"></a>二、JVM常用参数</h1><p>-Xms 初始堆大小</p>
+<p>-Xmx 最大堆大小</p>
+<p>-Xmn 年轻代大小</p>
+<p>-XX:PermSize 永久代初始值</p>
+<p>-XX:MaxPermSize 永久代最大值</p>
+<p>-XX:NewRatio 年轻代与老年代的比值</p>
+<p>-XX:SurvivorRatio Eden区与Survivor区的大小比值</p>
+<p>-XX:+PrintGCDateStamps 打印gc时间</p>
+<p>-XX:+PrintGCDetails 打印gc日志</p>
+<p>-Xloggc:../tomcat_gc.log gc日志位置</p>
+<h1 id="三、参数设定位置"><a href="#三、参数设定位置" class="headerlink" title="三、参数设定位置"></a>三、参数设定位置</h1><p>以windows中的tomcat部署为例：</p>
+<p>编辑bin目录下的catalina.bat文件，在文件头部加上</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">set CATALINA_OPTS&#x3D;-XX:+PrintGCDateStamps -XX:+PrintGCDetails -Xloggc:..&#x2F;tomcat_gc.log<br></code></pre></td></tr></table></figure>
+
+<p>启动tomcat服务，执行gc后，生成gc日志</p>
+<p><img src="https://img-blog.csdnimg.cn/20200107140456558.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+<p> <img src="https://img-blog.csdnimg.cn/20200107140542174.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
+]]></content>
+      <categories>
+        <category>Jvm</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Jvm</tag>
+        <tag>内存模型</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>线程池原理及使用方式</title>
     <url>/2020/12/07/%E6%B5%85%E8%B0%88Java%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/</url>
     <content><![CDATA[<h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><ul>
@@ -3410,51 +3455,6 @@
       <tags>
         <tag>Java</tag>
         <tag>线程池</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>理解JAVA内存模型</title>
-    <url>/2020/12/04/%E7%90%86%E8%A7%A3JAVA%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</url>
-    <content><![CDATA[<h1 id="一、关于JAVA内存模型"><a href="#一、关于JAVA内存模型" class="headerlink" title="一、关于JAVA内存模型"></a>一、关于JAVA内存模型</h1><p>JAVA内存模型是java基础，每个开发人员都需要有一定的了解，只有更好更多的了解底层的东西，才能促进自己更好的进步。</p>
-<p>本文记录的是JDK1.8之前的内存模型。在java中，主要将内存分为以下几块：</p>
-<p>（1）<strong>堆（Heap）</strong></p>
-<p>是内存区域中最大的一块，被所有线程共享，用来存放new出来的实例对象。</p>
-<p>（2）<strong>栈 (Stack)</strong></p>
-<p>分为Java虚拟机栈和本地方法栈。</p>
-<p><strong>Java虚拟机栈 (JVM Stack)：</strong></p>
-<p>每个JVM线程都有一个私有栈，用来执行Java方法。</p>
-<p><strong>本地方法栈 (Native Method Stacks)：</strong></p>
-<p>与虚拟机栈所发挥的作用是非常相似的，其<strong>区别</strong>不过是<strong>虚拟机栈为虚拟机执行Java方法（也就是字节码）服务</strong>，而<strong>本地方法栈则是为虚拟机使用到的Native方法服务</strong>。</p>
-<p>（3）<strong>方法区</strong></p>
-<p>用来存放虚拟机加载的类的信息，静态变量、常量。</p>
-<p>（4）<strong>程序计数器</strong></p>
-<p>程序计数器就是记录当前线程执行程序的位置，改变计数器的值来确定执行的下一条指令，比如循环、分支、方法跳转、异常处理，线程恢复都是依赖程序计数器来完成。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191227135912460.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<h1 id="二、JVM常用参数"><a href="#二、JVM常用参数" class="headerlink" title="二、JVM常用参数"></a>二、JVM常用参数</h1><p>-Xms 初始堆大小</p>
-<p>-Xmx 最大堆大小</p>
-<p>-Xmn 年轻代大小</p>
-<p>-XX:PermSize 永久代初始值</p>
-<p>-XX:MaxPermSize 永久代最大值</p>
-<p>-XX:NewRatio 年轻代与老年代的比值</p>
-<p>-XX:SurvivorRatio Eden区与Survivor区的大小比值</p>
-<p>-XX:+PrintGCDateStamps 打印gc时间</p>
-<p>-XX:+PrintGCDetails 打印gc日志</p>
-<p>-Xloggc:../tomcat_gc.log gc日志位置</p>
-<h1 id="三、参数设定位置"><a href="#三、参数设定位置" class="headerlink" title="三、参数设定位置"></a>三、参数设定位置</h1><p>以windows中的tomcat部署为例：</p>
-<p>编辑bin目录下的catalina.bat文件，在文件头部加上</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">set CATALINA_OPTS&#x3D;-XX:+PrintGCDateStamps -XX:+PrintGCDetails -Xloggc:..&#x2F;tomcat_gc.log<br></code></pre></td></tr></table></figure>
-
-<p>启动tomcat服务，执行gc后，生成gc日志</p>
-<p><img src="https://img-blog.csdnimg.cn/20200107140456558.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-<p> <img src="https://img-blog.csdnimg.cn/20200107140542174.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70"></p>
-]]></content>
-      <categories>
-        <category>Jvm</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Jvm</tag>
-        <tag>内存模型</tag>
       </tags>
   </entry>
   <entry>

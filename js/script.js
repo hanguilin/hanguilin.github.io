@@ -533,9 +533,9 @@
     var beGuide = localStorage.getItem('be-guide')
     if (beGuide === 'true') {
       // 是则跳过新手引导
-      return
+      // return
     }
-    var enjoyhint_instance = new EnjoyHint({});
+
     // 获取当前主题
     var mode = localStorage.getItem('color-mode') || 'light'
 
@@ -549,6 +549,13 @@
     var danmu_toggle_elem = `#${mode}-danmu-toggle`
     var j_navbar_menu_elem = `#${mode}-j-navbar-menu`
     var scroll_elem = `#${mode}-iconMouse`
+
+    var enjoyhint_instance = new EnjoyHint({
+      onEnd: function() {
+        // 步骤结束时触发界面下滑
+        $(scroll_elem).trigger('click')
+      }
+    });
 
     // 将所有引导元素装入数组
     guideElemArr.push(j_navbar_qrcode_elem, color_toggle_elem, danmu_toggle_elem, j_navbar_menu_elem, scroll_elem)
@@ -597,7 +604,7 @@
     scroll_step['shape'] = 'circle'
     scroll_step['radius'] = 70
     scroll_step['showSkip'] = false
-    scroll_step['nextButton'] = {className: "myNext", text: "comeon!"}
+    scroll_step['nextButton'] = {className: `${mode}-scrollMouse`, text: "comeon!"}
     enjoyhint_script_steps.push(scroll_step)
 
     enjoyhint_instance.set(enjoyhint_script_steps);
