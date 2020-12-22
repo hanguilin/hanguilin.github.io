@@ -533,7 +533,7 @@
     var beGuide = localStorage.getItem('be-guide')
     if (beGuide === 'true') {
       // 是则跳过新手引导
-      // return
+      return
     }
 
     // 获取当前主题
