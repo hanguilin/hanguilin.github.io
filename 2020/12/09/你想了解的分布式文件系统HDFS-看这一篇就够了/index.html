@@ -165,10 +165,10 @@
   
 
 
-	<nav class="han-navbar row">
+	<nav class="han-navbar post-navbar row">
 		<div class="left col-lg-8 col-md-8 col-sm-8 col-10">
       <div class="row">
-        <div class="col-lg-1 col-md-2 col-sm-3 col-3">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-5">
           
             <i class="iconfont iconqrcode j-navbar-qrcode"></i>
             
@@ -213,9 +213,9 @@
 </nav>
   <main id="main">
   <div class="article-wrap">
-    <div class="row container-fluid">
-      <div class="col-lg-2 col-md-2 col-xl-2 col-sm-2"></div>
-      <div class="col-lg-8 col-md-8 col-xl-8 col-sm-8"><article class="article">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-8 offset-xl-2 col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-sm-12"><article class="article">
   <div class="wrap">
     <section class="head">
   <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/222204-1515594124525e.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
@@ -511,15 +511,16 @@
     </section>
   </div>
 </article></div>
-      <div class="col-lg-2 col-md-2 col-xl-2 col-sm-2 toc-warp-col">
-        
+        <div class="col-xl-2 col-lg-2 col-md-2 d-xl-block d-lg-block d-md-block d-sm-none d-none toc-wrap-col">
           
+            
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
     <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-text">1、分布式文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E9%9B%86%E7%BE%A4%E7%BB%93%E6%9E%84"><span class="toc-text">计算机集群结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-text">分布式文件系统的结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81HDFS%E7%AE%80%E4%BB%8B"><span class="toc-text">2、HDFS简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81HDFS%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-text">3、HDFS相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%97"><span class="toc-text">块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%EF%BC%88NameNode%EF%BC%89%E5%92%8C%E6%95%B0%E6%8D%AE%E8%8A%82%E7%82%B9-DataNode"><span class="toc-text">名称节点（NameNode）和数据节点(DataNode)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">名称节点的数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FsImage"><span class="toc-text">FsImage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%E7%9A%84%E5%90%AF%E5%8A%A8"><span class="toc-text">名称节点的启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%E8%BF%90%E8%A1%8C%E6%9C%9F%E9%97%B4EditLog%E4%B8%8D%E6%96%AD%E5%8F%98%E5%A4%A7%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">名称节点运行期间EditLog不断变大的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%8A%82%E7%82%B9%EF%BC%88DataNode%EF%BC%89"><span class="toc-text">数据节点（DataNode）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81HDFS%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="toc-text">4、HDFS体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="toc-text">HDFS命名空间管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="toc-text">通信协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-text">HDFS体系结构的局限性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81HDFS%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86"><span class="toc-text">5、HDFS存储原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%97%E4%BD%99%E6%95%B0%E6%8D%AE%E4%BF%9D%E5%AD%98"><span class="toc-text">冗余数据保存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%8F%96%E7%AD%96%E7%95%A5"><span class="toc-text">数据存取策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E6%94%BE"><span class="toc-text">数据存放</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96"><span class="toc-text">数据读取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%94%99%E8%AF%AF%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="toc-text">数据错误与恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E8%8A%82%E7%82%B9%E5%87%BA%E9%94%99"><span class="toc-text">名称节点出错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%8A%82%E7%82%B9%E5%87%BA%E9%94%99"><span class="toc-text">数据节点出错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%87%BA%E9%94%99"><span class="toc-text">数据出错</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6%E3%80%81HDFS%E8%AF%BB%E5%86%99%E8%BF%87%E7%A8%8B"><span class="toc-text">6、HDFS读写过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6"><span class="toc-text">读取文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6"><span class="toc-text">写入文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7%E3%80%81HDFS%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5"><span class="toc-text">7、HDFS编程实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A6%96%E5%85%88%E5%90%AF%E5%8A%A8hadoop"><span class="toc-text">首先启动hadoop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-text">实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB%E7%AE%A1%E7%90%86%E7%95%8C%E9%9D%A2"><span class="toc-text">WEB管理界面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8Java-API%E4%B8%8EHDFS%E8%BF%9B%E8%A1%8C%E4%BA%A4%E4%BA%92"><span class="toc-text">利用Java API与HDFS进行交互</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E5%B0%BE"><span class="toc-text">结尾</span></a></li></ol>
   </aside>
 
-        
+          
+        </div>
       </div>
     </div>
   </div>
