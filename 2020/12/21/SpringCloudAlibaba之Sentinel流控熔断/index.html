@@ -220,7 +220,7 @@
         <div class="col-xl-8 offset-xl-2 col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-sm-12"><article class="article">
   <div class="wrap">
     <section class="head">
-  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/212253-1515590573a565.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/190705-16080304255549.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
     <h1 class="head-title">SpringCloudAlibaba之Sentinel流控熔断</h1>
     <div class="head-info">
@@ -230,7 +230,7 @@
           <i class="iconfont iconeye"></i><span id="/2020/12/21/SpringCloudAlibaba%E4%B9%8BSentinel%E6%B5%81%E6%8E%A7%E7%86%94%E6%96%AD/" class="leancloud" data-flag-title="SpringCloudAlibaba之Sentinel流控熔断"></span>
         </span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>5964</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>8721</span>
     </div>
   </div>
 </section>
@@ -263,7 +263,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">|--timestamp-|------date time----|--resource-|p |block|s |e|rt<br>1608555871000|2020-12-21 21:04:31|&#x2F;getSource|10|0|10|0|42|0|0|1<br>1608555871000|2020-12-21 21:04:31|HelloWorld|10|0|10|0|0|0|0|0<br>1608555871000|2020-12-21 21:04:31|__total_inbound_traffic__|10|0|10|0|42|0|0|0<br>1608555872000|2020-12-21 21:04:32|&#x2F;getSource|20|0|20|0|1|0|0|1<br>1608555872000|2020-12-21 21:04:32|HelloWorld|15|5|15|0|0|0|0|0<br>1608555872000|2020-12-21 21:04:32|__total_inbound_traffic__|20|0|20|0|1|0|0|0<br></code></pre></td></tr></table></figure>
 
 <p>其中 <code>p</code> 代表通过的请求, <code>block</code> 代表被阻止的请求, <code>s</code> 代表成功执行完成的请求个数, <code>e</code> 代表用户自定义的异常, <code>rt</code> 代表平均响应时长。</p>
-<h1 id="4-支持注解"><a href="#4-支持注解" class="headerlink" title="4.支持注解"></a>4.支持注解</h1><p>Sentinel 提供了 <code>@SentinelResource</code> 注解用于定义资源，并提供了 AspectJ 的扩展用于自动定义资源、处理 <code>BlockException</code> 等</p>
+<h1 id="4-熔断降级"><a href="#4-熔断降级" class="headerlink" title="4.熔断降级"></a>4.熔断降级</h1><p>Sentinel 提供了 <code>@SentinelResource</code> 注解用于定义资源，并提供了 AspectJ 的扩展用于自动定义资源、处理 <code>BlockException</code> 等</p>
 <p><code>@SentinelResource</code> 用于定义资源，并提供可选的异常处理和 fallback 配置项。 <code>@SentinelResource</code> 注解包含以下属性：</p>
 <ul>
 <li><p><code>value</code>：资源名称，必需项（不能为空）</p>
@@ -304,6 +304,68 @@
 <h3 id="AspectJ"><a href="#AspectJ" class="headerlink" title="AspectJ"></a>AspectJ</h3><p>若您的应用直接使用了 AspectJ，那么您需要在 <code>aop.xml</code> 文件中引入对应的 Aspect：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;aspects&gt;<br>    &lt;aspect name&#x3D;&quot;com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect&quot;&#x2F;&gt;<br>&lt;&#x2F;aspects&gt;<br></code></pre></td></tr></table></figure>
 
+<h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * hello</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> s</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SentinelResource(value = &quot;hello&quot;, blockHandler = &quot;exceptionHandler&quot;, fallback = &quot;helloFallback&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">hello</span><span class="hljs-params">(<span class="hljs-keyword">long</span> s)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (s == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;error&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> String.format(<span class="hljs-string">&quot;Hello at %d&quot;</span>, s);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Fallback 函数，函数签名与原函数一致或加一个 Throwable 类型的参数.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> s</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">helloFallback</span><span class="hljs-params">(<span class="hljs-keyword">long</span> s)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> String.format(<span class="hljs-string">&quot;Halooooo %d&quot;</span>, s);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Block 异常处理函数，参数最后多一个 BlockException，其余与原函数一致.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> s</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> ex</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">exceptionHandler</span><span class="hljs-params">(<span class="hljs-keyword">long</span> s, BlockException ex)</span> </span>&#123;<br>    <span class="hljs-comment">// Do some log here.</span><br>    ex.printStackTrace();<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Oops, error occurred at &quot;</span> + s;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="接口测试"><a href="#接口测试" class="headerlink" title="接口测试"></a>接口测试</h3><p>传入参数1</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222133054691.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>测试结果为正常调用的结果</p>
+<p><img    class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222133146397.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">image-20201222133146396</span></p>
+<p>参数0，测试结果为回调结果</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222134202104.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h1 id="5-Sentinel控制台"><a href="#5-Sentinel控制台" class="headerlink" title="5.Sentinel控制台"></a>5.Sentinel控制台</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Sentinel 提供一个轻量级的开源控制台，它提供机器发现以及健康情况管理、监控（单机和集群），规则管理和推送的功能。另外，鉴权在生产环境中也必不可少。这里，我们将会详细讲述如何通过<a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/%E6%8E%A7%E5%88%B6%E5%8F%B0#2-%E5%90%AF%E5%8A%A8%E6%8E%A7%E5%88%B6%E5%8F%B0">简单的步骤</a>就可以使用这些功能。</p>
+<p>接下来，我们将会逐一介绍如何整合 Sentinel 核心库和 Dashboard，让它发挥最大的作用。同时我们也在阿里云上提供企业级的控制台：<a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/AHAS-Sentinel-%E6%8E%A7%E5%88%B6%E5%8F%B0">AHAS Sentinel 控制台</a>，您只需要几个简单的步骤，就能最直观地看到控制台如何实现这些功能。</p>
+<p>Sentinel 控制台包含如下功能:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/%E6%8E%A7%E5%88%B6%E5%8F%B0#4-%E6%9F%A5%E7%9C%8B%E6%9C%BA%E5%99%A8%E5%88%97%E8%A1%A8%E4%BB%A5%E5%8F%8A%E5%81%A5%E5%BA%B7%E6%83%85%E5%86%B5"><strong>查看机器列表以及健康情况</strong></a>：收集 Sentinel 客户端发送的心跳包，用于判断机器是否在线。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/%E6%8E%A7%E5%88%B6%E5%8F%B0#5-%E7%9B%91%E6%8E%A7"><strong>监控 (单机和集群聚合)</strong></a>：通过 Sentinel 客户端暴露的监控 API，定期拉取并且聚合应用监控信息，最终可以实现秒级的实时监控。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/%E6%8E%A7%E5%88%B6%E5%8F%B0#6-%E8%A7%84%E5%88%99%E7%AE%A1%E7%90%86%E5%8F%8A%E6%8E%A8%E9%80%81"><strong>规则管理和推送</strong></a>：统一管理推送规则。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/%E6%8E%A7%E5%88%B6%E5%8F%B0#%E9%89%B4%E6%9D%83"><strong>鉴权</strong></a>：生产环境中鉴权非常重要。这里每个开发者需要根据自己的实际情况进行定制。</li>
+</ul>
+<blockquote>
+<p>注意：Sentinel 控制台目前仅支持单机部署。</p>
+</blockquote>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><ul>
+<li>jar包可以在<a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/releases">release</a>页面进行下载</li>
+<li>或者下载源码，运行时需要自行打包</li>
+</ul>
+<blockquote>
+<p><strong>注意</strong>：启动 Sentinel 控制台需要 JDK 版本为 1.8 及以上版本。</p>
+</blockquote>
+<h2 id="鉴权"><a href="#鉴权" class="headerlink" title="鉴权"></a>鉴权</h2><p>从 Sentinel 1.5.0 开始，控制台提供通用的鉴权接口 <a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/blob/master/sentinel-dashboard/src/main/java/com/alibaba/csp/sentinel/dashboard/auth/AuthService.java">AuthService</a>，用户可根据需求自行实现。</p>
+<p>从 Sentinel 1.6.0 起，Sentinel 控制台引入基本的<strong>登录</strong>功能，默认用户名和密码都是 <code>sentinel</code>。</p>
+<p>用户可以通过如下参数进行配置：</p>
+<ul>
+<li><code>-Dsentinel.dashboard.auth.username=sentinel</code> 用于指定控制台的登录用户名为 <code>sentinel</code>；</li>
+<li><code>-Dsentinel.dashboard.auth.password=123456</code> 用于指定控制台的登录密码为 <code>123456</code>；如果省略这两个参数，默认用户和密码均为 <code>sentinel</code>；</li>
+<li><code>-Dserver.servlet.session.timeout=7200</code> 用于指定 Spring Boot 服务端 session 的过期时间，如 <code>7200</code> 表示 7200 秒；<code>60m</code> 表示 60 分钟，默认为 30 分钟；</li>
+</ul>
+<p>同样也可以直接在 Spring properties 文件中进行配置。</p>
+<h2 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h2><p>使用如下命令启动控制台：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">java -Dserver.port&#x3D;8080 -Dcsp.sentinel.dashboard.server&#x3D;localhost:8080 -Dproject.name&#x3D;sentinel-dashboard -jar sentinel-dashboard.jar<br></code></pre></td></tr></table></figure>
+
+<p>如若8080端口冲突，可使用 <code>-Dserver.port=新端口</code> 进行设置。</p>
+<p>浏览器打开localhost:8080，用户名和密码均为sentinel</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222140202124.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p>在application.yml中加入如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">spring:<br>  cloud:<br>    sentinel:<br>      transport:<br>        port: 8719<br>        dashboard: localhost:8080<br></code></pre></td></tr></table></figure>
+
+<p>如果是用nacos作为配置中心，需要在nacos中配置应用的配置文件</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222141249143.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>如果我们想使用Sentinel的限流和熔断功能，除了在代码中可以硬编码外，也可直接通过控制台进行粗略的对接口进行限流和熔断。</p>
+<p>在Controller中加入测试方法，注意此Controller使用的时@RestController注解，如果是@Controller，请给方法加上@ResponseBody注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 请求资源</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@GetMapping(&quot;/testReq&quot;)</span><br><span class="hljs-meta">@SentinelResource(&quot;testSource&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">doTest</span> <span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;test&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>先调用一次该方法，方便被簇点链路收集，调用后，可在控制台-&gt;簇点链路中看到该资源</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222143641431.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>点击<code>+流控</code>新增规则</p>
+<img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222143739655.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" />
+
+<p>使用Jmeter进行测试，每秒执行10个请求</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222162100220.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>http请求</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222144632025.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>发现此处通过QPS最大限定值后，其余请求都被拒绝</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222162035491.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
 
       </section>
       <section class="extra">
@@ -379,7 +441,7 @@
             
   <aside class="toc-wrap">
     <h3 class="toc-title">文章目录：</h3>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%BC%95%E5%85%A5-Sentinel-%E4%BE%9D%E8%B5%96"><span class="toc-text">1. 引入 Sentinel 依赖</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%85%A5%E9%97%A8%E6%A1%88%E4%BE%8B"><span class="toc-text">2. 入门案例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%A3%80%E6%9F%A5%E7%BB%93%E6%9E%9C"><span class="toc-text">3.检查结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%94%AF%E6%8C%81%E6%B3%A8%E8%A7%A3"><span class="toc-text">4.支持注解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-Cloud-Alibaba"><span class="toc-text">Spring Cloud Alibaba</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-AOP"><span class="toc-text">Spring AOP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AspectJ"><span class="toc-text">AspectJ</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%BC%95%E5%85%A5-Sentinel-%E4%BE%9D%E8%B5%96"><span class="toc-text">1. 引入 Sentinel 依赖</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%85%A5%E9%97%A8%E6%A1%88%E4%BE%8B"><span class="toc-text">2. 入门案例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%A3%80%E6%9F%A5%E7%BB%93%E6%9E%9C"><span class="toc-text">3.检查结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7"><span class="toc-text">4.熔断降级</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-Cloud-Alibaba"><span class="toc-text">Spring Cloud Alibaba</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-AOP"><span class="toc-text">Spring AOP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AspectJ"><span class="toc-text">AspectJ</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DEMO"><span class="toc-text">DEMO</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95"><span class="toc-text">接口测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Sentinel%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="toc-text">5.Sentinel控制台</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-text">下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%89%B4%E6%9D%83"><span class="toc-text">鉴权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="toc-text">服务端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-text">使用</span></a></li></ol></li></ol>
   </aside>
 
           
