@@ -442,7 +442,7 @@
           }
         }
         $(".toc-link").removeClass("active");
-        $(".toc-link[href='#" + current[1] + "']").addClass("active");
+        $(".toc-link[href='#" + encodeURI(current[1]) + "']").addClass("active");
       };
       f();
     },
