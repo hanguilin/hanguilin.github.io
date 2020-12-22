@@ -91,122 +91,119 @@
           if (!data || !data.content) {
             return;
           }
-          $('#'+elem).text(data.content);
+          $('#' + elem).text(data.content);
         });
       } else if (CONFIG.preview.motto.api) {
         $.get(CONFIG.preview.motto.api, function (data) {
-          data && $('#'+elem).text(data);
+          data && $('#' + elem).text(data);
         });
       } else {
-		  var boxObj = document.getElementById(elem);
-		  if (boxObj) {
-			  new Typed(boxObj, {
-			  // 注意：输出的可以是标签，将标签当节点运行。比如下面的h2
-				strings: [CONFIG.preview.motto.default],
-				typeSpeed: 100, // 速度
-				startDelay: 500,
-				cursorChar: "_"
-			  });
-		  }
-	  }
+        var boxObj = document.getElementById(elem);
+        if (boxObj) {
+          new Typed(boxObj, {
+            // 注意：输出的可以是标签，将标签当节点运行。比如下面的h2
+            strings: [CONFIG.preview.motto.default],
+            typeSpeed: 100, // 速度
+            startDelay: 500,
+            cursorChar: "_"
+          });
+        }
+      }
 
     },
     background: function () {
       if (CONFIG.preview.background.api) {
         $(".preview-image").css("background-image", "url(" + CONFIG.preview.background.api + ")");
       }
-    },
-	beat: function () {
-	   
-	}
+    }
   }
-  
+
   var color_mode = {
-	  $rootElement: $("html"),
-	  lightColorToggle: "#light-color-toggle",
-	  darkColorToggle: "#dark-color-toggle",
-	  toggleElement: '.color-toggle',
-	  $highlightElement: $('[name=highlight-style]'),
-	  modeStorageKey: 'color-mode',
-	  mediaQueryStorageKey: 'color-mode-media-query',
-	  htmlAttribute: 'color-mode',
-	  toggleAttribute: 'color-toggle',
+    $rootElement: $("html"),
+    lightColorToggle: "#light-color-toggle",
+    darkColorToggle: "#dark-color-toggle",
+    toggleElement: '.color-toggle',
+    $highlightElement: $('[name=highlight-style]'),
+    modeStorageKey: 'color-mode',
+    mediaQueryStorageKey: 'color-mode-media-query',
+    htmlAttribute: 'color-mode',
+    toggleAttribute: 'color-toggle',
 
-	  getMediaQuery: function () {
-		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	  },
+    getMediaQuery: function () {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    },
 
-	  getModeStorage: function () {
-		return localStorage.getItem(color_mode.modeStorageKey);
-	  },
+    getModeStorage: function () {
+      return localStorage.getItem(color_mode.modeStorageKey);
+    },
 
-	  setModeStorage: function (mode) {
-		localStorage.setItem(color_mode.modeStorageKey, mode);
-	  },
+    setModeStorage: function (mode) {
+      localStorage.setItem(color_mode.modeStorageKey, mode);
+    },
 
-	  getMediaQueryStorage: function () {
-		return localStorage.getItem(color_mode.mediaQueryStorageKey);
-	  },
+    getMediaQueryStorage: function () {
+      return localStorage.getItem(color_mode.mediaQueryStorageKey);
+    },
 
-	  setMediaQueryStorage: function (mode) {
-		localStorage.setItem(color_mode.mediaQueryStorageKey, mode);
-	  },
+    setMediaQueryStorage: function (mode) {
+      localStorage.setItem(color_mode.mediaQueryStorageKey, mode);
+    },
 
-	  setColorMode: function (mode) {
-		color_mode.$rootElement.attr(color_mode.htmlAttribute, mode)
-		color_mode.setModeStorage(mode);
-	  },
+    setColorMode: function (mode) {
+      color_mode.$rootElement.attr(color_mode.htmlAttribute, mode)
+      color_mode.setModeStorage(mode);
+    },
 
-	  setIcon: function (mode) {
-		if (!$(color_mode.toggleElement)) return;
-		var addIconName = mode === 'light' ? 'iconmoono' : 'iconsuno';
-		var removeIconName = mode === 'light' ? 'iconsuno' : 'iconmoono';
-		$(color_mode.toggleElement).removeClass(removeIconName)
-		$(color_mode.toggleElement).addClass(addIconName)
-		$(color_mode.toggleElement).attr(color_mode.toggleAttribute, mode);
-	  },
+    setIcon: function (mode) {
+      if (!$(color_mode.toggleElement)) return;
+      var addIconName = mode === 'light' ? 'iconmoono' : 'iconsuno';
+      var removeIconName = mode === 'light' ? 'iconsuno' : 'iconmoono';
+      $(color_mode.toggleElement).removeClass(removeIconName)
+      $(color_mode.toggleElement).addClass(addIconName)
+      $(color_mode.toggleElement).attr(color_mode.toggleAttribute, mode);
+    },
 
-	  setHighlightStyle: function (mode) {
-		for (var i = 0; i < color_mode.$highlightElement.length; i++) {
-			var $item = color_mode.$highlightElement.eq(i)
-			$item.attr('disabled', !($item.attr('mode') === mode));
-		}
-	  },
+    setHighlightStyle: function (mode) {
+      for (var i = 0; i < color_mode.$highlightElement.length; i++) {
+        var $item = color_mode.$highlightElement.eq(i)
+        $item.attr('disabled', !($item.attr('mode') === mode));
+      }
+    },
 
-	  loadColorMode: function (mode) {
-		var mode = mode || color_mode.getModeStorage() || color_mode.getMediaQuery();
-		if (color_mode.getMediaQuery() === color_mode.getMediaQueryStorage()) {
-		  mode = color_mode.getModeStorage();
-		} else {
-		  mode = color_mode.getMediaQuery();
-		  color_mode.setMediaQueryStorage(mode);
-		}
+    loadColorMode: function (mode) {
+      var mode = mode || color_mode.getModeStorage() || color_mode.getMediaQuery();
+      if (color_mode.getMediaQuery() === color_mode.getMediaQueryStorage()) {
+        mode = color_mode.getModeStorage();
+      } else {
+        mode = color_mode.getMediaQuery();
+        color_mode.setMediaQueryStorage(mode);
+      }
 
-		action.previewChange(mode)
-		color_mode.setColorMode(mode);
-		color_mode.setIcon(mode);
-		color_mode.setHighlightStyle(mode);
-	  },
+      action.previewChange(mode)
+      color_mode.setColorMode(mode);
+      color_mode.setIcon(mode);
+      color_mode.setHighlightStyle(mode);
+    },
 
-	  switchColorMode: function () {
-		$(".color-toggle").click(function(){
-      danmu.closeDanmu()
-      color_mode.modeBindFun($(this))
-      danmu.startDanmuIfOpen()
-		})
-	  },
-	  modeBindFun: function (e) {
-		  color_mode.clearMotto()  
-		  var mode = e.attr(color_mode.toggleAttribute) === 'light' ? 'dark' : 'light';
-		  action.previewChange(mode)
-		  color_mode.setColorMode(mode);
-		  color_mode.setIcon(mode);
-		  color_mode.setHighlightStyle(mode);
-	  },
-	  clearMotto () {
-		  $(".preview-motto").empty()
-		  $(".typed-cursor").remove()
-	  }
+    switchColorMode: function () {
+      $(".color-toggle").click(function () {
+        danmu.closeDanmu()
+        color_mode.modeBindFun($(this))
+        danmu.startDanmuIfOpen()
+      })
+    },
+    modeBindFun: function (e) {
+      color_mode.clearMotto()
+      var mode = e.attr(color_mode.toggleAttribute) === 'light' ? 'dark' : 'light';
+      action.previewChange(mode)
+      color_mode.setColorMode(mode);
+      color_mode.setIcon(mode);
+      color_mode.setHighlightStyle(mode);
+    },
+    clearMotto() {
+      $(".preview-motto").empty()
+      $(".typed-cursor").remove()
+    }
   }
 
   var danmu = {
@@ -222,7 +219,7 @@
         if (active === 'true') {
           var $elem = $(`#${current}-bulletchat-screen`)
           getBulletChatList($elem);
-        }  
+        }
       }
     },
     toggleDanmu: function () {
@@ -288,9 +285,9 @@
     listenSearch: function () {
       $('.preview-search').keypress(function (even) {
         if (even.which == 13) {
-           ZHAOO.zui.notification({title: '功能开发中', content: '搜索功能暂未开放，敬请期待'})
+          ZHAOO.zui.notification({ title: '功能开发中', content: '搜索功能暂未开放，敬请期待' })
         }
-     });
+      });
     },
     smoothScroll: function () {
       // a[href *=#], area[href *=#]
@@ -338,10 +335,10 @@
         fn.hideMenu();
         $(".han-navbar").removeClass("out");
       });
-	  $(".menu-wrap").on("click", function () {
-		  fn.hideMenu();
-		  $(".han-navbar").removeClass("out");
-	  })
+      $(".menu-wrap").on("click", function () {
+        fn.hideMenu();
+        $(".han-navbar").removeClass("out");
+      })
     },
     scroolToTop: function () {
       $(".fab-up").on("click", function () {
@@ -489,138 +486,156 @@
         ZHAOO.zui.notification({ title: item.title, content: item.content, delay: delay });
       });
     },
-	initLightPreview: function () {
-	  $("#dark-preview").css('display', 'none')
-	  $("#light-preview").css('display', 'block')
-	  
+    initLightPreview: function () {
+      $("#dark-preview").css('display', 'none')
+      $("#light-preview").css('display', 'block')
+
       fn.background();
       fn.motto('light-motto');
-	  fn.beat();
     },
-	initDarkPreview: function () {
-		$("#light-preview").css('display', 'none')
-		$("#dark-preview").css('display', 'block')
+    initDarkPreview: function () {
+      $("#light-preview").css('display', 'none')
+      $("#dark-preview").css('display', 'block')
 
-		var iframeUrlArr = []
-			for (var i = 1; i <= 12; i++) {
-				iframeUrlArr.push(`/html/a${i}.html`)
-			}
-		var index = localStorage.getItem('frame_index') || 0
-		if (index >= iframeUrlArr.length) {
-			index = 0
-		} else {
-			index ++
-		}
-		$("#dark-preview-frame").attr('src', iframeUrlArr[index])
-		localStorage.setItem('frame_index', index)
-		fn.motto('dark-motto');
-		fn.beat();
-	},
-	previewChange: function (mode) {
-		switch (mode) {
-			case 'light':
-				action.initLightPreview()
-				break
-			case 'dark':
-				action.initDarkPreview()
-				break
-			default:
-				action.initLightPreview()
-		}
-  },
-  hintSequence: function () {
-    // 检查用户是否被引导过
-    var beGuide = localStorage.getItem('be-guide')
-    if (beGuide === 'true') {
-      // 是则跳过新手引导
-      return
-    }
-
-    // 获取当前主题
-    var mode = localStorage.getItem('color-mode') || 'light'
-
-    // 引导步骤
-    var enjoyhint_script_steps = []
-    // 引导元素数组
-    var guideElemArr = []
-
-    var j_navbar_qrcode_elem = `#${mode}-j-navbar-qrcode`
-    var color_toggle_elem = `#${mode}-color-toggle`
-    var danmu_toggle_elem = `#${mode}-danmu-toggle`
-    var j_navbar_menu_elem = `#${mode}-j-navbar-menu`
-    var scroll_elem = `#${mode}-iconMouse`
-
-    var enjoyhint_instance = new EnjoyHint({
-      onEnd: function() {
-        // 步骤结束时触发界面下滑
-        $(scroll_elem).trigger('click')
+      var iframeUrlArr = []
+      for (var i = 1; i <= 12; i++) {
+        iframeUrlArr.push(`/html/a${i}.html`)
       }
-    });
+      var index = localStorage.getItem('frame_index') || 0
+      if (index >= iframeUrlArr.length) {
+        index = 0
+      } else {
+        index++
+      }
+      $("#dark-preview-frame").attr('src', iframeUrlArr[index])
+      localStorage.setItem('frame_index', index)
+      fn.motto('dark-motto');
+    },
+    previewChange: function (mode) {
+      switch (mode) {
+        case 'light':
+          action.initLightPreview()
+          break
+        case 'dark':
+          action.initDarkPreview()
+          break
+        default:
+          action.initLightPreview()
+      }
+    },
+    hintSequence: function () {
 
-    // 将所有引导元素装入数组
-    guideElemArr.push(j_navbar_qrcode_elem, color_toggle_elem, danmu_toggle_elem, j_navbar_menu_elem, scroll_elem)
-    console.log(guideElemArr)
-    guideElemArr.forEach(e => {
-      // 被引导元素点击时，关闭新手引导
-      $(e).click(function() {
-        action.removeSequence()
+      if (!check.isPreview()) {
+        return
+      }
+
+      // 当前用户是否被引导过
+      var beGuide = localStorage.getItem('be-guide')
+      if (beGuide === 'true') {
+        return
+      }
+
+      // 获取当前主题
+      var mode = localStorage.getItem('color-mode') || 'light'
+
+      // 引导步骤
+      var enjoyhint_script_steps = []
+      // 引导元素数组
+      var guideElemArr = []
+
+      var j_navbar_qrcode_elem = `#${mode}-j-navbar-qrcode`
+      var color_toggle_elem = `#${mode}-color-toggle`
+      var danmu_toggle_elem = `#${mode}-danmu-toggle`
+      var j_navbar_menu_elem = `#${mode}-j-navbar-menu`
+      var scroll_elem = `#${mode}-iconMouse`
+
+      var enjoyhint_instance = new EnjoyHint({
+        onEnd: function () {
+          // 步骤结束时触发界面下滑
+          $(scroll_elem).trigger('click')
+        }
+      });
+
+      // 将所有引导元素装入数组
+      guideElemArr.push(j_navbar_qrcode_elem, color_toggle_elem, danmu_toggle_elem, j_navbar_menu_elem, scroll_elem)
+      guideElemArr.forEach(e => {
+        // 被引导元素点击时，关闭新手引导
+        $(e).click(function () {
+          action.removeSequence()
+        })
       })
-    })
-    
-    var j_navbar_qrcode_step = {}
-    var j_navbar_qrcode = `next ${j_navbar_qrcode_elem}`
-    j_navbar_qrcode_step[j_navbar_qrcode] = '欢迎来到我博客，这里是我的交友方式~'
-    j_navbar_qrcode_step['skipButton'] = {className: "mySkip", text: "狠心跳过"}
-    j_navbar_qrcode_step['nextButton'] = {className: "myNext", text: "好的~"}
-    enjoyhint_script_steps.push(j_navbar_qrcode_step)
 
-    var color_toggle_step = {}
-    var color_toggle = `next ${color_toggle_elem}`
-    color_toggle_step[color_toggle] = '这里可以切换主题~'
-    color_toggle_step['skipButton'] = {className: "mySkip", text: "狠心跳过"}
-    color_toggle_step['nextButton'] = {className: "myNext", text: "好的~"}
-    enjoyhint_script_steps.push(color_toggle_step)
+      var j_navbar_qrcode_step = {}
+      var j_navbar_qrcode = `next ${j_navbar_qrcode_elem}`
+      j_navbar_qrcode_step[j_navbar_qrcode] = '欢迎来到我博客，这里是我的交友方式~'
+      j_navbar_qrcode_step['skipButton'] = { className: "mySkip", text: "狠心跳过" }
+      j_navbar_qrcode_step['nextButton'] = { className: "myNext", text: "好的~" }
+      enjoyhint_script_steps.push(j_navbar_qrcode_step)
 
-
-    var danmu_toggle_step = {}
-    var danmu_toggle = `next ${danmu_toggle_elem}`
-    danmu_toggle_step[danmu_toggle] = '这里可以切换显示弹幕~'
-    danmu_toggle_step['skipButton'] = {className: "mySkip", text: "狠心跳过"}
-    danmu_toggle_step['nextButton'] = {className: "myNext", text: "好的~"}
-    enjoyhint_script_steps.push(danmu_toggle_step)
+      var color_toggle_step = {}
+      var color_toggle = `next ${color_toggle_elem}`
+      color_toggle_step[color_toggle] = '这里可以切换主题~'
+      color_toggle_step['skipButton'] = { className: "mySkip", text: "狠心跳过" }
+      color_toggle_step['nextButton'] = { className: "myNext", text: "好的~" }
+      enjoyhint_script_steps.push(color_toggle_step)
 
 
-    var j_navbar_menu_step = {}
-    var j_navbar_menu = `next ${j_navbar_menu_elem}`
-    j_navbar_menu_step[j_navbar_menu] = '这里是主菜单~'
-    j_navbar_menu_step['skipButton'] = {className: "mySkip", text: "狠心跳过"}
-    j_navbar_menu_step['nextButton'] = {className: "myNext", text: "好的~"}
-    enjoyhint_script_steps.push(j_navbar_menu_step)
+      var danmu_toggle_step = {}
+      var danmu_toggle = `next ${danmu_toggle_elem}`
+      danmu_toggle_step[danmu_toggle] = '这里可以切换显示弹幕~'
+      danmu_toggle_step['skipButton'] = { className: "mySkip", text: "狠心跳过" }
+      danmu_toggle_step['nextButton'] = { className: "myNext", text: "好的~" }
+      enjoyhint_script_steps.push(danmu_toggle_step)
 
 
-    var scroll_step = {}
-    var scroll = `next ${scroll_elem}`
-    scroll_step[scroll] = '下滑开始你的旅行吧~'
-    scroll_step['shape'] = 'circle'
-    scroll_step['radius'] = 70
-    scroll_step['showSkip'] = false
-    scroll_step['nextButton'] = {className: `${mode}-scrollMouse`, text: "comeon!"}
-    enjoyhint_script_steps.push(scroll_step)
+      var j_navbar_menu_step = {}
+      var j_navbar_menu = `next ${j_navbar_menu_elem}`
+      j_navbar_menu_step[j_navbar_menu] = '这里是主菜单~'
+      j_navbar_menu_step['skipButton'] = { className: "mySkip", text: "狠心跳过" }
+      j_navbar_menu_step['nextButton'] = { className: "myNext", text: "好的~" }
+      enjoyhint_script_steps.push(j_navbar_menu_step)
 
-    enjoyhint_instance.set(enjoyhint_script_steps);
-    enjoyhint_instance.run();
-    localStorage.setItem('be-guide', 'true')
-  },
-  removeSequence: function() {
-    if ($('.enjoyhint').is(':visible')) {
-      $('.enjoyhint').remove()
-      $('body').css('overflow', 'auto')
+
+      var scroll_step = {}
+      var scroll = `next ${scroll_elem}`
+      scroll_step[scroll] = '下滑开始你的旅行吧~'
+      scroll_step['shape'] = 'circle'
+      scroll_step['radius'] = 70
+      scroll_step['showSkip'] = false
+      scroll_step['nextButton'] = { className: `${mode}-scrollMouse`, text: "comeon!" }
+      enjoyhint_script_steps.push(scroll_step)
+
+      enjoyhint_instance.set(enjoyhint_script_steps);
+      enjoyhint_instance.run();
+      localStorage.setItem('be-guide', 'true')
+    },
+    removeSequence: function () {
+      if ($('.enjoyhint').is(':visible')) {
+        $('.enjoyhint').remove()
+        $('body').css('overflow', 'auto')
+      }
     }
   }
-}
+
+  var check = {
+    isPreview: function () {
+      // 获取当前主题
+      var mode = localStorage.getItem('color-mode') || 'light'
+      var $preview = $(`#${mode}-preview`)
+      // 判断页面是否首页
+      if ($preview.is(':visible')) {
+        var previewToTop = $(`#${mode}-preview`).offset().top - $(window).scrollTop()
+        // 判断预览页位于顶部
+        if (previewToTop == 0) {
+          return true
+        }
+      }
+      return false
+    }
+  }
 
   $(function () {
-	  action.showConsoleInfo();
+    action.showConsoleInfo();
     action.smoothScroll();
     action.loading();
     action.fab();
@@ -629,14 +644,16 @@
     action.scroolToTop();
     action.focusSearch();
     action.listenSearch();
-    action.hintSequence();
 
     danmu.initDanmu();
     danmu.toggleDanmu();
-	
+
     color_mode.loadColorMode();
     color_mode.switchColorMode();
-    
+
+    // 置于switchColorMode方法之后
+    action.hintSequence();
+
     CONFIG.fancybox && action.fancybox();
     CONFIG.pjax && action.pjax();
     CONFIG.lazyload.enable && action.lazyload();
