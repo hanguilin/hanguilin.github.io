@@ -607,6 +607,7 @@
   removeSequence: function() {
     if ($('.enjoyhint').is(':visible')) {
       $('.enjoyhint').remove()
+      $('body').css('overflow', 'auto')
     }
   }
 }
