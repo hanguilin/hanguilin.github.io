@@ -92,6 +92,81 @@
       </tags>
   </entry>
   <entry>
+    <title>SpringCloudGateway初探</title>
+    <url>/2020/12/23/SpringCloudGateway%E5%88%9D%E6%8E%A2/</url>
+    <content><![CDATA[<h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>SpringCloud全家桶中有个很重要的组件就是网关，在1.X版本中都是采用zuul网关，在2.X版本中，zuul的升级一直跳票，SpringCloud最后自己研发了一个网关替带zuul——SpringCloud Gateway 。换言之，gateway就是原zuul1.X版 的替代。</p>
+<p>Gateway是在spring生态系统上构建的api网关服务，基于Spring5，SpringBoot2和Project Reactor等技术。Gateway旨在提供一种简单而有效的方式来对api进行路由，以提供一些强大的过滤功能，例如熔断、限流、重试等。</p>
+<p>为了提升网关性能，SpringCloud Gateway是基于WebFlux框架实现的，而WebFlux框架底层使用了高性能的Reactor通信框架Netty。SpringCloud Gateway的目标提供统一的路由方式，且基于Filter链的方式提供了网关基本的功能，例如安全、监控/指标、限流。</p>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><p>基于Spring FremeWork5，Project Reactor和Spring Boot2.0进行构建；</p>
+<p>动态路由：能够匹配任何请求属性；</p>
+<p>可以对路由指定Predictate（断言）和Filter（过滤器）；</p>
+<p>集成Hystrix的断路器功能；</p>
+<p>集成SpringCloud的服务发现功能；</p>
+<p>请求限流功能；</p>
+<p>支持路径重写。</p>
+<h2 id="与Zuul的区别"><a href="#与Zuul的区别" class="headerlink" title="与Zuul的区别"></a>与Zuul的区别</h2><p>在SpringCloud Finchley 正式版之前，Spring Cloud推荐的网关是 Netflix提供的Zuul:</p>
+<p>1、Zuul 1.x，是一个基于阻塞I/O的API Gateway；</p>
+<p>2、Zuul 1.x基于Servlet 2.5使用阻塞架构，它不支持任何长连接(如WebSocket)。Zuul的设计模式和Nginx较像，每次I/О操作都是从工作线程中选择一个执行，请求线程被阻塞到工作线程完成，但是差别是Nginx用C++实现，Zuul用Java实现，而JVM本身会有第—次加载较慢的情况，使得Zuul的性能相对较差。</p>
+<p>3、Zuul 2.x理念更先进，想基于Netty非阻塞和支持长连接，但SpringCloud目前还没有整合。Zuul 2.x的性能较Zuul 1.x有较大提升。在性能方面，根据官方提供的基准测试，Spring Cloud Gateway的RPS(每秒请求数）是Zuul的1.6倍。</p>
+<p>4、Spring Cloud Gateway建立在Spring Framework 5、ProjectReactor和Spring Boot2之上，使用非阻塞API。</p>
+<p>5、Spring Cloud Gateway还支持WebSocket，并且与Spring紧密集成拥有更好的开发体验</p>
+<blockquote>
+<p>WebFlux</p>
+</blockquote>
+<p>传统的Web框架，比如说: struts2，springmvc等都是基于Servlet API与Servlet容器基础之上运行的。但是在Servlet3.1之后有了异步非阻塞的支持。而WebFlux是一个典型非阻塞异步的框架，它的核心是基于Reactor的相关API实现的。相对于传统的web框架来说，它可以运行在诸如Netty,Undertow及支持Servlet3.1的容器上。非阻塞式+函数式编程（Spring5必须让你使用java8）</p>
+<p>Spring WebFlux是Spring 5.0引入的新的响应式框架，区别于Spring MVC，它不需要依赖Servlet API，它是完全异步非阻塞的，并且基于Reactor来实现响应式流规范。</p>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="ROUTE（路由）"><a href="#ROUTE（路由）" class="headerlink" title="ROUTE（路由）"></a>ROUTE（路由）</h3><p>路由是构建网关的基本模块，它由ID，目标URI，一系列的断言和过滤器组成，如果断言为true，则匹配该路由。</p>
+<h3 id="PREDICATE（断言）"><a href="#PREDICATE（断言）" class="headerlink" title="PREDICATE（断言）"></a>PREDICATE（断言）</h3><p>参考的是Java8的java.util.function.Predictate，开发人员可以匹配HTTP请求中的所有内容（例如请求头或请求参数），如果请求与路由相匹配则进行路由。</p>
+<h3 id="FILTER（过滤）"><a href="#FILTER（过滤）" class="headerlink" title="FILTER（过滤）"></a>FILTER（过滤）</h3><p>指的是Spring框架中GatewayFilter的实例，使用过滤器，可以在请求被路由之前或之后对请求进行修改。</p>
+<p>web请求，通过一些匹配条件，定位到真正的服务节点，并在这个转发过程的前后，进行一些精细化控制。Predicate就是我们的匹配条件，而filter，就可以理解为一个无所不能的拦截器。有了这两个元素，再加上目标uri，就可以实现一个具体的路由。</p>
+<h2 id="GATEWEY工作流程"><a href="#GATEWEY工作流程" class="headerlink" title="GATEWEY工作流程"></a>GATEWEY工作流程</h2><p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/09fcaab25d7f444ffdcbd3fa3435501b.png"></p>
+<p>客户端向Spring Cloud Gateway发出请求。然后在Gateway Handler Mapping中找到与请求相匹配的路由，将其发送到Gateway Web Handler。</p>
+<p>Handler再通过指定的过滤器链来将请求发送到我们实际的服务执行业务逻辑，然后返回。<br>过滤器之间用虚线分开是因为过滤器可能会在发送代理请求之前（“pre”）或之后（“post”）执行业务逻辑的加强或其他处理。</p>
+<p>Filter 在 “pre” 类型的过滤器可以做参数校验、权限校验、流量监控、日志输出、协议转换等；在 “post” 类型的过滤器中可以做响应内容、响应头的修改，日志的输出，流量监控等，有着非常重要的作用</p>
+<p>Gatewey的核心逻辑就是**路由转发+执行过滤链</p>
+<h1 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h1><p>本例中使用Nacos作为注册和配置中心，系列源代码GitHub地址<a href="https://github.com/hanguilin/SpringCloudDemo">SpringCloudDemo</a></p>
+<p>创建api-gateway子项目</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201223110133035.png"></p>
+<p>完整<code>pom.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;<br>&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;<br>         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;<br>         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;<br>    &lt;parent&gt;<br>        &lt;artifactId&gt;nacos&lt;&#x2F;artifactId&gt;<br>        &lt;groupId&gt;cn.javayuli&lt;&#x2F;groupId&gt;<br>        &lt;version&gt;1.0.0&lt;&#x2F;version&gt;<br>    &lt;&#x2F;parent&gt;<br>    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;<br><br>    &lt;artifactId&gt;api-gatewey&lt;&#x2F;artifactId&gt;<br>    &lt;description&gt;api网关&lt;&#x2F;description&gt;<br><br>    &lt;dependencies&gt;<br>        &lt;!--gateway 网关依赖,内置webflux 依赖--&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-gateway&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>        &lt;!--注册中心客户端--&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>        &lt;!--配置中心客户端--&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>        &lt;!--断路器依赖--&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-sentinel&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-alibaba-sentinel-gateway&lt;&#x2F;artifactId&gt;<br>        &lt;&#x2F;dependency&gt;<br><br>    &lt;&#x2F;dependencies&gt;<br><br>    &lt;build&gt;<br>        &lt;plugins&gt;<br>            &lt;plugin&gt;<br>                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;<br>                &lt;artifactId&gt;spring-boot-maven-plugin&lt;&#x2F;artifactId&gt;<br>            &lt;&#x2F;plugin&gt;<br>        &lt;&#x2F;plugins&gt;<br>    &lt;&#x2F;build&gt;<br>&lt;&#x2F;project&gt;<br></code></pre></td></tr></table></figure>
+
+<p>启动类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.gateway;<br><br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.cloud.client.SpringCloudApplication;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 网关服务</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SpringCloudApplication</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GatewayApplication</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        SpringApplication.run(GatewayApplication.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>api-provider</code>项目作为接口提供者，提供了一个/hello接口，端口8000，访问路径<a href="http://localhost:8000/hello?s=1%E3%80%82%60api-provider%60%E9%A1%B9%E7%9B%AE%E5%9C%A8nacos%E4%B8%AD%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%90%8D%E7%A7%B0%E4%B8%BA%60api-provider%60%E3%80%82">http://localhost:8000/hello?s=1。`api-provider`项目在nacos中的服务名称为`api-provider`。</a></p>
+<p><code>api-gateway</code>配置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201223110719972.png"></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8001</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">gateway:</span><br>      <span class="hljs-attr">routes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">api-provider</span><br>        <span class="hljs-attr">uri:</span> <span class="hljs-string">lb://api-provider</span><br>        <span class="hljs-attr">predicates:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">Path=/provider/**</span><br>        <span class="hljs-attr">filters:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">RewritePath=/provider/(?&lt;segment&gt;.*),</span> <span class="hljs-string">/$\&#123;segment&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p><code>spring.cloud.gateway.routes</code>是对路由的配置</p>
+<p><code>spring.cloud.gateway.routes.id</code>是唯一的，需要自己定义，一般是用项目名称作为id</p>
+<p><code>spring.cloud.gateway.routes.uri</code>表示资源请求的真实路径</p>
+<ul>
+<li><p>lb</p>
+<p>在SpringCloud Gateway官方文档中有这么一句话</p>
+<p><code>Note that this example also demonstrates (optional) Spring Cloud Netflix Ribbon load-balancing via the lb prefix on the destination URI.</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201223112024559.png"></p>
+<p>意为如果项目中使用了Spring Cloud Netflix Ribbon，就可以用lb://${applicationName}的形式表示服务访问路径</p>
+<p>或者还可以直接使用请求路径，如<a href="http://localhost:8001/">http://localhost:8001</a></p>
+</li>
+</ul>
+<p><code>spring.cloud.gateway.routes.predicates</code> -Path表示请求路径匹配到此表达式的请求将由此规则进行转发</p>
+<p><code>spring.cloud.gateway.routes.filters</code> - RewritePath表示重写路由，此处可以将/provider/hello重写成/hello</p>
+<p>启动api-gateway与api-provider服务，无需分先后</p>
+<p>通过网关端口访问api-provider的接口</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201223111623761.png"></p>
+<p>最后放上<a href="https://docs.spring.io/spring-cloud-gateway/docs/2.2.5.RELEASE/reference/html/#gateway-request-predicates-factories">spring-cloud-gateway.2.2.RELEASE</a>的文档</p>
+]]></content>
+      <categories>
+        <category>SpringCloud</category>
+      </categories>
+      <tags>
+        <tag>SpringCloud</tag>
+        <tag>Spring Cloud Gateway</tag>
+        <tag>网关</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SpringCloudAlibaba之Sentinel介绍</title>
     <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BSentinel%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<h2 id="Sentinel-是什么"><a href="#Sentinel-是什么" class="headerlink" title="Sentinel 是什么"></a>Sentinel 是什么</h2><p>随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 是面向分布式服务架构的流量控制组件，主要以流量为切入点，从限流、流量整形、熔断降级、系统负载保护、热点防护等多个维度来帮助开发者保障微服务的稳定性。</p>
@@ -216,7 +291,8 @@
 <h3 id="AspectJ"><a href="#AspectJ" class="headerlink" title="AspectJ"></a>AspectJ</h3><p>若您的应用直接使用了 AspectJ，那么您需要在 <code>aop.xml</code> 文件中引入对应的 Aspect：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&lt;aspects&gt;<br>    &lt;aspect name&#x3D;&quot;com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect&quot;&#x2F;&gt;<br>&lt;&#x2F;aspects&gt;<br></code></pre></td></tr></table></figure>
 
-<h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * hello</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> s</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SentinelResource(value = &quot;hello&quot;, blockHandler = &quot;exceptionHandler&quot;, fallback = &quot;helloFallback&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">hello</span><span class="hljs-params">(<span class="hljs-keyword">long</span> s)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (s == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;error&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> String.format(<span class="hljs-string">&quot;Hello at %d&quot;</span>, s);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Fallback 函数，函数签名与原函数一致或加一个 Throwable 类型的参数.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> s</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">helloFallback</span><span class="hljs-params">(<span class="hljs-keyword">long</span> s)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> String.format(<span class="hljs-string">&quot;Halooooo %d&quot;</span>, s);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Block 异常处理函数，参数最后多一个 BlockException，其余与原函数一致.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> s</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> ex</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">exceptionHandler</span><span class="hljs-params">(<span class="hljs-keyword">long</span> s, BlockException ex)</span> </span>&#123;<br>    <span class="hljs-comment">// Do some log here.</span><br>    ex.printStackTrace();<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Oops, error occurred at &quot;</span> + s;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>系列源代码GitHub地址<a href="https://github.com/hanguilin/SpringCloudDemo">SpringCloudDemo</a></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * hello</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> s</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SentinelResource(value = &quot;hello&quot;, blockHandler = &quot;exceptionHandler&quot;, fallback = &quot;helloFallback&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">hello</span><span class="hljs-params">(<span class="hljs-keyword">long</span> s)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (s == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;error&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> String.format(<span class="hljs-string">&quot;Hello at %d&quot;</span>, s);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Fallback 函数，函数签名与原函数一致或加一个 Throwable 类型的参数.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> s</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">helloFallback</span><span class="hljs-params">(<span class="hljs-keyword">long</span> s)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> String.format(<span class="hljs-string">&quot;Halooooo %d&quot;</span>, s);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Block 异常处理函数，参数最后多一个 BlockException，其余与原函数一致.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> s</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> ex</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">exceptionHandler</span><span class="hljs-params">(<span class="hljs-keyword">long</span> s, BlockException ex)</span> </span>&#123;<br>    <span class="hljs-comment">// Do some log here.</span><br>    ex.printStackTrace();<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Oops, error occurred at &quot;</span> + s;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="接口测试"><a href="#接口测试" class="headerlink" title="接口测试"></a>接口测试</h3><p>传入参数1</p>
 <p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201222133054691.png"></p>
@@ -313,6 +389,7 @@
     <title>SpringCloudAlibaba之Nacos配置与注册</title>
     <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BNacos%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%B3%A8%E5%86%8C/</url>
     <content><![CDATA[<h1 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h1><p>编辑器：IDEA</p>
+<p>系列源代码GitHub地址<a href="https://github.com/hanguilin/SpringCloudDemo">SpringCloudDemo</a></p>
 <h2 id="创建父项目"><a href="#创建父项目" class="headerlink" title="创建父项目"></a>创建父项目</h2><p>File-&gt;New-&gt;Project</p>
 <img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201221171651514.png"  />
 
@@ -2148,9 +2225,9 @@
         <category>文件系统</category>
       </categories>
       <tags>
+        <tag>Hadoop</tag>
         <tag>分布式文件系统</tag>
         <tag>HDFS</tag>
-        <tag>Hadoop</tag>
       </tags>
   </entry>
   <entry>
@@ -2372,8 +2449,8 @@
       </categories>
       <tags>
         <tag>分布式</tag>
-        <tag>Hadoop</tag>
         <tag>大数据</tag>
+        <tag>Hadoop</tag>
       </tags>
   </entry>
   <entry>
