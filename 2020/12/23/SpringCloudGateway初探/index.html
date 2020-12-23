@@ -228,7 +228,7 @@
           <i class="iconfont iconeye"></i><span id="/2020/12/23/SpringCloudGateway%E5%88%9D%E6%8E%A2/" class="leancloud" data-flag-title="SpringCloudGateway初探"></span>
         </span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>6221</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>6223</span>
     </div>
   </div>
 </section>
@@ -264,7 +264,7 @@
 <p>Handler再通过指定的过滤器链来将请求发送到我们实际的服务执行业务逻辑，然后返回。<br>过滤器之间用虚线分开是因为过滤器可能会在发送代理请求之前（“pre”）或之后（“post”）执行业务逻辑的加强或其他处理。</p>
 <p>Filter 在 “pre” 类型的过滤器可以做参数校验、权限校验、流量监控、日志输出、协议转换等；在 “post” 类型的过滤器中可以做响应内容、响应头的修改，日志的输出，流量监控等，有着非常重要的作用</p>
 <p>Gatewey的核心逻辑就是**路由转发+执行过滤链</p>
-<h1 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h1><p>本例中使用Nacos作为注册和配置中心，系列源代码GitHub地址<a target="_blank" rel="noopener" href="https://github.com/hanguilin/SpringCloudDemo">SpringCloudDemo</a></p>
+<h1 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h1><p>本例中使用Nacos作为注册和配置中心，系列源代码GitHub地址<a target="_blank" rel="noopener" href="https://github.com/hanguilin/spring-cloud-demo">spring-cloud-demo</a></p>
 <p>创建api-gateway子项目</p>
 <p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201223110133035.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
 <p>完整<code>pom.xml</code></p>
