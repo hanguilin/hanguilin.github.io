@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SpringCloud整合Seata1.4.0 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="Java、Mysql、Redis、Spring、SpringBoot、SpringCloud">
+  <meta name="description" content="版本说明本例于windows基于Nacos配置注册、M...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_2277830_6v2krg83grc.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap-grid.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/pace/pace-theme-flash.min.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/bulletchat/bulletchat.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/enjoyhint/enjoyhint.css">
+
+  
+
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/puff.svg'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个互联网工具人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      leancloud: {
+        enable: true,
+        appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+        appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+        baseURL: 'https://fyt1fady.lc-cn-n1-shared.com',
+        bulletChatEnable: true,
+        bulletChatRepo: 'Comment',
+        bulletChatRepoURL: '/about/'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+	<nav class="han-navbar post-navbar row">
+		<div class="left col-lg-8 col-md-8 col-sm-8 col-10">
+      <div class="row">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-5">
+          
+            <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+            
+            
+            <i class="iconfont iconmoono color-toggle" id="light-color-toggle" color-toggle="light"></i>
+            
+        </div>
+      </div>
+		</div>
+		<div class="right col-lg-4 col-md-4 col-sm-4 col-2">
+		  <i class="iconfont iconmenu j-navbar-menu "></i>
+		</div>
+		
+		  <div class="qrcode-navbar"></div>
+		
+	</nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-8 offset-xl-2 col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-sm-12"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/115350-159348923089ff.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">SpringCloud整合Seata1.4.0</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>2020/12/25</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/25/SpringCloud%E6%95%B4%E5%90%88Seata1.4.0/" class="leancloud" data-flag-title="SpringCloud整合Seata1.4.0"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>14730</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="版本说明"><a href="#版本说明" class="headerlink" title="版本说明"></a>版本说明</h1><p>本例于windows基于Nacos配置注册、MybatisPlus、Hikari数据源，数据库为Mysql，示例代码为Seata的AT模式。案例代码GitHub地址<a target="_blank" rel="noopener" href="https://github.com/hanguilin/spring-cloud-demo">spring-cloud-demo</a></p>
+<p>具体版本：</p>
+<ul>
+<li><p>seata 1.4.0</p>
+</li>
+<li><p>SpringBoot 2.3.6.RELEASE</p>
+</li>
+<li><p>SpringCloud Hoxton.SR9</p>
+</li>
+<li><p>SpringCloudAlibaba 2.2.3.RELEASE</p>
+</li>
+<li><p>MybatisPlus 3.3.2</p>
+</li>
+</ul>
+<h1 id="下载资源"><a href="#下载资源" class="headerlink" title="下载资源"></a>下载资源</h1><p>从<a target="_blank" rel="noopener" href="https://github.com/seata/seata/releases">Seata Release</a>下载目前最新版的1.4.0发行包和源码</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225185937494.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h1 id="Seata配置"><a href="#Seata配置" class="headerlink" title="Seata配置"></a>Seata配置</h1><h2 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h2><p>1、解压seata-server-1.4.0文件，进入/seata/conf，将register.conf内容修改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs plain">registry &#123;<br>  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa<br>  type &#x3D; &quot;nacos&quot;<br><br>  nacos &#123;<br>    application &#x3D; &quot;seata-server&quot;<br>    serverAddr &#x3D; &quot;127.0.0.1:8848&quot;<br>    group &#x3D; &quot;SEATA_GROUP&quot;<br>    namespace &#x3D; &quot;56c94dbe-7fbe-49c2-b456-170001455569&quot;<br>    cluster &#x3D; &quot;default&quot;<br>    username &#x3D; &quot;nacos&quot;<br>    password &#x3D; &quot;nacos&quot;<br>  &#125;<br><br>&#125;<br><br>config &#123;<br>  # file、nacos 、apollo、zk、consul、etcd3<br>  type &#x3D; &quot;nacos&quot;<br><br>  nacos &#123;<br>    serverAddr &#x3D; &quot;127.0.0.1:8848&quot;<br>    namespace &#x3D; &quot;56c94dbe-7fbe-49c2-b456-170001455569&quot;<br>    group &#x3D; &quot;SEATA_GROUP&quot;<br>    username &#x3D; &quot;nacos&quot;<br>    password &#x3D; &quot;nacos&quot;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>此处为设置seata使用nacos进行注册与配置</p>
+<p><code>registry.nacos.namespace</code>为nacos中的命名空间，可以自行创建命名空间后，替换此处的namespace</p>
+<p>进入/bin，打开cmd，运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">seata-server.bat -p 9000 -m file<br></code></pre></td></tr></table></figure>
+
+<p>运行成功后，将会在nacos服务列表中显示</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225202911626.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>2、数据库建seata库即表</p>
+<p>数据库新建<code>yuli-seata</code>数据库，用来存放seata全局数据</p>
+<p>进入script/server/db，在<code>yuli-seata</code>库中运行<code>mysql.sql</code>文件，最终得到三张表</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225201012229.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>3、初始化配置文件同步到nacos中，请先启动nacos，再执行此操作</p>
+<p>解压seata的source code，进入script/config-center，修改<code>config.txt</code>配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><code class="hljs plain">transport.type&#x3D;TCP<br>transport.server&#x3D;NIO<br>transport.heartbeat&#x3D;true<br>transport.enableClientBatchSendRequest&#x3D;false<br>transport.threadFactory.bossThreadPrefix&#x3D;NettyBoss<br>transport.threadFactory.workerThreadPrefix&#x3D;NettyServerNIOWorker<br>transport.threadFactory.serverExecutorThreadPrefix&#x3D;NettyServerBizHandler<br>transport.threadFactory.shareBossWorker&#x3D;false<br>transport.threadFactory.clientSelectorThreadPrefix&#x3D;NettyClientSelector<br>transport.threadFactory.clientSelectorThreadSize&#x3D;1<br>transport.threadFactory.clientWorkerThreadPrefix&#x3D;NettyClientWorkerThread<br>transport.threadFactory.bossThreadSize&#x3D;1<br>transport.threadFactory.workerThreadSize&#x3D;default<br>transport.shutdown.wait&#x3D;3<br>service.vgroupMapping.spring-cloud-demo&#x3D;default<br>service.default.grouplist&#x3D;127.0.0.1:8091<br>service.enableDegrade&#x3D;false<br>service.disableGlobalTransaction&#x3D;false<br>client.rm.asyncCommitBufferLimit&#x3D;10000<br>client.rm.lock.retryInterval&#x3D;10<br>client.rm.lock.retryTimes&#x3D;30<br>client.rm.lock.retryPolicyBranchRollbackOnConflict&#x3D;true<br>client.rm.reportRetryCount&#x3D;5<br>client.rm.tableMetaCheckEnable&#x3D;false<br>client.rm.sqlParserType&#x3D;druid<br>client.rm.reportSuccessEnable&#x3D;false<br>client.rm.sagaBranchRegisterEnable&#x3D;false<br>client.tm.commitRetryCount&#x3D;5<br>client.tm.rollbackRetryCount&#x3D;5<br>client.tm.defaultGlobalTransactionTimeout&#x3D;60000<br>client.tm.degradeCheck&#x3D;false<br>client.tm.degradeCheckAllowTimes&#x3D;10<br>client.tm.degradeCheckPeriod&#x3D;2000<br>store.mode&#x3D;db<br>store.file.dir&#x3D;file_store&#x2F;data<br>store.file.maxBranchSessionSize&#x3D;16384<br>store.file.maxGlobalSessionSize&#x3D;512<br>store.file.fileWriteBufferCacheSize&#x3D;16384<br>store.file.flushDiskMode&#x3D;async<br>store.file.sessionReloadReadSize&#x3D;100<br>store.db.datasource&#x3D;druid<br>store.db.dbType&#x3D;mysql<br>store.db.driverClassName&#x3D;com.mysql.jdbc.Driver<br>store.db.url&#x3D;jdbc:mysql:&#x2F;&#x2F;127.0.0.1:3306&#x2F;yuli-seata?useUnicode&#x3D;true<br>store.db.user&#x3D;root<br>store.db.password&#x3D;root<br>store.db.minConn&#x3D;5<br>store.db.maxConn&#x3D;30<br>store.db.globalTable&#x3D;global_table<br>store.db.branchTable&#x3D;branch_table<br>store.db.queryLimit&#x3D;100<br>store.db.lockTable&#x3D;lock_table<br>store.db.maxWait&#x3D;5000<br>store.redis.host&#x3D;127.0.0.1<br>store.redis.port&#x3D;6379<br>store.redis.maxConn&#x3D;10<br>store.redis.minConn&#x3D;1<br>store.redis.database&#x3D;0<br>store.redis.password&#x3D;null<br>store.redis.queryLimit&#x3D;100<br>server.recovery.committingRetryPeriod&#x3D;1000<br>server.recovery.asynCommittingRetryPeriod&#x3D;1000<br>server.recovery.rollbackingRetryPeriod&#x3D;1000<br>server.recovery.timeoutRetryPeriod&#x3D;1000<br>server.maxCommitRetryTimeout&#x3D;-1<br>server.maxRollbackRetryTimeout&#x3D;-1<br>server.rollbackRetryTimeoutUnlockEnable&#x3D;false<br>client.undo.dataValidation&#x3D;true<br>client.undo.logSerialization&#x3D;jackson<br>client.undo.onlyCareUpdateColumns&#x3D;true<br>server.undo.logSaveDays&#x3D;7<br>server.undo.logDeletePeriod&#x3D;86400000<br>client.undo.logTable&#x3D;undo_log<br>client.log.exceptionRate&#x3D;100<br>transport.serialization&#x3D;seata<br>transport.compressor&#x3D;none<br>metrics.enabled&#x3D;false<br>metrics.registryType&#x3D;compact<br>metrics.exporterList&#x3D;prometheus<br>metrics.exporterPrometheusPort&#x3D;9898<br></code></pre></td></tr></table></figure>
+
+<p>修改项</p>
+<ul>
+<li><p>service.vgroupMapping.spring-cloud-demo=default</p>
+<p>spring-cloud-demo为自定义的<a target="_blank" rel="noopener" href="http://seata.io/zh-cn/docs/user/transaction-group.html">事务组</a></p>
+</li>
+<li><p>store.mode=db</p>
+<p>状态由数据库管理</p>
+<ul>
+<li><p>store.db.url=jdbc:mysql://127.0.0.1:3306/yuli-seata?useUnicode=true</p>
+<p>数据库连接地址</p>
+</li>
+<li><p>store.db.user=root</p>
+<p>数据库用户名</p>
+</li>
+<li><p>store.db.password=root<br>数据库密码</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>windows环境下可以通过python环境执行py脚本，也可通过git环境执行sh脚本，本文使用git bash</p>
+<p>进入解压后的源码包中/script/config-center/nacos</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225203133010.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>打开git bash窗口，执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sh nacos-config.sh -h localhost -p 8848 -t 56c94dbe-7fbe-49c2-b456-170001455569 -u nacos -w nacos<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>-h</p>
+<p>nacos’s host</p>
+</li>
+<li><p>p</p>
+<p>nacos’s 端口</p>
+</li>
+<li><p>-t</p>
+<p>nacos namespace命名空间id</p>
+</li>
+<li><p>-u </p>
+<p>nacos用户名</p>
+</li>
+<li><p>-w</p>
+<p>nacos密码</p>
+</li>
+</ul>
+<img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225203545906.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" />
+
+<p>执行成功：</p>
+<img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225203738709.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom: 67%;" />
+
+<p>在nacos中查看配置</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225203937909.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>可以发现配置散落一地，别诧异，这是正常的。但是希望后期会有所优化吧，毕竟太散乱</p>
+<h2 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h2><p>引入依赖，注意本例父pom中引入了spring-cloud-alibaba-dependencies，且定义了版本号，所以此处未手动定义版本号。需要查看完整代码的请移步文章头部提到的代码地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;dependency&gt;<br>  &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>  &lt;artifactId&gt;spring-cloud-starter-alibaba-seata&lt;&#x2F;artifactId&gt;<br>&lt;&#x2F;dependency&gt;<br></code></pre></td></tr></table></figure>
+
+<p>在项目的bootstrap.yml文件中增加如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs plain">seata:<br>  enabled: true<br>  application-id: $&#123;spring.application.name&#125;<br>  tx-service-group: spring-cloud-demo    #此处配置自定义的seata事务分组名称<br>  enable-auto-data-source-proxy: true    #开启数据库代理<br>  config:<br>    type: nacos<br>    nacos:<br>      server-addr: $&#123;spring.cloud.nacos.discovery.server-addr&#125;<br>      namespace: $&#123;spring.cloud.nacos.discovery.namespace&#125;<br>      group: SEATA_GROUP<br>  registry:<br>    type: nacos<br>    nacos:<br>      application: seata-server<br>      server-addr: $&#123;spring.cloud.nacos.discovery.server-addr&#125;<br>      namespace: $&#123;spring.cloud.nacos.discovery.namespace&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>$&#123;&#125;</code>为获取本文件中定义变量</p>
+<p>如<code>$&#123;spring.cloud.nacos.discovery.server-addr&#125;</code>，在本例中已经有设置为localhost:8848</p>
+<p>注意<code>seata.tx-service-group</code>和上文<code>config.txt</code>文件中<code>service.vgroupMapping.spring-cloud-demo=default</code>有对应关系，</p>
+<p>关系为<code>spring-cloud-demo</code></p>
+<p>配置代理数据源</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.mybatis.config;<br><br><span class="hljs-keyword">import</span> com.zaxxer.hikari.HikariDataSource;<br><span class="hljs-keyword">import</span> io.seata.rm.datasource.DataSourceProxy;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.condition.ConditionalOnClass;<br><span class="hljs-keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Primary;<br><br><span class="hljs-keyword">import</span> javax.sql.DataSource;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 对分布式事务seata配置的数据源代理</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@ConditionalOnClass(HikariDataSource.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DataSourceProxyConfig</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 原生datasource前缀取&quot;spring.datasource&quot;</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-meta">@ConfigurationProperties(prefix = &quot;spring.datasource&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> DataSource <span class="hljs-title">hikariDataSource</span><span class="hljs-params">()</span> </span>&#123;<br>        HikariDataSource hikariDataSource = <span class="hljs-keyword">new</span> HikariDataSource();<br>        <span class="hljs-keyword">return</span> hikariDataSource;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 构造datasource代理对象，替换原来的datasource</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> hikariDataSource</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Primary</span><br>    <span class="hljs-meta">@Bean(&quot;dataSource&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> DataSourceProxy <span class="hljs-title">dataSourceProxy</span><span class="hljs-params">(DataSource hikariDataSource)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DataSourceProxy(hikariDataSource);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>启动类排除<code>DataSourceAutoConfiguration</code>类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs plain">package cn.javayuli;<br><br>import org.springframework.boot.SpringApplication;<br>import org.springframework.boot.autoconfigure.EnableAutoConfiguration;<br>import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;<br>import org.springframework.cloud.client.SpringCloudApplication;<br><br>&#x2F;**<br> * 订单服务<br> * <br> * @author hanguilin<br> *&#x2F;<br>@EnableAutoConfiguration(exclude &#x3D; &#123;DataSourceAutoConfiguration.class&#125;)<br>@SpringCloudApplication<br>public class OrderApplication &#123;<br><br>    public static void main(String[] args) &#123;<br>        SpringApplication.run(OrderApplication.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h1><p>本例举很经典的例子：下订单时需要生成订单信息和扣减商品库存。</p>
+<h2 id="结构图"><a href="#结构图" class="headerlink" title="结构图"></a>结构图</h2><p>调用关系图：</p>
+<img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225205915331.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" />
+
+<p>项目结构图：</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225210015549.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<ul>
+<li><p>api-common</p>
+<p>公共调用，其中api-common-mybatis包含mybatis、seata、mysql-connect-java依赖，以及seata代理数据源配置，需要连接数据库的服务直接在pom中引入其项目即可</p>
+</li>
+<li><p>api-gateway</p>
+<p>基于springcloud gateway的网关服务</p>
+</li>
+<li><p>api-provider</p>
+<p>业务服务，由其发起远程调用，调用订单、库存服务</p>
+</li>
+<li><p>api-provider-order</p>
+<p>订单服务，可以创建订单信息</p>
+</li>
+<li><p>api-provider-stock</p>
+<p>库存服务，可以扣减商品数量</p>
+</li>
+</ul>
+<h2 id="库表"><a href="#库表" class="headerlink" title="库表"></a>库表</h2><p>项目库表</p>
+<img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225211040017.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  style="zoom:67%;" />
+
+<p><code>yuli-order</code>库中<code>tb_order</code>表为订单信息表</p>
+<p><code>yuli-stock</code>库中<code>tb_stock</code>表为库存信息表</p>
+<p><code>undo_log</code>为seata事务中重要的表，<code>在每个应用中都需要创建一张</code>，如果是单库，就用一张<code>undo_log</code>表即可</p>
+<p><code>undo_log</code>表建表语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`undo_log`</span> (<br>	<span class="hljs-string">`id`</span> <span class="hljs-built_in">BIGINT</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>	<span class="hljs-string">`branch_id`</span> <span class="hljs-built_in">BIGINT</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`xid`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`context`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`rollback_info`</span> LONGBLOB <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`log_status`</span> <span class="hljs-built_in">INT</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`log_created`</span> DATETIME <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`log_modified`</span> DATETIME <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`ext`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>) <span class="hljs-keyword">USING</span> BTREE,<br>	<span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">INDEX</span> <span class="hljs-string">`ux_undo_log`</span> (<span class="hljs-string">`xid`</span>, <span class="hljs-string">`branch_id`</span>) <span class="hljs-keyword">USING</span> BTREE<br>)<br><span class="hljs-keyword">COLLATE</span>=<span class="hljs-string">&#x27;utf8_general_ci&#x27;</span><br><span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span><br>AUTO_INCREMENT=<span class="hljs-number">56</span>;<br></code></pre></td></tr></table></figure>
+
+<p><code>tb_order</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`tb_order`</span> (<br>	<span class="hljs-string">`id`</span> <span class="hljs-built_in">INT</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>	<span class="hljs-string">`no`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">64</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;订单编号&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`remark`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;备注&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`create_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>	<span class="hljs-string">`update_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;修改时间&#x27;</span>,<br>	<span class="hljs-string">`del_flag`</span> <span class="hljs-built_in">CHAR</span>(<span class="hljs-number">1</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>) <span class="hljs-keyword">USING</span> BTREE<br>)<br><span class="hljs-keyword">COLLATE</span>=<span class="hljs-string">&#x27;utf8_general_ci&#x27;</span><br><span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span><br>AUTO_INCREMENT=<span class="hljs-number">39</span>;<br></code></pre></td></tr></table></figure>
+
+<p><code>tb_stock</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`tb_stock`</span> (<br>	<span class="hljs-string">`id`</span> <span class="hljs-built_in">INT</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>	<span class="hljs-string">`goods`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;物资名称&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`number`</span> <span class="hljs-built_in">INT</span>(<span class="hljs-number">10</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;库存数量&#x27;</span>,<br>	<span class="hljs-string">`remark`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;备注&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`create_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>	<span class="hljs-string">`update_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;更新时间&#x27;</span>,<br>	<span class="hljs-string">`del_flag`</span> <span class="hljs-built_in">CHAR</span>(<span class="hljs-number">1</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>) <span class="hljs-keyword">USING</span> BTREE<br>)<br><span class="hljs-keyword">COLLATE</span>=<span class="hljs-string">&#x27;utf8_general_ci&#x27;</span><br><span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span><br>AUTO_INCREMENT=<span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><h3 id="订单服务暴露接口"><a href="#订单服务暴露接口" class="headerlink" title="订单服务暴露接口"></a>订单服务暴露接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 创建订单</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> no 订单编号</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@PostMapping(&quot;/order/save&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">doSaveOrder</span> <span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;no&quot;)</span> String no)</span> </span>&#123;<br>    Order order = <span class="hljs-keyword">new</span> Order();<br>    order.setNo(no);<br>    <span class="hljs-comment">// 保存订单</span><br>    orderService.save(order);<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;success&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="库存服务暴露接口"><a href="#库存服务暴露接口" class="headerlink" title="库存服务暴露接口"></a>库存服务暴露接口</h3><p>根据物资现有数量减去出售数量，如果库存不够就会抛出异常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs plain">&#x2F;**<br> * 扣减库存<br> *<br> * @param goods 物资<br> * @param number 扣除量<br> * @return<br> *&#x2F;<br>@GetMapping(&quot;&#x2F;deduct&quot;)<br>public String doDeductionStock(@RequestParam(&quot;goods&quot;) String goods, @RequestParam(&quot;number&quot;) int number) 	&#123;<br>    Stock stock &#x3D; orderService.getOne(Wrappers.lambdaQuery(Stock.class).eq(Stock::getGoods, goods));<br>    Integer stockNumber &#x3D; stock.getNumber();<br>    Integer left &#x3D; stockNumber - number;<br>    if (stockNumber &#x3D;&#x3D; 0 || left &lt; 0) &#123;<br>        throw new RuntimeException(&quot;商品数量不足&quot;);<br>    &#125;<br>    stock.setNumber(left);<br>    orderService.updateById(stock);<br>    return &quot;success&quot;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="业务服务feign接口"><a href="#业务服务feign接口" class="headerlink" title="业务服务feign接口"></a>业务服务feign接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 远程调用库存服务</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@FeignClient(contextId = &quot;remoteOrderService&quot;, value = &quot;api-provider-order&quot;,</span><br><span class="hljs-meta">        fallbackFactory = RemoteOrderServiceFallbackFactory.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">RemoteOrderService</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建订单</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> no 订单编号</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@PostMapping(&quot;/order/save&quot;)</span><br>    <span class="hljs-function">String <span class="hljs-title">doSaveOrder</span> <span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;no&quot;)</span> String no)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 远程调用库存服务</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@FeignClient(contextId = &quot;remoteStockService&quot;, value = &quot;api-provider-stock&quot;,</span><br><span class="hljs-meta">        fallbackFactory = RemoteStockServiceFallbackFactory.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">RemoteStockService</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 扣减库存</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> goods 物资</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> number 扣除量</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@GetMapping(&quot;/stock/deduct&quot;)</span><br>    <span class="hljs-function">String <span class="hljs-title">doDeductionStock</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;goods&quot;)</span> String goods, <span class="hljs-meta">@RequestParam(&quot;number&quot;)</span> <span class="hljs-keyword">int</span> number)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="业务服务暴露接口"><a href="#业务服务暴露接口" class="headerlink" title="业务服务暴露接口"></a>业务服务暴露接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 下订单</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> no 订单编号</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> goods 物资</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@GlobalTransactional</span><br><span class="hljs-meta">@PostMapping(&quot;/business/create/order&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">doCreateOrder</span> <span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;no&quot;)</span> String no, <span class="hljs-meta">@RequestParam(&quot;goods&quot;)</span> String goods)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> businessService.createOrder(no, goods);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 下订单</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> no 订单编号</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> goods 物资</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">createOrder</span><span class="hljs-params">(String no, String goods)</span> </span>&#123;<br>    remoteOrderService.doSaveOrder(no);<br>    remoteStockService.doDeductionStock(goods, <span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;success&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>@GlobalTransactional</code>为seata的注解，表示开启全局事务</p>
+<h2 id="网关配置"><a href="#网关配置" class="headerlink" title="网关配置"></a>网关配置</h2><p>nacos中<code>api-gateway-dev.yml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8001</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">gateway:</span><br>      <span class="hljs-attr">routes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">api-provider</span><br>        <span class="hljs-attr">uri:</span> <span class="hljs-string">lb://api-provider</span><br>        <span class="hljs-attr">predicates:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">Path=/provider/**</span><br>        <span class="hljs-attr">filters:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">RewritePath=/provider/(?&lt;segment&gt;.*),</span> <span class="hljs-string">/$\&#123;segment&#125;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">api-provider-order</span><br>        <span class="hljs-attr">uri:</span> <span class="hljs-string">lb://api-provider-order</span><br>        <span class="hljs-attr">predicates:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">Path=/provider-order/**</span><br>        <span class="hljs-attr">filters:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">RewritePath=/provider-order/(?&lt;segment&gt;.*),</span> <span class="hljs-string">/$\&#123;segment&#125;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">api-provider-stock</span><br>        <span class="hljs-attr">uri:</span> <span class="hljs-string">lb://api-provider-stock</span><br>        <span class="hljs-attr">predicates:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">Path=/provider-stock/**</span><br>        <span class="hljs-attr">filters:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">RewritePath=/provider-stock/(?&lt;segment&gt;.*),</span> <span class="hljs-string">/$\&#123;segment&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="场景测试"><a href="#场景测试" class="headerlink" title="场景测试"></a>场景测试</h2><p>库存充足情况下会正常插入一条订单信息和将商品库存数减1</p>
+<p>启动nacos-&gt;seata-&gt;(api-gateway、api-provider、api-provider-order、api-provider-stock)</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225213323244.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>端口说明</p>
+<p>api-gateway：8001</p>
+<p>api-provider：8000</p>
+<p>api-provider-order：8002</p>
+<p>api-provider-stock：8003</p>
+<p>发送请求，路径<a href="">http://localhost:8001/provider/business/create/order</a>，走网关请求</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225213809314.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>订单成功插入一条数据</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225213908082.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>库存成功扣减（1-&gt;0）</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225213934344.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>此时将订单号修该一下，再请求，此时库存服务就会抛出异常</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214110084.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214133821.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214200401.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>订单信息未插入</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214336960.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>可看到订单服务控制台显示分支事务回滚，二阶段回滚，说明全局事务在其中起到了相应作用</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214441355.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/25/SpringCloud%E6%95%B4%E5%90%88Seata1.4.0/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;25&#x2F;SpringCloud%E6%95%B4%E5%90%88Seata1.4.0&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;25&#x2F;SpringCloud%E6%95%B4%E5%90%88Seata1.4.0&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Seata/" rel="tag">Seata</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringCloudAlibaba/" rel="tag">SpringCloudAlibaba</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" rel="tag">分布式事务</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2020/12/23/SpringCloudAlibaba%E4%B9%8BSeata%E4%BB%8B%E7%BB%8D/">SpringCloudAlibaba之Seata介绍<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="/js/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "来都来了，总得留下点什么吧(｡◕ฺˇε ˇ◕ฺ｡)",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+        <div class="col-xl-2 col-lg-2 col-md-2 d-xl-block d-lg-block d-md-block d-sm-none d-none toc-wrap-col">
+          
+            
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E"><span class="toc-text">版本说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E8%B5%84%E6%BA%90"><span class="toc-text">下载资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Seata%E9%85%8D%E7%BD%AE"><span class="toc-text">Seata配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Server"><span class="toc-text">Server</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Client"><span class="toc-text">Client</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DEMO"><span class="toc-text">DEMO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E5%9B%BE"><span class="toc-text">结构图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%93%E8%A1%A8"><span class="toc-text">库表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3"><span class="toc-text">接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A2%E5%8D%95%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2%E6%8E%A5%E5%8F%A3"><span class="toc-text">订单服务暴露接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%93%E5%AD%98%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2%E6%8E%A5%E5%8F%A3"><span class="toc-text">库存服务暴露接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E6%9C%8D%E5%8A%A1feign%E6%8E%A5%E5%8F%A3"><span class="toc-text">业务服务feign接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2%E6%8E%A5%E5%8F%A3"><span class="toc-text">业务服务暴露接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="toc-text">网关配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E6%B5%8B%E8%AF%95"><span class="toc-text">场景测试</span></a></li></ol></li></ol>
+  </aside>
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+
+
+
+
+  
+<script src="/lib/pace/pace.min.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/bulletchat/bulletchat.js"></script>
+
+
+
+
+  
+<script src="/lib/enjoyhint/enjoyhint.min.js"></script>
+
+
+
+</html>

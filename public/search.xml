@@ -92,6 +92,416 @@
       </tags>
   </entry>
   <entry>
+    <title>SpringCloud整合Seata1.4.0</title>
+    <url>/2020/12/25/SpringCloud%E6%95%B4%E5%90%88Seata1.4.0/</url>
+    <content><![CDATA[<h1 id="版本说明"><a href="#版本说明" class="headerlink" title="版本说明"></a>版本说明</h1><p>本例于windows基于Nacos配置注册、MybatisPlus、Hikari数据源，数据库为Mysql，示例代码为Seata的AT模式。案例代码GitHub地址<a href="https://github.com/hanguilin/spring-cloud-demo">spring-cloud-demo</a></p>
+<p>具体版本：</p>
+<ul>
+<li><p>seata 1.4.0</p>
+</li>
+<li><p>SpringBoot 2.3.6.RELEASE</p>
+</li>
+<li><p>SpringCloud Hoxton.SR9</p>
+</li>
+<li><p>SpringCloudAlibaba 2.2.3.RELEASE</p>
+</li>
+<li><p>MybatisPlus 3.3.2</p>
+</li>
+</ul>
+<h1 id="下载资源"><a href="#下载资源" class="headerlink" title="下载资源"></a>下载资源</h1><p>从<a href="https://github.com/seata/seata/releases">Seata Release</a>下载目前最新版的1.4.0发行包和源码</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225185937494.png"></p>
+<h1 id="Seata配置"><a href="#Seata配置" class="headerlink" title="Seata配置"></a>Seata配置</h1><h2 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h2><p>1、解压seata-server-1.4.0文件，进入/seata/conf，将register.conf内容修改为</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">registry &#123;<br>  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa<br>  type &#x3D; &quot;nacos&quot;<br><br>  nacos &#123;<br>    application &#x3D; &quot;seata-server&quot;<br>    serverAddr &#x3D; &quot;127.0.0.1:8848&quot;<br>    group &#x3D; &quot;SEATA_GROUP&quot;<br>    namespace &#x3D; &quot;56c94dbe-7fbe-49c2-b456-170001455569&quot;<br>    cluster &#x3D; &quot;default&quot;<br>    username &#x3D; &quot;nacos&quot;<br>    password &#x3D; &quot;nacos&quot;<br>  &#125;<br><br>&#125;<br><br>config &#123;<br>  # file、nacos 、apollo、zk、consul、etcd3<br>  type &#x3D; &quot;nacos&quot;<br><br>  nacos &#123;<br>    serverAddr &#x3D; &quot;127.0.0.1:8848&quot;<br>    namespace &#x3D; &quot;56c94dbe-7fbe-49c2-b456-170001455569&quot;<br>    group &#x3D; &quot;SEATA_GROUP&quot;<br>    username &#x3D; &quot;nacos&quot;<br>    password &#x3D; &quot;nacos&quot;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>此处为设置seata使用nacos进行注册与配置</p>
+<p><code>registry.nacos.namespace</code>为nacos中的命名空间，可以自行创建命名空间后，替换此处的namespace</p>
+<p>进入/bin，打开cmd，运行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">seata-server.bat -p 9000 -m file<br></code></pre></td></tr></table></figure>
+
+<p>运行成功后，将会在nacos服务列表中显示</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225202911626.png"></p>
+<p>2、数据库建seata库即表</p>
+<p>数据库新建<code>yuli-seata</code>数据库，用来存放seata全局数据</p>
+<p>进入script/server/db，在<code>yuli-seata</code>库中运行<code>mysql.sql</code>文件，最终得到三张表</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225201012229.png"></p>
+<p>3、初始化配置文件同步到nacos中，请先启动nacos，再执行此操作</p>
+<p>解压seata的source code，进入script/config-center，修改<code>config.txt</code>配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">transport.type&#x3D;TCP<br>transport.server&#x3D;NIO<br>transport.heartbeat&#x3D;true<br>transport.enableClientBatchSendRequest&#x3D;false<br>transport.threadFactory.bossThreadPrefix&#x3D;NettyBoss<br>transport.threadFactory.workerThreadPrefix&#x3D;NettyServerNIOWorker<br>transport.threadFactory.serverExecutorThreadPrefix&#x3D;NettyServerBizHandler<br>transport.threadFactory.shareBossWorker&#x3D;false<br>transport.threadFactory.clientSelectorThreadPrefix&#x3D;NettyClientSelector<br>transport.threadFactory.clientSelectorThreadSize&#x3D;1<br>transport.threadFactory.clientWorkerThreadPrefix&#x3D;NettyClientWorkerThread<br>transport.threadFactory.bossThreadSize&#x3D;1<br>transport.threadFactory.workerThreadSize&#x3D;default<br>transport.shutdown.wait&#x3D;3<br>service.vgroupMapping.spring-cloud-demo&#x3D;default<br>service.default.grouplist&#x3D;127.0.0.1:8091<br>service.enableDegrade&#x3D;false<br>service.disableGlobalTransaction&#x3D;false<br>client.rm.asyncCommitBufferLimit&#x3D;10000<br>client.rm.lock.retryInterval&#x3D;10<br>client.rm.lock.retryTimes&#x3D;30<br>client.rm.lock.retryPolicyBranchRollbackOnConflict&#x3D;true<br>client.rm.reportRetryCount&#x3D;5<br>client.rm.tableMetaCheckEnable&#x3D;false<br>client.rm.sqlParserType&#x3D;druid<br>client.rm.reportSuccessEnable&#x3D;false<br>client.rm.sagaBranchRegisterEnable&#x3D;false<br>client.tm.commitRetryCount&#x3D;5<br>client.tm.rollbackRetryCount&#x3D;5<br>client.tm.defaultGlobalTransactionTimeout&#x3D;60000<br>client.tm.degradeCheck&#x3D;false<br>client.tm.degradeCheckAllowTimes&#x3D;10<br>client.tm.degradeCheckPeriod&#x3D;2000<br>store.mode&#x3D;db<br>store.file.dir&#x3D;file_store&#x2F;data<br>store.file.maxBranchSessionSize&#x3D;16384<br>store.file.maxGlobalSessionSize&#x3D;512<br>store.file.fileWriteBufferCacheSize&#x3D;16384<br>store.file.flushDiskMode&#x3D;async<br>store.file.sessionReloadReadSize&#x3D;100<br>store.db.datasource&#x3D;druid<br>store.db.dbType&#x3D;mysql<br>store.db.driverClassName&#x3D;com.mysql.jdbc.Driver<br>store.db.url&#x3D;jdbc:mysql:&#x2F;&#x2F;127.0.0.1:3306&#x2F;yuli-seata?useUnicode&#x3D;true<br>store.db.user&#x3D;root<br>store.db.password&#x3D;root<br>store.db.minConn&#x3D;5<br>store.db.maxConn&#x3D;30<br>store.db.globalTable&#x3D;global_table<br>store.db.branchTable&#x3D;branch_table<br>store.db.queryLimit&#x3D;100<br>store.db.lockTable&#x3D;lock_table<br>store.db.maxWait&#x3D;5000<br>store.redis.host&#x3D;127.0.0.1<br>store.redis.port&#x3D;6379<br>store.redis.maxConn&#x3D;10<br>store.redis.minConn&#x3D;1<br>store.redis.database&#x3D;0<br>store.redis.password&#x3D;null<br>store.redis.queryLimit&#x3D;100<br>server.recovery.committingRetryPeriod&#x3D;1000<br>server.recovery.asynCommittingRetryPeriod&#x3D;1000<br>server.recovery.rollbackingRetryPeriod&#x3D;1000<br>server.recovery.timeoutRetryPeriod&#x3D;1000<br>server.maxCommitRetryTimeout&#x3D;-1<br>server.maxRollbackRetryTimeout&#x3D;-1<br>server.rollbackRetryTimeoutUnlockEnable&#x3D;false<br>client.undo.dataValidation&#x3D;true<br>client.undo.logSerialization&#x3D;jackson<br>client.undo.onlyCareUpdateColumns&#x3D;true<br>server.undo.logSaveDays&#x3D;7<br>server.undo.logDeletePeriod&#x3D;86400000<br>client.undo.logTable&#x3D;undo_log<br>client.log.exceptionRate&#x3D;100<br>transport.serialization&#x3D;seata<br>transport.compressor&#x3D;none<br>metrics.enabled&#x3D;false<br>metrics.registryType&#x3D;compact<br>metrics.exporterList&#x3D;prometheus<br>metrics.exporterPrometheusPort&#x3D;9898<br></code></pre></td></tr></table></figure>
+
+<p>修改项</p>
+<ul>
+<li><p>service.vgroupMapping.spring-cloud-demo=default</p>
+<p>spring-cloud-demo为自定义的<a href="http://seata.io/zh-cn/docs/user/transaction-group.html">事务组</a></p>
+</li>
+<li><p>store.mode=db</p>
+<p>状态由数据库管理</p>
+<ul>
+<li><p>store.db.url=jdbc:mysql://127.0.0.1:3306/yuli-seata?useUnicode=true</p>
+<p>数据库连接地址</p>
+</li>
+<li><p>store.db.user=root</p>
+<p>数据库用户名</p>
+</li>
+<li><p>store.db.password=root<br>数据库密码</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>windows环境下可以通过python环境执行py脚本，也可通过git环境执行sh脚本，本文使用git bash</p>
+<p>进入解压后的源码包中/script/config-center/nacos</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225203133010.png"></p>
+<p>打开git bash窗口，执行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">sh nacos-config.sh -h localhost -p 8848 -t 56c94dbe-7fbe-49c2-b456-170001455569 -u nacos -w nacos<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>-h</p>
+<p>nacos’s host</p>
+</li>
+<li><p>p</p>
+<p>nacos’s 端口</p>
+</li>
+<li><p>-t</p>
+<p>nacos namespace命名空间id</p>
+</li>
+<li><p>-u </p>
+<p>nacos用户名</p>
+</li>
+<li><p>-w</p>
+<p>nacos密码</p>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225203545906.png" style="zoom:67%;" />
+
+<p>执行成功：</p>
+<img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225203738709.png" style="zoom: 67%;" />
+
+<p>在nacos中查看配置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225203937909.png"></p>
+<p>可以发现配置散落一地，别诧异，这是正常的。但是希望后期会有所优化吧，毕竟太散乱</p>
+<h2 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h2><p>引入依赖，注意本例父pom中引入了spring-cloud-alibaba-dependencies，且定义了版本号，所以此处未手动定义版本号。需要查看完整代码的请移步文章头部提到的代码地址。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&lt;dependency&gt;<br>  &lt;groupId&gt;com.alibaba.cloud&lt;&#x2F;groupId&gt;<br>  &lt;artifactId&gt;spring-cloud-starter-alibaba-seata&lt;&#x2F;artifactId&gt;<br>&lt;&#x2F;dependency&gt;<br></code></pre></td></tr></table></figure>
+
+<p>在项目的bootstrap.yml文件中增加如下配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">seata:<br>  enabled: true<br>  application-id: $&#123;spring.application.name&#125;<br>  tx-service-group: spring-cloud-demo    #此处配置自定义的seata事务分组名称<br>  enable-auto-data-source-proxy: true    #开启数据库代理<br>  config:<br>    type: nacos<br>    nacos:<br>      server-addr: $&#123;spring.cloud.nacos.discovery.server-addr&#125;<br>      namespace: $&#123;spring.cloud.nacos.discovery.namespace&#125;<br>      group: SEATA_GROUP<br>  registry:<br>    type: nacos<br>    nacos:<br>      application: seata-server<br>      server-addr: $&#123;spring.cloud.nacos.discovery.server-addr&#125;<br>      namespace: $&#123;spring.cloud.nacos.discovery.namespace&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>$&#123;&#125;</code>为获取本文件中定义变量</p>
+<p>如<code>$&#123;spring.cloud.nacos.discovery.server-addr&#125;</code>，在本例中已经有设置为localhost:8848</p>
+<p>注意<code>seata.tx-service-group</code>和上文<code>config.txt</code>文件中<code>service.vgroupMapping.spring-cloud-demo=default</code>有对应关系，</p>
+<p>关系为<code>spring-cloud-demo</code></p>
+<p>配置代理数据源</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.javayuli.mybatis.config;<br><br><span class="hljs-keyword">import</span> com.zaxxer.hikari.HikariDataSource;<br><span class="hljs-keyword">import</span> io.seata.rm.datasource.DataSourceProxy;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.condition.ConditionalOnClass;<br><span class="hljs-keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Primary;<br><br><span class="hljs-keyword">import</span> javax.sql.DataSource;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 对分布式事务seata配置的数据源代理</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@ConditionalOnClass(HikariDataSource.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DataSourceProxyConfig</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 原生datasource前缀取&quot;spring.datasource&quot;</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-meta">@ConfigurationProperties(prefix = &quot;spring.datasource&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> DataSource <span class="hljs-title">hikariDataSource</span><span class="hljs-params">()</span> </span>&#123;<br>        HikariDataSource hikariDataSource = <span class="hljs-keyword">new</span> HikariDataSource();<br>        <span class="hljs-keyword">return</span> hikariDataSource;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 构造datasource代理对象，替换原来的datasource</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> hikariDataSource</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Primary</span><br>    <span class="hljs-meta">@Bean(&quot;dataSource&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> DataSourceProxy <span class="hljs-title">dataSourceProxy</span><span class="hljs-params">(DataSource hikariDataSource)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DataSourceProxy(hikariDataSource);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>启动类排除<code>DataSourceAutoConfiguration</code>类</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">package cn.javayuli;<br><br>import org.springframework.boot.SpringApplication;<br>import org.springframework.boot.autoconfigure.EnableAutoConfiguration;<br>import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;<br>import org.springframework.cloud.client.SpringCloudApplication;<br><br>&#x2F;**<br> * 订单服务<br> * <br> * @author hanguilin<br> *&#x2F;<br>@EnableAutoConfiguration(exclude &#x3D; &#123;DataSourceAutoConfiguration.class&#125;)<br>@SpringCloudApplication<br>public class OrderApplication &#123;<br><br>    public static void main(String[] args) &#123;<br>        SpringApplication.run(OrderApplication.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h1><p>本例举很经典的例子：下订单时需要生成订单信息和扣减商品库存。</p>
+<h2 id="结构图"><a href="#结构图" class="headerlink" title="结构图"></a>结构图</h2><p>调用关系图：</p>
+<img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225205915331.png" style="zoom:67%;" />
+
+<p>项目结构图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225210015549.png"></p>
+<ul>
+<li><p>api-common</p>
+<p>公共调用，其中api-common-mybatis包含mybatis、seata、mysql-connect-java依赖，以及seata代理数据源配置，需要连接数据库的服务直接在pom中引入其项目即可</p>
+</li>
+<li><p>api-gateway</p>
+<p>基于springcloud gateway的网关服务</p>
+</li>
+<li><p>api-provider</p>
+<p>业务服务，由其发起远程调用，调用订单、库存服务</p>
+</li>
+<li><p>api-provider-order</p>
+<p>订单服务，可以创建订单信息</p>
+</li>
+<li><p>api-provider-stock</p>
+<p>库存服务，可以扣减商品数量</p>
+</li>
+</ul>
+<h2 id="库表"><a href="#库表" class="headerlink" title="库表"></a>库表</h2><p>项目库表</p>
+<img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225211040017.png" style="zoom:67%;" />
+
+<p><code>yuli-order</code>库中<code>tb_order</code>表为订单信息表</p>
+<p><code>yuli-stock</code>库中<code>tb_stock</code>表为库存信息表</p>
+<p><code>undo_log</code>为seata事务中重要的表，<code>在每个应用中都需要创建一张</code>，如果是单库，就用一张<code>undo_log</code>表即可</p>
+<p><code>undo_log</code>表建表语句</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`undo_log`</span> (<br>	<span class="hljs-string">`id`</span> <span class="hljs-built_in">BIGINT</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>	<span class="hljs-string">`branch_id`</span> <span class="hljs-built_in">BIGINT</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`xid`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`context`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`rollback_info`</span> LONGBLOB <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`log_status`</span> <span class="hljs-built_in">INT</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`log_created`</span> DATETIME <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`log_modified`</span> DATETIME <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>	<span class="hljs-string">`ext`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>) <span class="hljs-keyword">USING</span> BTREE,<br>	<span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">INDEX</span> <span class="hljs-string">`ux_undo_log`</span> (<span class="hljs-string">`xid`</span>, <span class="hljs-string">`branch_id`</span>) <span class="hljs-keyword">USING</span> BTREE<br>)<br><span class="hljs-keyword">COLLATE</span>=<span class="hljs-string">&#x27;utf8_general_ci&#x27;</span><br><span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span><br>AUTO_INCREMENT=<span class="hljs-number">56</span>;<br></code></pre></td></tr></table></figure>
+
+<p><code>tb_order</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`tb_order`</span> (<br>	<span class="hljs-string">`id`</span> <span class="hljs-built_in">INT</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>	<span class="hljs-string">`no`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">64</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;订单编号&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`remark`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;备注&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`create_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>	<span class="hljs-string">`update_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;修改时间&#x27;</span>,<br>	<span class="hljs-string">`del_flag`</span> <span class="hljs-built_in">CHAR</span>(<span class="hljs-number">1</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>) <span class="hljs-keyword">USING</span> BTREE<br>)<br><span class="hljs-keyword">COLLATE</span>=<span class="hljs-string">&#x27;utf8_general_ci&#x27;</span><br><span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span><br>AUTO_INCREMENT=<span class="hljs-number">39</span>;<br></code></pre></td></tr></table></figure>
+
+<p><code>tb_stock</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`tb_stock`</span> (<br>	<span class="hljs-string">`id`</span> <span class="hljs-built_in">INT</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>	<span class="hljs-string">`goods`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;物资名称&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`number`</span> <span class="hljs-built_in">INT</span>(<span class="hljs-number">10</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;库存数量&#x27;</span>,<br>	<span class="hljs-string">`remark`</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;备注&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	<span class="hljs-string">`create_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>	<span class="hljs-string">`update_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;更新时间&#x27;</span>,<br>	<span class="hljs-string">`del_flag`</span> <span class="hljs-built_in">CHAR</span>(<span class="hljs-number">1</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8_general_ci&#x27;</span>,<br>	PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>) <span class="hljs-keyword">USING</span> BTREE<br>)<br><span class="hljs-keyword">COLLATE</span>=<span class="hljs-string">&#x27;utf8_general_ci&#x27;</span><br><span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span><br>AUTO_INCREMENT=<span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><h3 id="订单服务暴露接口"><a href="#订单服务暴露接口" class="headerlink" title="订单服务暴露接口"></a>订单服务暴露接口</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 创建订单</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> no 订单编号</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@PostMapping(&quot;/order/save&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">doSaveOrder</span> <span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;no&quot;)</span> String no)</span> </span>&#123;<br>    Order order = <span class="hljs-keyword">new</span> Order();<br>    order.setNo(no);<br>    <span class="hljs-comment">// 保存订单</span><br>    orderService.save(order);<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;success&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="库存服务暴露接口"><a href="#库存服务暴露接口" class="headerlink" title="库存服务暴露接口"></a>库存服务暴露接口</h3><p>根据物资现有数量减去出售数量，如果库存不够就会抛出异常</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">&#x2F;**<br> * 扣减库存<br> *<br> * @param goods 物资<br> * @param number 扣除量<br> * @return<br> *&#x2F;<br>@GetMapping(&quot;&#x2F;deduct&quot;)<br>public String doDeductionStock(@RequestParam(&quot;goods&quot;) String goods, @RequestParam(&quot;number&quot;) int number) 	&#123;<br>    Stock stock &#x3D; orderService.getOne(Wrappers.lambdaQuery(Stock.class).eq(Stock::getGoods, goods));<br>    Integer stockNumber &#x3D; stock.getNumber();<br>    Integer left &#x3D; stockNumber - number;<br>    if (stockNumber &#x3D;&#x3D; 0 || left &lt; 0) &#123;<br>        throw new RuntimeException(&quot;商品数量不足&quot;);<br>    &#125;<br>    stock.setNumber(left);<br>    orderService.updateById(stock);<br>    return &quot;success&quot;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="业务服务feign接口"><a href="#业务服务feign接口" class="headerlink" title="业务服务feign接口"></a>业务服务feign接口</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 远程调用库存服务</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@FeignClient(contextId = &quot;remoteOrderService&quot;, value = &quot;api-provider-order&quot;,</span><br><span class="hljs-meta">        fallbackFactory = RemoteOrderServiceFallbackFactory.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">RemoteOrderService</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建订单</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> no 订单编号</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@PostMapping(&quot;/order/save&quot;)</span><br>    <span class="hljs-function">String <span class="hljs-title">doSaveOrder</span> <span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;no&quot;)</span> String no)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 远程调用库存服务</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> hanguilin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@FeignClient(contextId = &quot;remoteStockService&quot;, value = &quot;api-provider-stock&quot;,</span><br><span class="hljs-meta">        fallbackFactory = RemoteStockServiceFallbackFactory.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">RemoteStockService</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 扣减库存</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> goods 物资</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> number 扣除量</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@GetMapping(&quot;/stock/deduct&quot;)</span><br>    <span class="hljs-function">String <span class="hljs-title">doDeductionStock</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;goods&quot;)</span> String goods, <span class="hljs-meta">@RequestParam(&quot;number&quot;)</span> <span class="hljs-keyword">int</span> number)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="业务服务暴露接口"><a href="#业务服务暴露接口" class="headerlink" title="业务服务暴露接口"></a>业务服务暴露接口</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 下订单</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> no 订单编号</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> goods 物资</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@GlobalTransactional</span><br><span class="hljs-meta">@PostMapping(&quot;/business/create/order&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">doCreateOrder</span> <span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;no&quot;)</span> String no, <span class="hljs-meta">@RequestParam(&quot;goods&quot;)</span> String goods)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> businessService.createOrder(no, goods);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 下订单</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> no 订单编号</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> goods 物资</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">createOrder</span><span class="hljs-params">(String no, String goods)</span> </span>&#123;<br>    remoteOrderService.doSaveOrder(no);<br>    remoteStockService.doDeductionStock(goods, <span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;success&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>@GlobalTransactional</code>为seata的注解，表示开启全局事务</p>
+<h2 id="网关配置"><a href="#网关配置" class="headerlink" title="网关配置"></a>网关配置</h2><p>nacos中<code>api-gateway-dev.yml</code></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8001</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">gateway:</span><br>      <span class="hljs-attr">routes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">api-provider</span><br>        <span class="hljs-attr">uri:</span> <span class="hljs-string">lb://api-provider</span><br>        <span class="hljs-attr">predicates:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">Path=/provider/**</span><br>        <span class="hljs-attr">filters:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">RewritePath=/provider/(?&lt;segment&gt;.*),</span> <span class="hljs-string">/$\&#123;segment&#125;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">api-provider-order</span><br>        <span class="hljs-attr">uri:</span> <span class="hljs-string">lb://api-provider-order</span><br>        <span class="hljs-attr">predicates:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">Path=/provider-order/**</span><br>        <span class="hljs-attr">filters:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">RewritePath=/provider-order/(?&lt;segment&gt;.*),</span> <span class="hljs-string">/$\&#123;segment&#125;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">api-provider-stock</span><br>        <span class="hljs-attr">uri:</span> <span class="hljs-string">lb://api-provider-stock</span><br>        <span class="hljs-attr">predicates:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">Path=/provider-stock/**</span><br>        <span class="hljs-attr">filters:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">RewritePath=/provider-stock/(?&lt;segment&gt;.*),</span> <span class="hljs-string">/$\&#123;segment&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="场景测试"><a href="#场景测试" class="headerlink" title="场景测试"></a>场景测试</h2><p>库存充足情况下会正常插入一条订单信息和将商品库存数减1</p>
+<p>启动nacos-&gt;seata-&gt;(api-gateway、api-provider、api-provider-order、api-provider-stock)</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225213323244.png"></p>
+<p>端口说明</p>
+<p>api-gateway：8001</p>
+<p>api-provider：8000</p>
+<p>api-provider-order：8002</p>
+<p>api-provider-stock：8003</p>
+<p>发送请求，路径<a href="">http://localhost:8001/provider/business/create/order</a>，走网关请求</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225213809314.png"></p>
+<p>订单成功插入一条数据</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225213908082.png"></p>
+<p>库存成功扣减（1-&gt;0）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225213934344.png"></p>
+<p>此时将订单号修该一下，再请求，此时库存服务就会抛出异常</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214110084.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214133821.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214200401.png"></p>
+<p>订单信息未插入</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214336960.png"></p>
+<p>可看到订单服务控制台显示分支事务回滚，二阶段回滚，说明全局事务在其中起到了相应作用</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/image-20201225214441355.png"></p>
+]]></content>
+      <categories>
+        <category>SpringCloudAlibaba</category>
+      </categories>
+      <tags>
+        <tag>SpringCloudAlibaba</tag>
+        <tag>Seata</tag>
+        <tag>分布式事务</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringCloudAlibaba之Seata介绍</title>
+    <url>/2020/12/23/SpringCloudAlibaba%E4%B9%8BSeata%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<h1 id="Seata-是什么"><a href="#Seata-是什么" class="headerlink" title="Seata 是什么?"></a>Seata 是什么?</h1><p>Seata 是一款开源的分布式事务解决方案，致力于提供高性能和简单易用的分布式事务服务。Seata 将为用户提供了 AT、TCC、SAGA 和 XA 事务模式，为用户打造一站式的分布式解决方案。</p>
+<h1 id="AT-模式"><a href="#AT-模式" class="headerlink" title="AT 模式"></a>AT 模式</h1><h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><ul>
+<li>基于支持本地 ACID 事务的关系型数据库。</li>
+<li>Java 应用，通过 JDBC 访问数据库。</li>
+</ul>
+<h2 id="整体机制"><a href="#整体机制" class="headerlink" title="整体机制"></a>整体机制</h2><p>两阶段提交协议的演变：</p>
+<ul>
+<li>一阶段：业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源。</li>
+<li>二阶段：<ul>
+<li>提交异步化，非常快速地完成。</li>
+<li>回滚通过一阶段的回滚日志进行反向补偿。</li>
+</ul>
+</li>
+</ul>
+<h1 id="写隔离"><a href="#写隔离" class="headerlink" title="写隔离"></a>写隔离</h1><ul>
+<li>一阶段本地事务提交前，需要确保先拿到 <strong>全局锁</strong> 。</li>
+<li>拿不到 <strong>全局锁</strong> ，不能提交本地事务。</li>
+<li>拿 <strong>全局锁</strong> 的尝试被限制在一定范围内，超出范围将放弃，并回滚本地事务，释放本地锁。</li>
+</ul>
+<p>以一个示例来说明：</p>
+<p>两个全局事务 tx1 和 tx2，分别对 a 表的 m 字段进行更新操作，m 的初始值 1000。</p>
+<p>tx1 先开始，开启本地事务，拿到本地锁，更新操作 m = 1000 - 100 = 900。本地事务提交前，先拿到该记录的 <strong>全局锁</strong> ，本地提交释放本地锁。 tx2 后开始，开启本地事务，拿到本地锁，更新操作 m = 900 - 100 = 800。本地事务提交前，尝试拿该记录的 <strong>全局锁</strong> ，tx1 全局提交前，该记录的全局锁被 tx1 持有，tx2 需要重试等待 <strong>全局锁</strong> 。</p>
+<p><img  src="https://img.alicdn.com/tfs/TB1zaknwVY7gK0jSZKzXXaikpXa-702-521.png"  ><span class="image-caption">Write-Isolation: Commit</span></p>
+<p>tx1 二阶段全局提交，释放 <strong>全局锁</strong> 。tx2 拿到 <strong>全局锁</strong> 提交本地事务。</p>
+<p><img  src="https://img.alicdn.com/tfs/TB1xW0UwubviK0jSZFNXXaApXXa-718-521.png"  ><span class="image-caption">Write-Isolation: Rollback</span></p>
+<p>如果 tx1 的二阶段全局回滚，则 tx1 需要重新获取该数据的本地锁，进行反向补偿的更新操作，实现分支的回滚。</p>
+<p>此时，如果 tx2 仍在等待该数据的 <strong>全局锁</strong>，同时持有本地锁，则 tx1 的分支回滚会失败。分支的回滚会一直重试，直到 tx2 的 <strong>全局锁</strong> 等锁超时，放弃 <strong>全局锁</strong> 并回滚本地事务释放本地锁，tx1 的分支回滚最终成功。</p>
+<p>因为整个过程 <strong>全局锁</strong> 在 tx1 结束前一直是被 tx1 持有的，所以不会发生 <strong>脏写</strong> 的问题。</p>
+<h1 id="读隔离"><a href="#读隔离" class="headerlink" title="读隔离"></a>读隔离</h1><p>在数据库本地事务隔离级别 <strong>读已提交（Read Committed）</strong> 或以上的基础上，Seata（AT 模式）的默认全局隔离级别是 <strong>读未提交（Read Uncommitted）</strong> 。</p>
+<p>如果应用在特定场景下，必需要求全局的 <strong>读已提交</strong> ，目前 Seata 的方式是通过 SELECT FOR UPDATE 语句的代理。</p>
+<p><img  src="https://img.alicdn.com/tfs/TB138wuwYj1gK0jSZFuXXcrHpXa-724-521.png"  ><span class="image-caption">Read Isolation: SELECT FOR UPDATE</span></p>
+<p>SELECT FOR UPDATE 语句的执行会申请 <strong>全局锁</strong> ，如果 <strong>全局锁</strong> 被其他事务持有，则释放本地锁（回滚 SELECT FOR UPDATE 语句的本地执行）并重试。这个过程中，查询是被 block 住的，直到 <strong>全局锁</strong> 拿到，即读取的相关数据是 <strong>已提交</strong> 的，才返回。</p>
+<p>出于总体性能上的考虑，Seata 目前的方案并没有对所有 SELECT 语句都进行代理，仅针对 FOR UPDATE 的 SELECT 语句。</p>
+<h1 id="工作机制"><a href="#工作机制" class="headerlink" title="工作机制"></a>工作机制</h1><p>以一个示例来说明整个 AT 分支的工作过程。</p>
+<p>业务表：<code>product</code></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Key</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>bigint(20)</td>
+<td>PRI</td>
+</tr>
+<tr>
+<td>name</td>
+<td>varchar(100)</td>
+<td></td>
+</tr>
+<tr>
+<td>since</td>
+<td>varchar(100)</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>AT 分支事务的业务逻辑：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">update</span> product <span class="hljs-keyword">set</span> <span class="hljs-keyword">name</span> = <span class="hljs-string">&#x27;GTS&#x27;</span> <span class="hljs-keyword">where</span> <span class="hljs-keyword">name</span> = <span class="hljs-string">&#x27;TXC&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="一阶段"><a href="#一阶段" class="headerlink" title="一阶段"></a>一阶段</h2><p>过程：</p>
+<ol>
+<li>解析 SQL：得到 SQL 的类型（UPDATE），表（product），条件（where name = ‘TXC’）等相关的信息。</li>
+<li>查询前镜像：根据解析得到的条件信息，生成查询语句，定位数据。</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">id</span>, <span class="hljs-keyword">name</span>, since <span class="hljs-keyword">from</span> product <span class="hljs-keyword">where</span> <span class="hljs-keyword">name</span> = <span class="hljs-string">&#x27;TXC&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>得到前镜像：</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>since</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>TXC</td>
+<td>2014</td>
+</tr>
+</tbody></table>
+<ol>
+<li>执行业务 SQL：更新这条记录的 name 为 ‘GTS’。</li>
+<li>查询后镜像：根据前镜像的结果，通过 <strong>主键</strong> 定位数据。</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">id</span>, <span class="hljs-keyword">name</span>, since <span class="hljs-keyword">from</span> product <span class="hljs-keyword">where</span> <span class="hljs-keyword">id</span> = <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<p>得到后镜像：</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>since</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>GTS</td>
+<td>2014</td>
+</tr>
+</tbody></table>
+<ol>
+<li>插入回滚日志：把前后镜像数据以及业务 SQL 相关的信息组成一条回滚日志记录，插入到 <code>UNDO_LOG</code> 表中。</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="code"><pre><code class="hljs json">&#123;<br>	<span class="hljs-attr">&quot;branchId&quot;</span>: <span class="hljs-number">641789253</span>,<br>	<span class="hljs-attr">&quot;undoItems&quot;</span>: [&#123;<br>		<span class="hljs-attr">&quot;afterImage&quot;</span>: &#123;<br>			<span class="hljs-attr">&quot;rows&quot;</span>: [&#123;<br>				<span class="hljs-attr">&quot;fields&quot;</span>: [&#123;<br>					<span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;id&quot;</span>,<br>					<span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-number">4</span>,<br>					<span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-number">1</span><br>				&#125;, &#123;<br>					<span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;name&quot;</span>,<br>					<span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-number">12</span>,<br>					<span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-string">&quot;GTS&quot;</span><br>				&#125;, &#123;<br>					<span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;since&quot;</span>,<br>					<span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-number">12</span>,<br>					<span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-string">&quot;2014&quot;</span><br>				&#125;]<br>			&#125;],<br>			<span class="hljs-attr">&quot;tableName&quot;</span>: <span class="hljs-string">&quot;product&quot;</span><br>		&#125;,<br>		<span class="hljs-attr">&quot;beforeImage&quot;</span>: &#123;<br>			<span class="hljs-attr">&quot;rows&quot;</span>: [&#123;<br>				<span class="hljs-attr">&quot;fields&quot;</span>: [&#123;<br>					<span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;id&quot;</span>,<br>					<span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-number">4</span>,<br>					<span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-number">1</span><br>				&#125;, &#123;<br>					<span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;name&quot;</span>,<br>					<span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-number">12</span>,<br>					<span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-string">&quot;TXC&quot;</span><br>				&#125;, &#123;<br>					<span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;since&quot;</span>,<br>					<span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-number">12</span>,<br>					<span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-string">&quot;2014&quot;</span><br>				&#125;]<br>			&#125;],<br>			<span class="hljs-attr">&quot;tableName&quot;</span>: <span class="hljs-string">&quot;product&quot;</span><br>		&#125;,<br>		<span class="hljs-attr">&quot;sqlType&quot;</span>: <span class="hljs-string">&quot;UPDATE&quot;</span><br>	&#125;],<br>	<span class="hljs-attr">&quot;xid&quot;</span>: <span class="hljs-string">&quot;xid:xxx&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>提交前，向 TC 注册分支：申请 <code>product</code> 表中，主键值等于 1 的记录的 <strong>全局锁</strong> 。</li>
+<li>本地事务提交：业务数据的更新和前面步骤中生成的 UNDO LOG 一并提交。</li>
+<li>将本地事务提交的结果上报给 TC。</li>
+</ol>
+<h2 id="二阶段-回滚"><a href="#二阶段-回滚" class="headerlink" title="二阶段-回滚"></a>二阶段-回滚</h2><ol>
+<li>收到 TC 的分支回滚请求，开启一个本地事务，执行如下操作。</li>
+<li>通过 XID 和 Branch ID 查找到相应的 UNDO LOG 记录。</li>
+<li>数据校验：拿 UNDO LOG 中的后镜与当前数据进行比较，如果有不同，说明数据被当前全局事务之外的动作做了修改。这种情况，需要根据配置策略来做处理，详细的说明在另外的文档中介绍。</li>
+<li>根据 UNDO LOG 中的前镜像和业务 SQL 的相关信息生成并执行回滚的语句：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">update</span> product <span class="hljs-keyword">set</span> <span class="hljs-keyword">name</span> = <span class="hljs-string">&#x27;TXC&#x27;</span> <span class="hljs-keyword">where</span> <span class="hljs-keyword">id</span> = <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>提交本地事务。并把本地事务的执行结果（即分支事务回滚的结果）上报给 TC。</li>
+</ol>
+<h2 id="二阶段-提交"><a href="#二阶段-提交" class="headerlink" title="二阶段-提交"></a>二阶段-提交</h2><ol>
+<li>收到 TC 的分支提交请求，把请求放入一个异步任务的队列中，马上返回提交成功的结果给 TC。</li>
+<li>异步任务阶段的分支提交请求将异步和批量地删除相应 UNDO LOG 记录。</li>
+</ol>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h2 id="回滚日志表"><a href="#回滚日志表" class="headerlink" title="回滚日志表"></a>回滚日志表</h2><p>UNDO_LOG Table：不同数据库在类型上会略有差别。</p>
+<p>以 MySQL 为例：</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>branch_id</td>
+<td>bigint PK</td>
+</tr>
+<tr>
+<td>xid</td>
+<td>varchar(100)</td>
+</tr>
+<tr>
+<td>context</td>
+<td>varchar(128)</td>
+</tr>
+<tr>
+<td>rollback_info</td>
+<td>longblob</td>
+</tr>
+<tr>
+<td>log_status</td>
+<td>tinyint</td>
+</tr>
+<tr>
+<td>log_created</td>
+<td>datetime</td>
+</tr>
+<tr>
+<td>log_modified</td>
+<td>datetime</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 注意此处0.7.0+ 增加字段 context</span><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`undo_log`</span> (<br>  <span class="hljs-string">`id`</span> <span class="hljs-built_in">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,<br>  <span class="hljs-string">`branch_id`</span> <span class="hljs-built_in">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-string">`xid`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-string">`context`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-string">`rollback_info`</span> longblob <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-string">`log_status`</span> <span class="hljs-built_in">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-string">`log_created`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  <span class="hljs-string">`log_modified`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,<br>  PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>),<br>  <span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">KEY</span> <span class="hljs-string">`ux_undo_log`</span> (<span class="hljs-string">`xid`</span>,<span class="hljs-string">`branch_id`</span>)<br>) <span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span> AUTO_INCREMENT=<span class="hljs-number">1</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CHARSET</span>=utf8;<br></code></pre></td></tr></table></figure>
+
+<h1 id="TCC-模式"><a href="#TCC-模式" class="headerlink" title="TCC 模式"></a>TCC 模式</h1><p>回顾总览中的描述：一个分布式的全局事务，整体是 <strong>两阶段提交</strong> 的模型。全局事务是由若干分支事务组成的，分支事务要满足 <strong>两阶段提交</strong> 的模型要求，即需要每个分支事务都具备自己的：</p>
+<ul>
+<li>一阶段 prepare 行为</li>
+<li>二阶段 commit 或 rollback 行为</li>
+</ul>
+<p><img  src="https://img.alicdn.com/tfs/TB14Kguw1H2gK0jSZJnXXaT1FXa-853-482.png"  ><span class="image-caption">Overview of a global transaction</span></p>
+<p>根据两阶段行为模式的不同，我们将分支事务划分为 <strong>Automatic (Branch) Transaction Mode</strong> 和 <strong>Manual (Branch) Transaction Mode</strong>.</p>
+<p>AT 模式（<a href="http://seata.io/zh-cn/docs/overview/what-is-seata.html">参考链接 TBD</a>）基于 <strong>支持本地 ACID 事务</strong> 的 <strong>关系型数据库</strong>：</p>
+<ul>
+<li>一阶段 prepare 行为：在本地事务中，一并提交业务数据更新和相应回滚日志记录。</li>
+<li>二阶段 commit 行为：马上成功结束，<strong>自动</strong> 异步批量清理回滚日志。</li>
+<li>二阶段 rollback 行为：通过回滚日志，<strong>自动</strong> 生成补偿操作，完成数据回滚。</li>
+</ul>
+<p>相应的，TCC 模式，不依赖于底层数据资源的事务支持：</p>
+<ul>
+<li>一阶段 prepare 行为：调用 <strong>自定义</strong> 的 prepare 逻辑。</li>
+<li>二阶段 commit 行为：调用 <strong>自定义</strong> 的 commit 逻辑。</li>
+<li>二阶段 rollback 行为：调用 <strong>自定义</strong> 的 rollback 逻辑。</li>
+</ul>
+<p>所谓 TCC 模式，是指支持把 <strong>自定义</strong> 的分支事务纳入到全局事务的管理中。</p>
+<h1 id="Saga-模式"><a href="#Saga-模式" class="headerlink" title="Saga 模式"></a>Saga 模式</h1><p>Saga模式是SEATA提供的长事务解决方案，在Saga模式中，业务流程中每个参与者都提交本地事务，当出现某一个参与者失败则补偿前面已经成功的参与者，一阶段正向服务和二阶段补偿服务都由业务开发实现。</p>
+<p><img  src="https://img.alicdn.com/tfs/TB1Y2kuw7T2gK0jSZFkXXcIQFXa-445-444.png"  ><span class="image-caption">Saga模式示意图</span></p>
+<p>理论基础：Hector &amp; Kenneth 发表论⽂ Sagas （1987）</p>
+<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><ul>
+<li>业务流程长、业务流程多</li>
+<li>参与者包含其它公司或遗留系统服务，无法提供 TCC 模式要求的三个接口</li>
+</ul>
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ul>
+<li>一阶段提交本地事务，无锁，高性能</li>
+<li>事件驱动架构，参与者可异步执行，高吞吐</li>
+<li>补偿服务易于实现</li>
+</ul>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ul>
+<li>不保证隔离性（应对方案见<a href="http://seata.io/zh-cn/docs/user/saga.html">用户文档</a>）</li>
+</ul>
+]]></content>
+      <categories>
+        <category>SpringCloudAlibaba</category>
+      </categories>
+      <tags>
+        <tag>SpringCloudAlibaba</tag>
+        <tag>Seata</tag>
+        <tag>分布式事务</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SpringCloudGateway初探</title>
     <url>/2020/12/23/SpringCloudGateway%E5%88%9D%E6%8E%A2/</url>
     <content><![CDATA[<h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>SpringCloud全家桶中有个很重要的组件就是网关，在1.X版本中都是采用zuul网关，在2.X版本中，zuul的升级一直跳票，SpringCloud最后自己研发了一个网关替带zuul——SpringCloud Gateway 。换言之，gateway就是原zuul1.X版 的替代。</p>
@@ -164,60 +574,6 @@
         <tag>SpringCloud</tag>
         <tag>Spring Cloud Gateway</tag>
         <tag>网关</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringCloudAlibaba之Sentinel介绍</title>
-    <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BSentinel%E4%BB%8B%E7%BB%8D/</url>
-    <content><![CDATA[<h2 id="Sentinel-是什么"><a href="#Sentinel-是什么" class="headerlink" title="Sentinel 是什么"></a>Sentinel 是什么</h2><p>随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 是面向分布式服务架构的流量控制组件，主要以流量为切入点，从限流、流量整形、熔断降级、系统负载保护、热点防护等多个维度来帮助开发者保障微服务的稳定性。</p>
-<h3 id="Sentinel-的历史"><a href="#Sentinel-的历史" class="headerlink" title="Sentinel 的历史"></a>Sentinel 的历史</h3><ul>
-<li>2012 年，Sentinel 诞生，主要功能为入口流量控制。</li>
-<li>2013-2017 年，Sentinel 在阿里巴巴集团内部迅速发展，成为基础技术模块，覆盖了所有的核心场景。Sentinel 也因此积累了大量的流量归整场景以及生产实践。</li>
-<li>2018 年，Sentinel 开源，并持续演进。</li>
-<li>2019 年，Sentinel 朝着多语言扩展的方向不断探索，推出 <a href="https://github.com/alibaba/sentinel-cpp">C++ 原生版本</a>，同时针对 Service Mesh 场景也推出了 <a href="https://github.com/alibaba/Sentinel/tree/master/sentinel-cluster/sentinel-cluster-server-envoy-rls">Envoy 集群流量控制支持</a>，以解决 Service Mesh 架构下多语言限流的问题。</li>
-<li>2020 年，推出 <a href="https://github.com/alibaba/sentinel-golang">Sentinel Go 版本</a>，继续朝着云原生方向演进。</li>
-</ul>
-<h2 id="Sentinel-基本概念"><a href="#Sentinel-基本概念" class="headerlink" title="Sentinel 基本概念"></a>Sentinel 基本概念</h2><h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><p>资源是 Sentinel 的关键概念。它可以是 Java 应用程序中的任何内容，例如，由应用程序提供的服务，或由应用程序调用的其它应用提供的服务，甚至可以是一段代码。在接下来的文档中，我们都会用资源来描述代码块。</p>
-<p>只要通过 Sentinel API 定义的代码，就是资源，能够被 Sentinel 保护起来。大部分情况下，可以使用方法签名，URL，甚至服务名称作为资源名来标示资源。</p>
-<h3 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h3><p>围绕资源的实时状态设定的规则，可以包括流量控制规则、熔断降级规则以及系统保护规则。所有规则可以动态实时调整。</p>
-<h2 id="Sentinel-功能和设计理念"><a href="#Sentinel-功能和设计理念" class="headerlink" title="Sentinel 功能和设计理念"></a>Sentinel 功能和设计理念</h2><h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><h4 id="什么是流量控制"><a href="#什么是流量控制" class="headerlink" title="什么是流量控制"></a>什么是流量控制</h4><p>流量控制在网络传输中是一个常用的概念，它用于调整网络包的发送数据。然而，从系统稳定性角度考虑，在处理请求的速度上，也有非常多的讲究。任意时间到来的请求往往是随机不可控的，而系统的处理能力是有限的。我们需要根据系统的处理能力对流量进行控制。Sentinel 作为一个调配器，可以根据需要把随机的请求调整成合适的形状。</p>
-<h4 id="流量控制设计理念"><a href="#流量控制设计理念" class="headerlink" title="流量控制设计理念"></a>流量控制设计理念</h4><p>流量控制有以下几个角度:</p>
-<ul>
-<li>资源的调用关系，例如资源的调用链路，资源和资源之间的关系；</li>
-<li>运行指标，例如 QPS、线程池、系统负载等；</li>
-<li>控制的效果，例如直接限流、冷启动、排队等。</li>
-</ul>
-<p>Sentinel 的设计理念是让您自由选择控制的角度，并进行灵活组合，从而达到想要的效果。</p>
-<h3 id="熔断降级"><a href="#熔断降级" class="headerlink" title="熔断降级"></a>熔断降级</h3><h4 id="什么是熔断降级"><a href="#什么是熔断降级" class="headerlink" title="什么是熔断降级"></a>什么是熔断降级</h4><p>除了流量控制以外，及时对调用链路中的不稳定因素进行熔断也是 Sentinel 的使命之一。由于调用关系的复杂性，如果调用链路中的某个资源出现了不稳定，可能会导致请求发生堆积，进而导致级联错误。</p>
-<p>Sentinel 和 Hystrix 的原则是一致的: 当检测到调用链路中某个资源出现不稳定的表现，例如请求响应时间长或异常比例升高的时候，则对这个资源的调用进行限制，让请求快速失败，避免影响到其它的资源而导致级联故障。</p>
-<h4 id="熔断降级设计理念"><a href="#熔断降级设计理念" class="headerlink" title="熔断降级设计理念"></a>熔断降级设计理念</h4><p>在限制的手段上，Sentinel 和 Hystrix 采取了完全不一样的方法。</p>
-<p>Hystrix 通过 <a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#benefits-of-thread-pools">线程池隔离</a> 的方式，来对依赖（在 Sentinel 的概念中对应 <em>资源</em>）进行了隔离。这样做的好处是资源和资源之间做到了最彻底的隔离。缺点是除了增加了线程切换的成本（过多的线程池导致线程数目过多），还需要预先给各个资源做线程池大小的分配。</p>
-<p>Sentinel 对这个问题采取了两种手段:</p>
-<ul>
-<li>通过并发线程数进行限制</li>
-</ul>
-<p>和资源池隔离的方法不同，Sentinel 通过限制资源并发线程的数量，来减少不稳定资源对其它资源的影响。这样不但没有线程切换的损耗，也不需要您预先分配线程池的大小。当某个资源出现不稳定的情况下，例如响应时间变长，对资源的直接影响就是会造成线程数的逐步堆积。当线程数在特定资源上堆积到一定的数量之后，对该资源的新请求就会被拒绝。堆积的线程完成任务后才开始继续接收请求。</p>
-<ul>
-<li>通过响应时间对资源进行降级</li>
-</ul>
-<p>除了对并发线程数进行控制以外，Sentinel 还可以通过响应时间来快速降级不稳定的资源。当依赖的资源出现响应时间过长后，所有对该资源的访问都会被直接拒绝，直到过了指定的时间窗口之后才重新恢复。</p>
-<h3 id="系统自适应保护"><a href="#系统自适应保护" class="headerlink" title="系统自适应保护"></a>系统自适应保护</h3><p>Sentinel 同时提供系统维度的自适应保护能力。防止雪崩，是系统防护中重要的一环。当系统负载较高的时候，如果还持续让请求进入，可能会导致系统崩溃，无法响应。在集群环境下，网络负载均衡会把本应这台机器承载的流量转发到其它的机器上去。如果这个时候其它的机器也处在一个边缘状态的时候，这个增加的流量就会导致这台机器也崩溃，最后导致整个集群不可用。</p>
-<p>针对这个情况，Sentinel 提供了对应的保护机制，让系统的入口流量和系统的负载达到一个平衡，保证系统在能力范围之内处理最多的请求。</p>
-<h2 id="Sentinel-是如何工作的"><a href="#Sentinel-是如何工作的" class="headerlink" title="Sentinel 是如何工作的"></a>Sentinel 是如何工作的</h2><p>Sentinel 的主要工作机制如下：</p>
-<ul>
-<li>对主流框架提供适配或者显示的 API，来定义需要保护的资源，并提供设施对资源进行实时统计和调用链路分析。</li>
-<li>根据预设的规则，结合对资源的实时统计信息，对流量进行控制。同时，Sentinel 提供开放的接口，方便您定义及改变规则。</li>
-<li>Sentinel 提供实时的监控系统，方便您快速了解目前系统的状态。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>SpringCloudAlibaba</category>
-      </categories>
-      <tags>
-        <tag>SpringCloudAlibaba</tag>
-        <tag>Sentiel</tag>
-        <tag>熔断</tag>
-        <tag>流控</tag>
       </tags>
   </entry>
   <entry>
@@ -363,6 +719,60 @@
         <tag>熔断</tag>
         <tag>流控</tag>
         <tag>Sentinel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringCloudAlibaba之Sentinel介绍</title>
+    <url>/2020/12/21/SpringCloudAlibaba%E4%B9%8BSentinel%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<h2 id="Sentinel-是什么"><a href="#Sentinel-是什么" class="headerlink" title="Sentinel 是什么"></a>Sentinel 是什么</h2><p>随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 是面向分布式服务架构的流量控制组件，主要以流量为切入点，从限流、流量整形、熔断降级、系统负载保护、热点防护等多个维度来帮助开发者保障微服务的稳定性。</p>
+<h3 id="Sentinel-的历史"><a href="#Sentinel-的历史" class="headerlink" title="Sentinel 的历史"></a>Sentinel 的历史</h3><ul>
+<li>2012 年，Sentinel 诞生，主要功能为入口流量控制。</li>
+<li>2013-2017 年，Sentinel 在阿里巴巴集团内部迅速发展，成为基础技术模块，覆盖了所有的核心场景。Sentinel 也因此积累了大量的流量归整场景以及生产实践。</li>
+<li>2018 年，Sentinel 开源，并持续演进。</li>
+<li>2019 年，Sentinel 朝着多语言扩展的方向不断探索，推出 <a href="https://github.com/alibaba/sentinel-cpp">C++ 原生版本</a>，同时针对 Service Mesh 场景也推出了 <a href="https://github.com/alibaba/Sentinel/tree/master/sentinel-cluster/sentinel-cluster-server-envoy-rls">Envoy 集群流量控制支持</a>，以解决 Service Mesh 架构下多语言限流的问题。</li>
+<li>2020 年，推出 <a href="https://github.com/alibaba/sentinel-golang">Sentinel Go 版本</a>，继续朝着云原生方向演进。</li>
+</ul>
+<h2 id="Sentinel-基本概念"><a href="#Sentinel-基本概念" class="headerlink" title="Sentinel 基本概念"></a>Sentinel 基本概念</h2><h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><p>资源是 Sentinel 的关键概念。它可以是 Java 应用程序中的任何内容，例如，由应用程序提供的服务，或由应用程序调用的其它应用提供的服务，甚至可以是一段代码。在接下来的文档中，我们都会用资源来描述代码块。</p>
+<p>只要通过 Sentinel API 定义的代码，就是资源，能够被 Sentinel 保护起来。大部分情况下，可以使用方法签名，URL，甚至服务名称作为资源名来标示资源。</p>
+<h3 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h3><p>围绕资源的实时状态设定的规则，可以包括流量控制规则、熔断降级规则以及系统保护规则。所有规则可以动态实时调整。</p>
+<h2 id="Sentinel-功能和设计理念"><a href="#Sentinel-功能和设计理念" class="headerlink" title="Sentinel 功能和设计理念"></a>Sentinel 功能和设计理念</h2><h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><h4 id="什么是流量控制"><a href="#什么是流量控制" class="headerlink" title="什么是流量控制"></a>什么是流量控制</h4><p>流量控制在网络传输中是一个常用的概念，它用于调整网络包的发送数据。然而，从系统稳定性角度考虑，在处理请求的速度上，也有非常多的讲究。任意时间到来的请求往往是随机不可控的，而系统的处理能力是有限的。我们需要根据系统的处理能力对流量进行控制。Sentinel 作为一个调配器，可以根据需要把随机的请求调整成合适的形状。</p>
+<h4 id="流量控制设计理念"><a href="#流量控制设计理念" class="headerlink" title="流量控制设计理念"></a>流量控制设计理念</h4><p>流量控制有以下几个角度:</p>
+<ul>
+<li>资源的调用关系，例如资源的调用链路，资源和资源之间的关系；</li>
+<li>运行指标，例如 QPS、线程池、系统负载等；</li>
+<li>控制的效果，例如直接限流、冷启动、排队等。</li>
+</ul>
+<p>Sentinel 的设计理念是让您自由选择控制的角度，并进行灵活组合，从而达到想要的效果。</p>
+<h3 id="熔断降级"><a href="#熔断降级" class="headerlink" title="熔断降级"></a>熔断降级</h3><h4 id="什么是熔断降级"><a href="#什么是熔断降级" class="headerlink" title="什么是熔断降级"></a>什么是熔断降级</h4><p>除了流量控制以外，及时对调用链路中的不稳定因素进行熔断也是 Sentinel 的使命之一。由于调用关系的复杂性，如果调用链路中的某个资源出现了不稳定，可能会导致请求发生堆积，进而导致级联错误。</p>
+<p>Sentinel 和 Hystrix 的原则是一致的: 当检测到调用链路中某个资源出现不稳定的表现，例如请求响应时间长或异常比例升高的时候，则对这个资源的调用进行限制，让请求快速失败，避免影响到其它的资源而导致级联故障。</p>
+<h4 id="熔断降级设计理念"><a href="#熔断降级设计理念" class="headerlink" title="熔断降级设计理念"></a>熔断降级设计理念</h4><p>在限制的手段上，Sentinel 和 Hystrix 采取了完全不一样的方法。</p>
+<p>Hystrix 通过 <a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#benefits-of-thread-pools">线程池隔离</a> 的方式，来对依赖（在 Sentinel 的概念中对应 <em>资源</em>）进行了隔离。这样做的好处是资源和资源之间做到了最彻底的隔离。缺点是除了增加了线程切换的成本（过多的线程池导致线程数目过多），还需要预先给各个资源做线程池大小的分配。</p>
+<p>Sentinel 对这个问题采取了两种手段:</p>
+<ul>
+<li>通过并发线程数进行限制</li>
+</ul>
+<p>和资源池隔离的方法不同，Sentinel 通过限制资源并发线程的数量，来减少不稳定资源对其它资源的影响。这样不但没有线程切换的损耗，也不需要您预先分配线程池的大小。当某个资源出现不稳定的情况下，例如响应时间变长，对资源的直接影响就是会造成线程数的逐步堆积。当线程数在特定资源上堆积到一定的数量之后，对该资源的新请求就会被拒绝。堆积的线程完成任务后才开始继续接收请求。</p>
+<ul>
+<li>通过响应时间对资源进行降级</li>
+</ul>
+<p>除了对并发线程数进行控制以外，Sentinel 还可以通过响应时间来快速降级不稳定的资源。当依赖的资源出现响应时间过长后，所有对该资源的访问都会被直接拒绝，直到过了指定的时间窗口之后才重新恢复。</p>
+<h3 id="系统自适应保护"><a href="#系统自适应保护" class="headerlink" title="系统自适应保护"></a>系统自适应保护</h3><p>Sentinel 同时提供系统维度的自适应保护能力。防止雪崩，是系统防护中重要的一环。当系统负载较高的时候，如果还持续让请求进入，可能会导致系统崩溃，无法响应。在集群环境下，网络负载均衡会把本应这台机器承载的流量转发到其它的机器上去。如果这个时候其它的机器也处在一个边缘状态的时候，这个增加的流量就会导致这台机器也崩溃，最后导致整个集群不可用。</p>
+<p>针对这个情况，Sentinel 提供了对应的保护机制，让系统的入口流量和系统的负载达到一个平衡，保证系统在能力范围之内处理最多的请求。</p>
+<h2 id="Sentinel-是如何工作的"><a href="#Sentinel-是如何工作的" class="headerlink" title="Sentinel 是如何工作的"></a>Sentinel 是如何工作的</h2><p>Sentinel 的主要工作机制如下：</p>
+<ul>
+<li>对主流框架提供适配或者显示的 API，来定义需要保护的资源，并提供设施对资源进行实时统计和调用链路分析。</li>
+<li>根据预设的规则，结合对资源的实时统计信息，对流量进行控制。同时，Sentinel 提供开放的接口，方便您定义及改变规则。</li>
+<li>Sentinel 提供实时的监控系统，方便您快速了解目前系统的状态。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>SpringCloudAlibaba</category>
+      </categories>
+      <tags>
+        <tag>SpringCloudAlibaba</tag>
+        <tag>Sentiel</tag>
+        <tag>熔断</tag>
+        <tag>流控</tag>
       </tags>
   </entry>
   <entry>
@@ -894,7 +1304,7 @@
   </entry>
   <entry>
     <title>如何搭建一个SpringCloud2项目</title>
-    <url>/2020/12/15/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AASpringCloud2%E9%A1%B9%E7%9B%AE/</url>
+    <url>/2020/12/15/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AASpringCloud2.0%E9%A1%B9%E7%9B%AE/</url>
     <content><![CDATA[<p>&emsp;首先创建一个Maven项目：</p>
 <img src="https://img-blog.csdnimg.cn/2020072112400676.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MTcxODE3,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
 
@@ -1183,7 +1593,7 @@
   </entry>
   <entry>
     <title>如何搭建一个SpringBoot2.0项目</title>
-    <url>/2020/12/15/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AASpringBoot2%E9%A1%B9%E7%9B%AE/</url>
+    <url>/2020/12/15/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AASpringBoot2.0%E9%A1%B9%E7%9B%AE/</url>
     <content><![CDATA[<h1 id="一、SpringBoot"><a href="#一、SpringBoot" class="headerlink" title="一、SpringBoot"></a>一、SpringBoot</h1><p><img src="https://img-blog.csdnimg.cn/20200717172720453.png"><br>&emsp;SpringBoot是由Pivotal团队在2013年开始研发、2014年4月发布第一个版本的全新开源的轻量级框架。它基于Spring4.0设计，不仅继承了Spring框架原有的优秀特性，而且还通过简化配置来进一步简化了Spring应用的整个搭建和开发过程。另外SpringBoot通过集成大量的框架使得依赖包的版本冲突，以及引用的不稳定性等问题得到了很好的解决。</p>
 <p>&emsp;<strong>SpringBoot所具备的特征有</strong>：</p>
 <ol>
@@ -3456,7 +3866,7 @@
   </entry>
   <entry>
     <title>SpringBoot2.0配置多数据源</title>
-    <url>/2020/12/07/SpringBoot2-0%E9%85%8D%E7%BD%AE%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/</url>
+    <url>/2020/12/07/SpringBoot2.0%E9%85%8D%E7%BD%AE%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/</url>
     <content><![CDATA[<h1 id="一、简述"><a href="#一、简述" class="headerlink" title="一、简述"></a>一、简述</h1><p>配置多数据源意思就是在一个项目中使用多个数据库，在项目使用中可以不用手动切换数据库来实现不同数据库的数据获取和更新。</p>
 <p>源码地址： <a href="https://github.com/hanguilin/boot-security">https://github.com/hanguilin/boot-security</a></p>
 <p>项目环境： SpringBoot 2.1.9、Spring Data Jpa</p>
@@ -4471,7 +4881,7 @@
   </entry>
   <entry>
     <title>SpringBoot+Shiro+JPA+LayUI的后台管理系统</title>
-    <url>/2020/12/04/SpringBoot-Shiro-JPA-LayUI%E7%9A%84%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/</url>
+    <url>/2020/12/04/SpringBoot+Shiro+JPA+LayUI%E7%9A%84%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/</url>
     <content><![CDATA[<h1 id="一、系统说明"><a href="#一、系统说明" class="headerlink" title="一、系统说明"></a>一、系统说明</h1><p>资源下载路径：<a href="https://download.csdn.net/download/qq_37171817/12056804">https://download.csdn.net/download/qq_37171817/12056804</a></p>
 <p>本系统是一个用SpringBoot做后台开发框架，Shiro做权限管理框架，Spring Data Jpa 做持久层框架，Layui、Layui mini做为前端框架的前后端分离的项目。</p>
 <p>即拿即用，上手即会，可以方便你快速的开发一套属于自己的系统。</p>
@@ -4759,7 +5169,7 @@
   </entry>
   <entry>
     <title>Tomcat+Nginx+Redis实现session共享</title>
-    <url>/2020/11/29/Tomcat-Nginx-Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB/</url>
+    <url>/2020/11/29/Tomcat+Nginx+Redis%E5%AE%9E%E7%8E%B0session%E5%85%B1%E4%BA%AB/</url>
     <content><![CDATA[<h1 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h1><p>中间件：Tomcat、Redis、Nginx</p>
 <p>jar包：commons-pool2-2.4.2.jar、jedis-2.8.0.jar、tomcat-redis-session-manager-2.0.0.jar</p>
 <h1 id="二、配置"><a href="#二、配置" class="headerlink" title="二、配置"></a>二、配置</h1><h2 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h2><p>多台Tomacat需要配置不同的端口号</p>
