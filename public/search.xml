@@ -92,6 +92,158 @@
       </tags>
   </entry>
   <entry>
+    <title>分布式事务理论基础</title>
+    <url>/2020/12/26/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h1 id="两阶段提交（2PC）"><a href="#两阶段提交（2PC）" class="headerlink" title="两阶段提交（2PC）"></a>两阶段提交（2PC）</h1><p>两阶段提交协议（Two Phase Commitment Protocol)中，涉及到两种角色</p>
+<ul>
+<li><p>一个事务协调者（coordinator）</p>
+<p>负责协调多个参与者进行事务投票及提交或者回滚</p>
+</li>
+<li><p>多个事务参与者（participants）</p>
+<p>本地事务执行者</p>
+</li>
+</ul>
+<p>两个处理步骤</p>
+<ul>
+<li><p>投票阶段（voting phase）</p>
+<p>协调者将通知事务参与者准备提交或取消事务，然后进入表决过程。参与者将告知协调者自己的决策：</p>
+<ul>
+<li><p>同意</p>
+<p>事务参与者成功执行本地事务，但未提交</p>
+</li>
+<li><p>取消</p>
+<p>本地事务遇到故障执行失败</p>
+</li>
+</ul>
+</li>
+<li><p>提交阶段 （commit phase）</p>
+<p>收到参与者的通知后，协调者再向参与者发出通知，根据反馈情况决定各参与者是否要提交还是回滚</p>
+</li>
+</ul>
+<p>如图，1-2为第一阶段，2-3为第二阶段</p>
+<p>如果任一资源管理器在第一阶段返回准备失败，那么事务管理器会要求所有资源管理器在第二阶段执行回滚操作。通过事务管理器的两阶段协调，最终所有资源管理器要么全部提交，要么全部回滚，最终状态都是一致的</p>
+<p>  <img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/20190409111746632.png"></p>
+<h1 id="TCC"><a href="#TCC" class="headerlink" title="TCC"></a>TCC</h1><h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>TCC将事务提交分为Try-Confirm-Cancel 3个操作。其和两阶段提交有点类似，Try为第一阶段，Confirm-Cancel为第二阶段，是一种应用层面侵入业务的两阶段提交</p>
+<table>
+<thead>
+<tr>
+<th>操作方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Try</td>
+<td>预留业务资源/数据校验</td>
+</tr>
+<tr>
+<td>Confirm</td>
+<td>确认执行业务操作，实际提交数据，不做任何业务检查，try成功，confirm必定成功，需保证幂等</td>
+</tr>
+<tr>
+<td>Cancel</td>
+<td>取消执行业务操作，实际回滚数据，需保证幂等</td>
+</tr>
+</tbody></table>
+<p>其核心在于将业务分为两个操作步骤完成。不依赖RM对分布式事务的支持，而是通过对业务逻辑的分解来实现分布式事务</p>
+<p>下面以银行转账例子来说明</p>
+<p>假设用户user表中有两个字段：可用余额(available_money)、冻结余额(frozen_money)<br>A扣钱对应服务A(ServiceA)<br>B加钱对应服务B(ServiceB)<br>转账订单服务(OrderService)<br>业务转账方法服务(BusinessService)</p>
+<p>ServiceA，ServiceB，OrderService都需分别实现try()，confirm()，cancel()方法，方法对应业务逻辑如下</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ServiceA</th>
+<th>ServiceB</th>
+<th>OrderService</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>try()</td>
+<td>校验余额（并发控制）<br />冻结余额+1000<br />余额-1000</td>
+<td>冻结余额+1000</td>
+<td>创建转账订单，状态待转账</td>
+</tr>
+<tr>
+<td>confirm()</td>
+<td>冻结余额-1000</td>
+<td>冻结余额-1000<br />余额+1000</td>
+<td>状态变为转账成功</td>
+</tr>
+<tr>
+<td>cancel()</td>
+<td>冻结余额-1000<br />余额+1000</td>
+<td>冻结余额-1000</td>
+<td>状态变为转账失败</td>
+</tr>
+</tbody></table>
+<p>其中业务调用方BusinessService中就需要调用<br>ServiceA.try()<br>ServiceB.try()<br>OrderService.try()</p>
+<p>1、 当所有try方法均执行成功时，对全局事务进行提交，及由事务管理器调用每个微服务的confirm()方法</p>
+<p>2、当任意一个方法try()失败（预留资源不足，抑或网络异常等任何异常），由事务管理器调用每个服务的cancel()方法对全局事务进行回滚</p>
+<p>TCC原理参考图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/20190409113546636.png"></p>
+<h2 id="幂等控制"><a href="#幂等控制" class="headerlink" title="幂等控制"></a>幂等控制</h2><p>使用TCC时要注意Try-Confirm-Cancel 3个操作的幂等控制，网络原因，或者重试操作都有可能导致这几个操作重复执行</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/20190416211740360.png"></p>
+<p>业务实现过程中需重点关注幂等实现，讲到幂等，以上诉TCC转账例子中的confirm()方法来说明</p>
+<p>在confirm()方法中，余额-1000，冻结余额-1000，这一步是实现幂等的关键，你会怎么做？</p>
+<p>常规逻辑：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//根据userId查到账户</span><br>Account account = accountMapper.selectById(userId);<br><span class="hljs-comment">//取出当前资金</span><br><span class="hljs-keyword">int</span> availableMoney = account.getAvailableMoney();<br>account.setAvailableMoney(availableMoney-<span class="hljs-number">1000</span>);<br><span class="hljs-comment">//更新剩余资金</span><br>accountMapper.update(account);<br></code></pre></td></tr></table></figure>
+
+<p>看起来是没有问题的，但是这是一个读-改-写的过程，其过程非原子性，在并发情况下会出现数据不一致的情况</p>
+<p>最简单的做法是利用数据库行锁特性解决</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">update</span> <span class="hljs-keyword">account</span> <span class="hljs-keyword">set</span> available_money = available_money<span class="hljs-number">-1000</span> <span class="hljs-keyword">where</span> user_id=<span class="hljs-comment">#&#123;userId&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>但是TCC中，单纯使用这个方法是不行的，如上，他不能解决多次操作带来的多次扣减问题，如果执行2次，那么用户账户就减少了2000</p>
+<p>这是我们可以引入转账订单状态来做判断，若订单状态为已支付，则停止后续扣减操作</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span>( order!=<span class="hljs-keyword">null</span> &amp;&amp; order.getStatus().equals(<span class="hljs-string">&quot;转账成功&quot;</span>))&#123;<br>	<span class="hljs-keyword">return</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="空回滚"><a href="#空回滚" class="headerlink" title="空回滚"></a>空回滚</h2><p>TCC服务在未收到Try请求的情况下收到Cancel请求，这种场景被称为空回滚</p>
+<p>如下图所示，事务协调器再调用TCC服务的一阶段try操作时，可能会出现丢包而导致的网络超时，此时事务协调器会触发二阶段回滚，调用TCC的cancel操作</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/2019041620592316.png"></p>
+<p>TCC服务在实现时应当允许空回滚的执行</p>
+<p>以上诉案例为例，如果try方法没执行，那么订单一定没创建，所以在cancel方法中可以以此为依据进行判断，如果订单不存在，不处理后续逻辑，且正常执行，不要抛出异常</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(orderNo==<span class="hljs-keyword">null</span> || order==<span class="hljs-keyword">null</span>)&#123;<br>	<span class="hljs-keyword">return</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="防悬挂"><a href="#防悬挂" class="headerlink" title="防悬挂"></a>防悬挂</h2><p>如下图所示，事务协调器在调用TCC服务的一阶段Try操作时，可能会出现因网络拥堵而导致的超时，此时事务协调器会触发二阶段回滚，调用TCC服务的Cancel操作；在此之后，拥堵在网络上的一阶段Try数据包被TCC服务收到，出现了二阶段Cancel请求比一阶段Try请求先执行的情况；</p>
+<p>用户在实现TCC服务时，应当允许空回滚，但是要拒绝执行空回滚之后到来的一阶段Try请求；</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/20190416210140253.png"></p>
+<p>可以在二阶段执行时插入一条事务控制记录，状态为已回滚，这样当一阶段执行时，先读取该记录，如果记录存在，就认为二阶段回滚操作已经执行，不再执行try方法；</p>
+<h1 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h1><p>事务消息更倾向于达成分布式事务的最终一致性，适用于分布式事务的提交或回滚只取决于事务发起方的业务需求，如A给B打了款并且成功了，那么下游业务B一定需要加钱这种场景，或许下了单，用户积分一定得增加这种场景。RocketMQ4.3中已经开源了事务消息，具体设计思路分析及demo演示，可以参考文章<a href="https://blog.csdn.net/hosaos/article/details/90050276">《分布式事务-RocketMQ消息事务设计思路及Demo》</a></p>
+<h1 id="优缺点比较"><a href="#优缺点比较" class="headerlink" title="优缺点比较"></a>优缺点比较</h1><table>
+<thead>
+<tr>
+<th>事务方案</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2PC</td>
+<td>实现简单</td>
+<td>1、需要数据库(一般是XA支持) 2、锁粒度大，性能差</td>
+</tr>
+<tr>
+<td>TCC</td>
+<td>锁粒度小，性能好</td>
+<td>需要侵入业务，实现较为复杂，复杂业务实现幂等有难度</td>
+</tr>
+<tr>
+<td>消息事务</td>
+<td>业务侵入小，无需编写业务回滚补偿逻辑</td>
+<td>事务消息实现难度大，强依赖第三方中间件可靠性</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>分布式事务</category>
+      </categories>
+      <tags>
+        <tag>分布式事务</tag>
+        <tag>微服务</tag>
+        <tag>2PC</tag>
+        <tag>TCC</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SpringCloud整合Seata1.4.0</title>
     <url>/2020/12/25/SpringCloud%E6%95%B4%E5%90%88Seata1.4.0/</url>
     <content><![CDATA[<h1 id="版本说明"><a href="#版本说明" class="headerlink" title="版本说明"></a>版本说明</h1><p>本例于windows基于Nacos配置注册、MybatisPlus、Hikari数据源，数据库为Mysql，示例代码为Seata的AT模式。案例代码GitHub地址<a href="https://github.com/hanguilin/spring-cloud-demo">spring-cloud-demo</a></p>

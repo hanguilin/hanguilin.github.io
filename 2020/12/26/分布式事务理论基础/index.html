@@ -1,0 +1,650 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>分布式事务理论基础 - 与李的个人博客</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  <meta name="keywords" content="Java、Mysql、Redis、Spring、SpringBoot、SpringCloud">
+  <meta name="description" content="两阶段提交（2PC）两阶段提交协议（Two Phase...">
+  <meta name="author" content="韩桂林 (与李)">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" sizes="180x180">
+  <meta rel="mask-icon" href="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo32x32.png" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/logo128x128.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_s6x2xcokxrl.css">
+
+  
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_2277830_6v2krg83grc.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/github.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap-grid.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/pace/pace-theme-flash.min.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/bulletchat/bulletchat.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="/lib/enjoyhint/enjoyhint.css">
+
+  
+
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/puff.svg'
+      },
+      donate: {
+        enable: true,
+        alipay: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png',
+        wechat: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/wechat.png'
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: false
+      },
+      preview: {
+        background: {
+          default: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/bg.jpg',
+          api: ''
+        },
+        motto: {
+          jinrishici: false,
+          default: '我是与李，一个互联网工具人',
+          api: ''
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'image',
+        image: 'https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/微信图片_20201128190505.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        model: 'simple'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      leancloud: {
+        enable: true,
+        appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+        appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+        baseURL: 'https://fyt1fady.lc-cn-n1-shared.com',
+        bulletChatEnable: true,
+        bulletChatRepo: 'Comment',
+        bulletChatRepoURL: '/about/'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+
+
+	<nav class="han-navbar post-navbar row">
+		<div class="left col-lg-8 col-md-8 col-sm-8 col-10">
+      <div class="row">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-5">
+          
+            <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+            
+            
+            <i class="iconfont iconmoono color-toggle" id="light-color-toggle" color-toggle="light"></i>
+            
+        </div>
+      </div>
+		</div>
+		<div class="right col-lg-4 col-md-4 col-sm-4 col-2">
+		  <i class="iconfont iconmenu j-navbar-menu "></i>
+		</div>
+		
+		  <div class="qrcode-navbar"></div>
+		
+	</nav>
+
+  
+
+<nav class="menu">
+  <div class="menu-wrap">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-8 offset-xl-2 col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-sm-12"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/220626-1565186786f6bd.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">分布式事务理论基础</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>2020/12/26</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2020/12/26/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/" class="leancloud" data-flag-title="分布式事务理论基础"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2975</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="两阶段提交（2PC）"><a href="#两阶段提交（2PC）" class="headerlink" title="两阶段提交（2PC）"></a>两阶段提交（2PC）</h1><p>两阶段提交协议（Two Phase Commitment Protocol)中，涉及到两种角色</p>
+<ul>
+<li><p>一个事务协调者（coordinator）</p>
+<p>负责协调多个参与者进行事务投票及提交或者回滚</p>
+</li>
+<li><p>多个事务参与者（participants）</p>
+<p>本地事务执行者</p>
+</li>
+</ul>
+<p>两个处理步骤</p>
+<ul>
+<li><p>投票阶段（voting phase）</p>
+<p>协调者将通知事务参与者准备提交或取消事务，然后进入表决过程。参与者将告知协调者自己的决策：</p>
+<ul>
+<li><p>同意</p>
+<p>事务参与者成功执行本地事务，但未提交</p>
+</li>
+<li><p>取消</p>
+<p>本地事务遇到故障执行失败</p>
+</li>
+</ul>
+</li>
+<li><p>提交阶段 （commit phase）</p>
+<p>收到参与者的通知后，协调者再向参与者发出通知，根据反馈情况决定各参与者是否要提交还是回滚</p>
+</li>
+</ul>
+<p>如图，1-2为第一阶段，2-3为第二阶段</p>
+<p>如果任一资源管理器在第一阶段返回准备失败，那么事务管理器会要求所有资源管理器在第二阶段执行回滚操作。通过事务管理器的两阶段协调，最终所有资源管理器要么全部提交，要么全部回滚，最终状态都是一致的</p>
+<p>  <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/20190409111746632.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h1 id="TCC"><a href="#TCC" class="headerlink" title="TCC"></a>TCC</h1><h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>TCC将事务提交分为Try-Confirm-Cancel 3个操作。其和两阶段提交有点类似，Try为第一阶段，Confirm-Cancel为第二阶段，是一种应用层面侵入业务的两阶段提交</p>
+<table>
+<thead>
+<tr>
+<th>操作方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Try</td>
+<td>预留业务资源/数据校验</td>
+</tr>
+<tr>
+<td>Confirm</td>
+<td>确认执行业务操作，实际提交数据，不做任何业务检查，try成功，confirm必定成功，需保证幂等</td>
+</tr>
+<tr>
+<td>Cancel</td>
+<td>取消执行业务操作，实际回滚数据，需保证幂等</td>
+</tr>
+</tbody></table>
+<p>其核心在于将业务分为两个操作步骤完成。不依赖RM对分布式事务的支持，而是通过对业务逻辑的分解来实现分布式事务</p>
+<p>下面以银行转账例子来说明</p>
+<p>假设用户user表中有两个字段：可用余额(available_money)、冻结余额(frozen_money)<br>A扣钱对应服务A(ServiceA)<br>B加钱对应服务B(ServiceB)<br>转账订单服务(OrderService)<br>业务转账方法服务(BusinessService)</p>
+<p>ServiceA，ServiceB，OrderService都需分别实现try()，confirm()，cancel()方法，方法对应业务逻辑如下</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ServiceA</th>
+<th>ServiceB</th>
+<th>OrderService</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>try()</td>
+<td>校验余额（并发控制）<br />冻结余额+1000<br />余额-1000</td>
+<td>冻结余额+1000</td>
+<td>创建转账订单，状态待转账</td>
+</tr>
+<tr>
+<td>confirm()</td>
+<td>冻结余额-1000</td>
+<td>冻结余额-1000<br />余额+1000</td>
+<td>状态变为转账成功</td>
+</tr>
+<tr>
+<td>cancel()</td>
+<td>冻结余额-1000<br />余额+1000</td>
+<td>冻结余额-1000</td>
+<td>状态变为转账失败</td>
+</tr>
+</tbody></table>
+<p>其中业务调用方BusinessService中就需要调用<br>ServiceA.try()<br>ServiceB.try()<br>OrderService.try()</p>
+<p>1、 当所有try方法均执行成功时，对全局事务进行提交，及由事务管理器调用每个微服务的confirm()方法</p>
+<p>2、当任意一个方法try()失败（预留资源不足，抑或网络异常等任何异常），由事务管理器调用每个服务的cancel()方法对全局事务进行回滚</p>
+<p>TCC原理参考图</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/20190409113546636.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<h2 id="幂等控制"><a href="#幂等控制" class="headerlink" title="幂等控制"></a>幂等控制</h2><p>使用TCC时要注意Try-Confirm-Cancel 3个操作的幂等控制，网络原因，或者重试操作都有可能导致这几个操作重复执行</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/20190416211740360.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>业务实现过程中需重点关注幂等实现，讲到幂等，以上诉TCC转账例子中的confirm()方法来说明</p>
+<p>在confirm()方法中，余额-1000，冻结余额-1000，这一步是实现幂等的关键，你会怎么做？</p>
+<p>常规逻辑：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//根据userId查到账户</span><br>Account account = accountMapper.selectById(userId);<br><span class="hljs-comment">//取出当前资金</span><br><span class="hljs-keyword">int</span> availableMoney = account.getAvailableMoney();<br>account.setAvailableMoney(availableMoney-<span class="hljs-number">1000</span>);<br><span class="hljs-comment">//更新剩余资金</span><br>accountMapper.update(account);<br></code></pre></td></tr></table></figure>
+
+<p>看起来是没有问题的，但是这是一个读-改-写的过程，其过程非原子性，在并发情况下会出现数据不一致的情况</p>
+<p>最简单的做法是利用数据库行锁特性解决</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">update</span> <span class="hljs-keyword">account</span> <span class="hljs-keyword">set</span> available_money = available_money<span class="hljs-number">-1000</span> <span class="hljs-keyword">where</span> user_id=<span class="hljs-comment">#&#123;userId&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>但是TCC中，单纯使用这个方法是不行的，如上，他不能解决多次操作带来的多次扣减问题，如果执行2次，那么用户账户就减少了2000</p>
+<p>这是我们可以引入转账订单状态来做判断，若订单状态为已支付，则停止后续扣减操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span>( order!=<span class="hljs-keyword">null</span> &amp;&amp; order.getStatus().equals(<span class="hljs-string">&quot;转账成功&quot;</span>))&#123;<br>	<span class="hljs-keyword">return</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="空回滚"><a href="#空回滚" class="headerlink" title="空回滚"></a>空回滚</h2><p>TCC服务在未收到Try请求的情况下收到Cancel请求，这种场景被称为空回滚</p>
+<p>如下图所示，事务协调器再调用TCC服务的一阶段try操作时，可能会出现丢包而导致的网络超时，此时事务协调器会触发二阶段回滚，调用TCC的cancel操作</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/2019041620592316.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>TCC服务在实现时应当允许空回滚的执行</p>
+<p>以上诉案例为例，如果try方法没执行，那么订单一定没创建，所以在cancel方法中可以以此为依据进行判断，如果订单不存在，不处理后续逻辑，且正常执行，不要抛出异常</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(orderNo==<span class="hljs-keyword">null</span> || order==<span class="hljs-keyword">null</span>)&#123;<br>	<span class="hljs-keyword">return</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="防悬挂"><a href="#防悬挂" class="headerlink" title="防悬挂"></a>防悬挂</h2><p>如下图所示，事务协调器在调用TCC服务的一阶段Try操作时，可能会出现因网络拥堵而导致的超时，此时事务协调器会触发二阶段回滚，调用TCC服务的Cancel操作；在此之后，拥堵在网络上的一阶段Try数据包被TCC服务收到，出现了二阶段Cancel请求比一阶段Try请求先执行的情况；</p>
+<p>用户在实现TCC服务时，应当允许空回滚，但是要拒绝执行空回滚之后到来的一阶段Try请求；</p>
+<p><img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/20190416210140253.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>可以在二阶段执行时插入一条事务控制记录，状态为已回滚，这样当一阶段执行时，先读取该记录，如果记录存在，就认为二阶段回滚操作已经执行，不再执行try方法；</p>
+<h1 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h1><p>事务消息更倾向于达成分布式事务的最终一致性，适用于分布式事务的提交或回滚只取决于事务发起方的业务需求，如A给B打了款并且成功了，那么下游业务B一定需要加钱这种场景，或许下了单，用户积分一定得增加这种场景。RocketMQ4.3中已经开源了事务消息，具体设计思路分析及demo演示，可以参考文章<a target="_blank" rel="noopener" href="https://blog.csdn.net/hosaos/article/details/90050276">《分布式事务-RocketMQ消息事务设计思路及Demo》</a></p>
+<h1 id="优缺点比较"><a href="#优缺点比较" class="headerlink" title="优缺点比较"></a>优缺点比较</h1><table>
+<thead>
+<tr>
+<th>事务方案</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2PC</td>
+<td>实现简单</td>
+<td>1、需要数据库(一般是XA支持) 2、锁粒度大，性能差</td>
+</tr>
+<tr>
+<td>TCC</td>
+<td>锁粒度小，性能好</td>
+<td>需要侵入业务，实现较为复杂，复杂业务实现幂等有难度</td>
+</tr>
+<tr>
+<td>消息事务</td>
+<td>业务侵入小，无需编写业务回滚补偿逻辑</td>
+<td>事务消息实现难度大，强依赖第三方中间件可靠性</td>
+</tr>
+</tbody></table>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>韩桂林 (与李)</li>
+    <li><strong>本文链接：</strong><a href="https://blog.javayuli.cn/2020/12/26/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/index.html" title="https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;26&#x2F;%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80&#x2F;index.html">https:&#x2F;&#x2F;blog.javayuli.cn&#x2F;2020&#x2F;12&#x2F;26&#x2F;%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+          <section class="donate">
+  <div id="qrcode-donate">
+    <img   class="lazyload" data-original="https://cdn.jsdelivr.net/gh/hanguilin/images@main/img/alipay.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" >
+  </div>
+  <div class="icon">
+    <a href="javascript:;" id="alipay"><i class="iconfont iconalipay"></i></a>
+    <a href="javascript:;" id="wechat"><i class="iconfont iconwechat-fill"></i></a>
+  </div>
+</section>
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2PC/" rel="tag">2PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCC/" rel="tag">TCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" rel="tag">分布式事务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2020/12/25/SpringCloud%E6%95%B4%E5%90%88Seata1.4.0/">SpringCloud整合Seata1.4.0<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="/js/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz",
+        app_key: "LMCz0v4gpcosEVGjNSmqwAm6",
+        placeholder: "来都来了，总得留下点什么吧(｡◕ฺˇε ˇ◕ฺ｡)",
+        avatar: "mp",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+        <div class="col-xl-2 col-lg-2 col-md-2 d-xl-block d-lg-block d-md-block d-sm-none d-none toc-wrap-col">
+          
+            
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%882PC%EF%BC%89"><span class="toc-text">两阶段提交（2PC）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCC"><span class="toc-text">TCC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-text">基本原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%82%E7%AD%89%E6%8E%A7%E5%88%B6"><span class="toc-text">幂等控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E5%9B%9E%E6%BB%9A"><span class="toc-text">空回滚</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E6%82%AC%E6%8C%82"><span class="toc-text">防悬挂</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF"><span class="toc-text">事务消息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9%E6%AF%94%E8%BE%83"><span class="toc-text">优缺点比较</span></a></li></ol>
+  </aside>
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="tencent://message/?Menu=yes&uin=1451633962 "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#12B7F5'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconQQ "></i>
+      </a><a 
+        href="javascript:; "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#09BB07'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconwechat-fill "></i>
+      </a><a 
+        href="https://github.com/hanguilin "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1451633962@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://blog.javayuli.cn">HanGuiLin</a>  |  <a target="_blank" href="http://beian.miit.gov.cn">渝ICP备2020013169号</a></p></div>
+	<div class="footer-count">
+		<span id="busuanzi_container_site_pv">
+		本站总访问量<span id="busuanzi_value_site_pv"></span>次
+		</span>
+		<span id="busuanzi_container_site_uv">
+		  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+		</span>
+	</div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+    <div class="scrollbar j-scrollbar">
+  <div class="scrollbar-current j-scrollbar-current"></div>
+</div>
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'fYT1fadyqPAK8ERar6xK7XQm-gzGzoHsz',
+      appKey: 'LMCz0v4gpcosEVGjNSmqwAm6',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'https://blog.javayuli.cn';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcss.com/typed.js/2.0.5/typed.js"></script>
+
+
+
+
+  
+<script src="/lib/pace/pace.min.js"></script>
+
+
+
+
+
+
+  
+<script src="/lib/bulletchat/bulletchat.js"></script>
+
+
+
+
+  
+<script src="/lib/enjoyhint/enjoyhint.min.js"></script>
+
+
+
+</html>
